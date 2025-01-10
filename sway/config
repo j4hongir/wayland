@@ -1,0 +1,248 @@
+# set modifier
+set $super Mod4
+set $alt Mod1
+
+#picom 
+exec --no-startup-id picom -b
+
+# set font
+font pango:MartianMono NFM Cond Med 10
+
+# use mouse+$super to drag floating windows to their wanted position
+floating_modifier $super
+
+# wallpaper 
+# exec --no-startup-id nitrogen --set-zoom-fill ~/Pictures/walls/g.png
+exec swaybg -i ~/Pictures/walls/g.png -m fill
+
+# start dmenu (a program launcher)
+# bindsym $super+d exec i3-dmenu-desktop --dmenu="dmenu -i -b \
+# -fn 'Poppins:size=9' -nb '#141c21' -nf '#93a1a1' \
+
+#звук 
+exec --no-startup-id pulseaudio --start 
+
+
+# exec --no-startup-id xrandr --output VGA-0 --mode 1280x1024  
+
+
+# start a terminal
+bindsym $super+t exec kitty 
+
+# bindsym $super+w exec kitty -e nmtui-connect 
+
+# start dmenu (a program launcher)
+
+
+# common apps keybinds
+# bindsym Print exec scrot 'Cheese_%a-%d%b%y_%H.%M.png' -e 'xdg-open ~/$f'
+bindsym $super+p exec swaylock -c 000000  
+bindsym $super+b exec vivaldi
+
+bindsym $super+f exec nautilus
+bindsym $super+h exec obsidian
+
+
+# bindsym $super+u exec ~/./brightness.sh
+bindsym $super+m exec vivaldi --app=https://music.youtube.com
+bindsym $super+Shift+t exec vivaldi --app=https://web.telegram.org/k/
+
+
+# # Горячая клавиша для запуска программы и позиционирования окна
+bindsym $super+u exec --no-startup-id ~/./brightness.sh
+
+# change volume and brightness
+# bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+
+# bindsym XF86AudioLowerVolume exec amixer -q set Master 5%-
+# bindsym XF86AudioMute exec amixer set Master toggle
+# bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+# bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
+# kill focused window
+bindsym $super+x kill
+bindsym $alt+F4 kill
+
+# bindsym $super+z exec swaymsg '[con_id=__focused__] focus next'
+# bindsym $super+z exec 
+bindsym $super+z [con_mark=_prev] focus
+exec ~/./cc.sh
+
+
+# change focus
+bindsym $super+Left focus left
+bindsym $super+j focus left
+bindsym $super+Down focus down
+bindsym $super+k focus down
+bindsym $super+Up focus up
+bindsym $super+i focus up
+bindsym $super+Right focus right
+bindsym $super+l focus right
+
+# bindsym $super+z exec --no-startup-id swaymsg '[workspace="*"] focus next'
+# bindsym $super+z exec --no-startup-id swaymsg '[app_id=.*] focus next'
+# bindsym $super+z exec --no-startup-id swaymsg '[con_id=__focused__.parent] focus next'
+
+
+
+# move focused window
+bindsym $super+Shift+Left move left
+bindsym $super+Shift+j move left
+bindsym $super+Shift+Down move down
+bindsym $super+Shift+k move down
+bindsym $super+Shift+Up move up
+bindsym $super+Shift+i move up
+bindsym $super+Shift+Right move right
+bindsym $super+Shift+l move right
+
+# split in horizontal or vertical orientation
+bindsym $super+n split h
+bindsym $super+v split v
+
+# change split direction for already opened windows
+bindsym $super+s layout toggle split
+
+# enter fullscreen mode for the focused container
+bindsym $super+Shift+f fullscreen toggle
+
+# toggle tiling / floating
+bindsym $super+e floating toggle
+
+# change focus between tiling / floating windows
+#bindsym $super+z focus mode_toggle
+
+# switch to workspace
+bindsym $super+Control+Right workspace next
+bindsym $super+Control+Left workspace prev
+bindsym $alt+1 workspace 1
+bindsym $alt+2 workspace 2
+bindsym $alt+3 workspace 3
+bindsym $alt+4 workspace 4
+bindsym $alt+5 workspace 5
+bindsym $alt+6 workspace 6
+
+# move focused container to workspace
+bindsym $super+Shift+1 move container to workspace 1
+bindsym $super+Shift+2 move container to workspace 2
+bindsym $super+Shift+3 move container to workspace 3
+bindsym $super+Shift+4 move container to workspace 4
+bindsym $super+Shift+5 move container to workspace 5
+bindsym $super+Shift+6 move container to workspace 6
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $super+BackSpace exec "swaymsg reload"
+
+# exit i3
+# bindsym $super+q exec "i3-nagbar -t warning -m 'Really, exit?' \
+# -b 'Yes' 'i3-msg exit'"
+
+# bindsym $super+Shift+q exec "i3-nagbar -t warning -m 'Really poweroff ?' \
+# -b 'Yes' 'systemctl poweroff'"
+
+
+bindsym $super+Shift+q exec ~/sys2.sh
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+	bindsym Right resize grow width 5 px or 5 ppt
+	bindsym l resize grow width 5 px or 5 ppt
+	bindsym Up resize grow height 5 px or 5 ppt
+	bindsym i resize grow height 5 px or 5 ppt
+	bindsym Down resize shrink height 5 px or 5 ppt
+	bindsym k resize shrink height 5 px or 5 ppt
+	bindsym Left resize shrink width 5 px or 5 ppt
+	bindsym j resize shrink width 5 px or 5 ppt
+	bindsym Return mode "default"
+	}
+bindsym $super+c mode "resize"
+
+
+# colour of border, background, text, indicator, and child_border
+client.focused             #fabd2f  #282828 #ebdbb2 #fabd2f  #fabd2f
+# client.focused             #fabd2f  #282828 #ebdbb2 #83a598 #83a598
+client.focused_inactive    #928374 #928374 #ebdbb2 #282828 #282828
+client.unfocused           #7c6f64 #3c3836 #ebdbb2 #928374 #928374
+client.urgent              #fb4934 #282828 #ebdbb2 #d79921 #d79921
+client.placeholder         #928374 #3c3836 #ebdbb2 #282828 #282828
+client.background          #282828
+
+# window rules, you can find the window class using xprop
+# for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] floating enable
+# for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] focus
+# for_window [class=".*"] border pixel 2.5
+for_window [class=".*"] border pixel 2.5
+# hide_edge_borders smart
+hide_edge_borders none
+gaps inner 4
+gaps outer 3
+# gaps top 31px
+
+#smart_gaps on
+# exec --no-startup-id copyq
+
+# #clipboar
+# exec --no-startup-id xfce4-clipman
+# bindsym $super+Shift+v exec copyq menu
+# bindsym $super+Shift+v exec xfce4-popup-clipman
+
+# bindsym $super+Shift+v exec ~/./clipman.sh
+
+bindsym $super+Shift+v exec cliphist list | dmenu -b -l 10 -i -fn "MartianMono NFM Cond Med:14" -nb "#282828" -nf "#ebdbb2" -sb "#fabd2f" -sf "#282828"| cliphist decode | wl-copy 
+
+
+
+bindsym $super+o exec dmenu_run -b -l 10 -i -p "What are we doing?" -fn "MartianMono NFM Cond Med:14" -nb "#282828" -nf "#ebdbb2" -sb "#fabd2f" -sf "#282828"  
+
+
+bindsym $super+y exec ~/./stat.sh
+
+bindsym $super+Shift+m exec ~/./music.sh
+# bar
+# exec --no-startup-id xfce4-panel
+
+# bar {
+#     status_command i3status
+# }
+# exec --no-startup-id i3status 
+# exec --no-startup-id polybar
+
+# #keyboard layaut
+# bindsym $super+Shift+space exec setxkbmap us
+# bindsym $super+space exec setxkbmap ru
+
+# exec --no-startup-id setxkbmap -model pc105 -layout us,ru -option grp:win_space_toggle
+exec --no-startup-id  wl-paste --watch cliphist store
+
+input * {
+    xkb_layout us,ru
+    xkb_options grp:win_space_toggle
+}
+
+
+
+
+input "type:touchpad" {
+    tap enabled
+    natural_scroll enabled
+}
+
+
+# ~/.config/sway/config
+
+# Увеличить громкость
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+# Уменьшить громкость
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+# Включить/выключить звук
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+
+
+# Скриншот выбранной области
+bindsym super+Shift+w exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png
+
+
+
+
+
