@@ -1,9 +1,3 @@
 #!/bin/bash
 
-# Получаем список истории буфера обмена
-SELECTION=$(cliphist list | dmenu -i -l 10 -p "Clipboard history:")
-
-# Если выбрано, вставляем в буфер обмена
-if [ -n "$SELECTION" ]; then
-    echo "$SELECTION" | wl-copy
-fi
+cliphist list | dmenu -b -l 10 -i -fn "MartianMono NFM Cond Med:14" -nb "#282828" -nf "#ebdbb2" -sb "#fabd2f" -sf "#282828"| cliphist decode | wl-copy

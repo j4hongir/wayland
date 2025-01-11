@@ -1,0 +1,37 @@
+# с верху минималной системы arch или debian сюда не входит настройки сети и драйверов 
+wayland
+wlroots
+xorg-server-xwayland
+xdg-desktop-portal 
+#xdg-desktop-portal-gtk
+xdg-desktop-portal-wlr 
+gnome-keyring
+mesa
+mesa-utils
+sdm
+swaybg
+swaylock
+pipewire pipewire-pulse wireplumber pavucontrol
+#hyprland #for hyprland 
+#sway swaymsg # for sway
+fonts: MartianMono NF ; MartianMono NFM Cond Med
+kitty
+ranger
+zsh
+
+waybar
+git
+gh 
+openssh
+neovim
+chromium
+thunar
+obsidian
+dmenu
+grim
+slurp
+wl-clipboard
+#mako # for notify
+cliphist
+bleachbit 
+lxappearance
