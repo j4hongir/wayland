@@ -1,0 +1,119 @@
+{
+    "layer": "top",
+    "spacing": 0,
+    "height": 0,
+
+    "margin-top": 4,
+    "margin-right": 4,
+    "margin-bottom": 0,
+    "margin-left": 4,
+
+    "modules-left": [
+        "sway/workspaces",
+        "hyprland/workspaces"
+    ],
+
+    "modules-center": [
+        "clock"
+    ],
+
+    "modules-right": [
+        "tray",
+        "hyprland/language",
+        "cpu",
+        "memory",
+        "battery",
+        "network",
+        "pulseaudio"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "tooltip": false
+    },
+   
+    
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "tooltip": false,
+        "format-icons": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "urgent": "",
+            "active": "",
+            "default": ""
+    }
+
+    },
+
+    "hyprland/language": {
+
+    "format": "{}",
+
+    "format-ru": "RU",
+
+    "format-en": "US"
+
+    },
+
+
+    "tray": {
+        "spacing": 10,
+        "tooltip": false
+    },
+
+    "clock": {
+        "format": "{:%I:%M %p - %a, %d %b %Y}",
+        "tooltip": false
+    },
+
+    "cpu": {
+        "format": " {usage}%",
+        "interval": 2,
+
+        "states": {
+            "critical": 90
+        }
+    },
+
+    "memory": {
+        "format": " {percentage}%",
+        "interval": 2,
+
+        "states": {
+            "critical": 80
+        }
+    },
+
+    "battery": {
+        "format": " {capacity}%",
+        "interval": 5,
+        "states": {
+            "warning": 20,
+            "critical": 10
+        },
+        "tooltip": false
+    },
+
+    "network": {
+        "format-wifi" : "󰤨 {bandwidthDownBits}",
+        "format-ethernet": "enth {bandwidthDownBits}",
+        "format-disconnected" : "󰤭",
+        "interval": 5,
+        "tooltip": false
+    },
+
+    "pulseaudio": {
+        "scroll-step": 5,
+        "max-volume": 150,
+        "format": " {volume}%",
+        "format-bluetooth": "󰗾 {volume}%",
+        "nospacing": 1,
+        "on-click": "pavucontrol",
+        "tooltip": false
+    }
+}

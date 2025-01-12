@@ -1,4 +1,4 @@
-# с верху минималной системы arch или debian сюда не входит настройки сети и драйверов 
+networkmanager
 wayland
 wlroots
 xorg-server-xwayland
@@ -8,7 +8,8 @@ xdg-desktop-portal-wlr
 gnome-keyring
 mesa
 mesa-utils
-sdm
+sdmn or gdm
+
 swaybg
 swaylock
 pipewire pipewire-pulse wireplumber pavucontrol
@@ -18,7 +19,6 @@ fonts: MartianMono NF ; MartianMono NFM Cond Med
 kitty
 ranger
 zsh
-
 waybar
 git
 gh 
@@ -35,3 +35,21 @@ wl-clipboard
 cliphist
 bleachbit 
 lxappearance
+viewnior
+powertop
+tlp
+bluez
+adwaita-cursors
+adwaita-icon-theme
+rsync 
+tldr
+tmux
+fzf
+virtualbox-host-modules-arch
+wl-clipboard
+
+###
+yay
+smash
+cava
+
