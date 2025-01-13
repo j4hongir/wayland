@@ -16,7 +16,7 @@
 ![hypr]( https://i.ibb.co/VmzTtG5/screenshot-2025-01-11-181951.png)
 
 ---
-sway and hyprland are configured almost the same way (and run the same scripts the same programs)
+sway and hyprland are configured almost the same way (and run the same scripts the same programs) 
 I may miss or change something, but here are my main hotkeys
 
 | **Shortcut**            | **Action**                                    |
