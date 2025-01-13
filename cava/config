@@ -1,0 +1,21 @@
+# cava
+[input]
+method = pulse
+source = auto
+
+[smoothing]
+integral = 0.7
+monstercat = 1
+
+[color]
+
+gradient = 1
+
+gradient_color_1 = '#83A598'  # Teal -> Gruvbox Aqua
+gradient_color_2 = '#B8BB26'  # Green -> Gruvbox Green
+gradient_color_3 = '#FABD2F'  # Yellow -> Gruvbox Yellow
+gradient_color_4 = '#D3869B'  # Pink -> Gruvbox Purple
+gradient_color_5 = '#D3869B'  # Lavender -> Тоже Gruvbox Purple
+gradient_color_6 = '#FB4934'  # Flamingo -> Gruvbox Red
+gradient_color_7 = '#CC241D'  # Red -> Более тёмный Gruvbox Red
+gradient_color_8 = '#458588'  # Blue -> Gruvbox Blue

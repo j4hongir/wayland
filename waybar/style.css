@@ -9,7 +9,8 @@
 }
 
 window#waybar {
-    background: #1d2021;
+    /*background: #1d2021;*/
+    background: rgba(29, 32, 33, 0.8);
     border: 2px solid #928374;
 }
 
@@ -25,6 +26,7 @@ tooltip {
 #battery,
 #language,
 #network,
+#custom-notification,
 #pulseaudio {
     margin: 6px 6px 6px 0px;
     padding: 2px 8px;
@@ -59,7 +61,7 @@ tooltip {
 }
 
 #tray {
-    background-color: #d4be98;
+    background-color: #303536;
     border: 2px solid #c7ab7a;
 }
 
@@ -72,10 +74,14 @@ tooltip {
 #cpu,
 #memory,
 #network,
+#language,
 #pulseaudio {
-    background-color: #ddc7a1;
-    border: 2px solid #c7ab7a;
-    color: #1d2021;
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    color: #d4be98;
+    /*background-color: #ddc7a1;*/
+    /*border: 2px solid #c7ab7a;*/
+    /*color: #1d2021;*/
 }
 
 #cpu.critical,
@@ -93,9 +99,13 @@ tooltip {
     color: #c14a4a;
 }
 
-#language {
-    background-color: #d4be98;
-    border: 2px solid #c7ab7a;
-    color: #1d2021;
+/*#language {*/
+/*    background-color: #d4be98;*/
+/*    border: 2px solid #c7ab7a;*/
+/*    color: #1d2021;*/
+/*}*/
+#custom-notification{
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    color: #d4be98;
 }
-

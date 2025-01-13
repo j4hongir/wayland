@@ -6,7 +6,7 @@
     "margin-top": 4,
     "margin-right": 4,
     "margin-bottom": 0,
-    "margin-left": 4,
+    "margin-left": 3,
 
     "modules-left": [
         "sway/workspaces",
@@ -14,16 +14,17 @@
     ],
 
     "modules-center": [
-        "clock"
+        "clock",
+        "custom/notification"
     ],
 
     "modules-right": [
         "tray",
+        "network",
         "hyprland/language",
         "cpu",
         "memory",
         "battery",
-        "network",
         "pulseaudio"
     ],
 
@@ -51,16 +52,31 @@
     },
 
     "hyprland/language": {
-
     "format": "{}",
-
     "format-ru": "RU",
-
     "format-en": "US"
-
     },
 
-
+    "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span foreground='red'><sup></sup></span>",
+      "none": "",
+      "dnd-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-none": "",
+      "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
     "tray": {
         "spacing": 10,
         "tooltip": false
@@ -69,12 +85,13 @@
     "clock": {
         "format": "{:%I:%M %p - %a, %d %b %Y}",
         "tooltip": false
+        //"on-click": "kitty --title '~/wayland/./clock -s -b -c' ~/wayland/./clock -s -b -c"
     },
 
     "cpu": {
         "format": " {usage}%",
         "interval": 2,
-
+        "on-click": "kitty --title btop btop",
         "states": {
             "critical": 90
         }
@@ -83,7 +100,7 @@
     "memory": {
         "format": " {percentage}%",
         "interval": 2,
-
+        "on-click": "kitty --title btop btop",
         "states": {
             "critical": 80
         }
@@ -100,7 +117,7 @@
     },
 
     "network": {
-        "format-wifi" : "󰤨 {bandwidthDownBits}",
+        "format-wifi" : "{bandwidthDownBits}",
         "format-ethernet": "enth {bandwidthDownBits}",
         "format-disconnected" : "󰤭",
         "interval": 5,

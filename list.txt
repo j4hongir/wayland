@@ -8,10 +8,9 @@ xdg-desktop-portal-wlr
 gnome-keyring
 mesa
 mesa-utils
-sdmn or gdm
-
+sddmn or gdm
 swaybg
-swaylock
+hyprlock or swaylock 
 pipewire pipewire-pulse wireplumber pavucontrol
 #hyprland #for hyprland 
 #sway swaymsg # for sway
@@ -29,27 +28,45 @@ thunar
 obsidian
 dmenu
 grim
-slurp
+slurp or flameshot 
 wl-clipboard
-#mako # for notify
+swaync
 cliphist
 bleachbit 
 lxappearance
-viewnior
+nwg-look
+swayimg or viewnior
 powertop
 tlp
 bluez
-adwaita-cursors
-adwaita-icon-theme
 rsync 
 tldr
 tmux
 fzf
+virtualbox
 virtualbox-host-modules-arch
-wl-clipboard
-
+obs-studio
+btop
+ranger
+blueman
+gtk-engine-murrine
+    gtk theme - https://www.gnome-look.org/p/1681313/
+    cursor theme - https://github.com/sainnhe/capitaine-cursors/releases
+gnome-logs
 ###
+door-knocker
 yay
 smash
 cava
+phinger-cursors
+#syspower dont working with hyprland 
+gruvbox-plus-icon-theme-git
+packettracer
+gns3
+
+
+docker-io
+git 
+github-cli
+helix 
 

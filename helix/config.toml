@@ -1,0 +1,27 @@
+theme = "gruvbox"
+
+
+
+
+
+
+[keys.insert]
+"A-space" = "normal_mode"
+[keys.select]
+"A-space" = "normal_mode"
+
+[editor.cursor-shape]
+normal = "block"
+insert = "bar"
+select = "block"
+
+
+
+[editor.statusline]
+left = ["mode", "spinner"]
+center = ["file-name"]
+right = ["diagnostics", "selections", "position", "file-encoding", "file-line-ending", "file-type"]
+separator = "│"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"

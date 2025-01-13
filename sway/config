@@ -16,11 +16,12 @@ exec swaybg -i ~/wayland/gruvwall.png -m fill
 
 #звук 
 exec --no-startup-id pulseaudio --start 
+exec --no-startup-id swaync
 
 # start a terminal
 bindsym $super+t exec kitty 
 
-bindsym $super+p exec swaylock -c 000000  
+bindsym $super+p exec hyprlock
 bindsym $super+b exec chromium
 
 bindsym $super+f exec thunar
@@ -101,6 +102,7 @@ bindsym $super+Shift+6 move container to workspace 6
 bindsym $super+BackSpace exec "swaymsg reload"
 
 bindsym $super+Shift+q exec ~/wayland/sys2.sh
+# bindsym $super+Shift+q exec syspower
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -139,9 +141,9 @@ gaps outer 3
 
 exec --no-startup-id waybar
 
-bindsym $super+Shift+v exec cliphist list | dmenu -b -l 10 -i -fn "MartianMono NFM Cond Med:14" -nb "#282828" -nf "#ebdbb2" -sb "#fabd2f" -sf "#282828"| cliphist decode | wl-copy 
+bindsym $super+Shift+v exec  ~/wayland/./clipman.sh
 
-bindsym $super+o exec dmenu_run -b -l 10 -i -p "What are we doing?" -fn "MartianMono NFM Cond Med:14" -nb "#282828" -nf "#ebdbb2" -sb "#fabd2f" -sf "#282828"  
+bindsym $super+o exec ~/wayland/./appfinder.sh  
 
 bindsym $super+y exec ~/wayland/./stat.sh
 
@@ -163,7 +165,7 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-bindsym super+Shift+w exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H%M%S').png
+bindsym super+Shift+w exec ~/wayland/./screen.sh
 
 
 
