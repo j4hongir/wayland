@@ -10,10 +10,12 @@
 
     "modules-left": [
         "sway/workspaces",
-        "hyprland/workspaces"
+        "hyprland/workspaces",
+        "custom/music"
     ],
 
     "modules-center": [
+        //"custom/music",
         "clock",
         "custom/notification"
     ],
@@ -25,6 +27,7 @@
         "cpu",
         "memory",
         "battery",
+        "custom/brightness",
         "pulseaudio"
     ],
 
@@ -58,7 +61,7 @@
     },
 
     "custom/notification": {
-    "tooltip": false,
+    //"tooltip": false,
     "format": "{icon}",
     "format-icons": {
       "notification": "<span foreground='red'><sup></sup></span>",
@@ -77,15 +80,49 @@
     "on-click-right": "swaync-client -d -sw",
     "escape": true
   },
+
+
+
+
     "tray": {
         "spacing": 10,
         "tooltip": false
     },
 
+    
     "clock": {
-        "format": "{:%I:%M %p - %a, %d %b %Y}",
-        "tooltip": false
-        //"on-click": "kitty --title '~/wayland/./clock -s -b -c' ~/wayland/./clock -s -b -c"
+        // Основной формат отображения времени
+        "format": "{:%H:%M}",
+        // Формат для всплывающей подсказки с календарем
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        // Настройки календаря
+        "calendar": {
+            "mode"          : "month",
+            "mode-mon-col"  : 3,
+            "weeks-pos"     : "right",
+            "on-scroll"     : 1,
+            "on-click-right": "mode",
+            
+        "format": {
+            "months":     "<span color='#fabd2f'><b>{}</b></span>",    // Желтовато-оранжевый
+            "days":       "<span color='#d3869b'><b>{}</b></span>",    // Розовато-фиолетовый
+            "weeks":      "<span color='#8ec07c'><b>W{}</b></span>",   // Зелёный
+            "weekdays":   "<span color='#fe8019'><b>{}</b></span>",    // Оранжевый
+            "today":      "<span color='#fb4934'><b><u>{}</u></b></span>" // Красный
+        }
+
+        },
+        // Действия при кликах
+        "actions": {
+            //"on-click": "gnome-calendar", // или любой другой календарь
+            "on-click-middle": "mode",
+            //"on-click-right": "shift_scroll",
+            "on-click-right": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        },
+        // Интервал обновления
+        "interval": 1
     },
 
     "cpu": {
@@ -106,14 +143,19 @@
         }
     },
 
+    
     "battery": {
-        "format": " {capacity}%",
-        "interval": 5,
+        "bat": "BAT0",
+        "adapter": "AC",
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰂄 {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
         "states": {
-            "warning": 20,
-            "critical": 10
+            "warning": 30,
+            "critical": 15
         },
-        "tooltip": false
+        "interval": 30
     },
 
     "network": {
@@ -123,6 +165,28 @@
         "interval": 5,
         "tooltip": false
     },
+    
+    
+    "custom/brightness": {
+        "exec": "~/.config/waybar/scripts/brightness.sh",
+        "interval": 1,
+        "format": "{} ",
+        "scroll-step": 5,
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+
+    
+    "custom/music": {
+        "format": "{}",
+        "max-length": 40,
+        "interval": 1,
+        "exec": "~/.config/waybar/scripts/music.sh",
+        "on-click": "playerctl previous",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl play-pause"
+    },        
+    
 
     "pulseaudio": {
         "scroll-step": 5,

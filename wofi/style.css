@@ -1,43 +1,64 @@
+@define-color bg #282828;
+@define-color fg #ebdbb2;
+@define-color y #d79921;
+* {
+    font-family: 'MartianMono NFM Cond Med';
+    font-size: 14px;
+    font-weight: 600;
+}
 window {
-    margin: 0px;
-    border: 3px solid #fabd2f; 
-    background-color: #282828;
-    border-radius: 8px; 
+    border: none;
+    border-radius: 5px;
 }
 
 #input {
-    margin: 5px;
+    margin: 15px;
+    border-color: @bg;
     border: none;
-    background-color: #1d2021;
-    border-radius: 8px; 
+    color: @bg;
+    border-radius: 5px;
+    background-color: @fg;
 }
+
 
 #inner-box {
     margin: 5px;
-    background-color: #282828;
+    background-color: @bg;
+    border: none;
 }
 
 #outer-box {
-    margin: 5px;
-    background-color: #282828;
-    border-radius: 8px; 
-}
-
-#scroll {
-    margin: 0px;
-    border: none;
-    border-radius: 8px; 
+    background-color: @bg;
+    border-radius: 5px;
+    border: 3px solid #fabd2f;
 }
 
 #text {
-    margin: 5px;
+    margin: 10px;
+    padding: 5px;
+    color: @fg;
     border: none;
-    border-radius: 8px; 
+}
+#text:selected {
+    margin: 10px 0px;
+    color: @bg;
+}
+
+#entry {
+    padding: 0px 10px;
+    margin: 0px 10px;
+    background-color: @bg;
+    border-radius: 5px;
+    border: none;
 }
 
 #entry:selected {
-    background-color: #1d2021;
-    border-radius: 8px; 
+    padding: 0px 10px;
+    margin: 0px 10px;
+    background-color: @y;
+    border-radius: 5px;
+    border: none;
 }
+
 
 

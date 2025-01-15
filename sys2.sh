@@ -1,8 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
-chosen=$(printf "Restart \nQuit \nLock Session\nSuspend\nReboot\nShutdown" | dmenu -b -l 10 -i -p "What are we doing?" -fn "MartianMono NFM Cond Med:14" \
--nb "#282828" -nf "#ebdbb2" -sb "#fabd2f" -sf "#282828")
+# Опции для меню
+options="Restart\nQuit\nLock Session\nSuspend\nReboot\nShutdown"
 
+# Вызов wofi
+chosen=$(echo -e "$options" | wofi --dmenu --prompt "What are we doing?" --style ~/.config/wofi/style.css)
+
+# Если ничего не выбрано, выйти
 if [ -z "$chosen" ]; then
     exit 0
 else
@@ -10,10 +14,10 @@ else
         Restart*) systemctl reboot ;;
         
         Quit*)
-            if [[ "$(echo $DESKTOP_SESSION)" == "hyprland" ]]; then
+            if [[ "$DESKTOP_SESSION" == "hyprland" ]]; then
                 # Если это Hyprland
                 hyprctl dispatch exit
-            elif [[ "$(echo $DESKTOP_SESSION)" == "sway" ]]; then
+            elif [[ "$DESKTOP_SESSION" == "sway" ]]; then
                 # Если это Sway
                 swaymsg exit
             else

@@ -27,6 +27,7 @@ tooltip {
 #language,
 #network,
 #custom-notification,
+#custom-music,
 #pulseaudio {
     margin: 6px 6px 6px 0px;
     padding: 2px 8px;
@@ -34,7 +35,8 @@ tooltip {
 
 #workspaces {
     background-color: #303536;
-    margin: 6px 0px 6px 6px;
+    /*margin: 6px 0px 6px 6px;*/
+    margin: 6px 6px 6px 6px;
     border: 2px solid #434a4c;
 }
 
@@ -65,11 +67,6 @@ tooltip {
     border: 2px solid #c7ab7a;
 }
 
-#battery {
-    background-color: #a9b665;
-    border: 2px solid #c7ab7a;
-    color: #6c782e;
-}
 
 #cpu,
 #memory,
@@ -99,13 +96,47 @@ tooltip {
     color: #c14a4a;
 }
 
-/*#language {*/
-/*    background-color: #d4be98;*/
-/*    border: 2px solid #c7ab7a;*/
-/*    color: #1d2021;*/
-/*}*/
+#language {
+    background-color: #d4be98;
+    border: 2px solid #c7ab7a;
+    color: #1d2021;
+}
 #custom-notification{
     background-color: #303536;
     border: 2px solid #434a4c;
     color: #d4be98;
 }
+
+#custom-music{
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    color: #d4be98;
+}
+
+#custom-brightness{
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    margin: 6px 6px 6px 0px;
+    color: #d4be98;
+}
+
+#battery {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    margin: 6px 6px 6px 0px;
+    color: #d4be98;
+}
+
+tooltip {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    color: #d4be98;
+}
+
+tooltip label {
+    color: #d4be98;
+    padding: 8px;
+    margin: 4px;
+}
+
+

@@ -1,0 +1,46 @@
+{
+    "$schema": "/etc/xdg/swaync/configSchema.json",
+    "positionX": "right",
+    "positionY": "top",
+    "control-center-margin-top": 10,
+    "control-center-margin-bottom": 10,
+    "control-center-margin-right": 10,
+    "control-center-margin-left": 10,
+    "notification-icon-size": 64,
+    "notification-body-image-size": 96,
+    "notification-window-width": 400,
+    "control-center-width": 400,
+    "control-center-height": 600,
+    "fit-to-screen": true,
+    "layer": "overlay",
+    "cssPriority": "user",
+    "notification-window-padding": 10,
+    "widgets": [
+        "title",
+        "dnd",
+        "notifications",
+        "mpris",
+        "volume"
+    ],
+    "widget-config": {
+        "title": {
+            "text": "Уведомления",
+            "clear-all-button": true,
+            "button-text": "Очистить"
+        },
+        "dnd": {
+            "text": "Не беспокоить"
+        },
+        "label": {
+            "max-lines": 5,
+            "text": "Центр управления"
+        },
+        "mpris": {
+            "image-size": 96,
+            "image-radius": 12
+        },
+        "volume": {
+            "label": "󰕾"
+        }
+    }
+}

@@ -39,6 +39,7 @@ swayimg or viewnior
 powertop
 tlp
 bluez
+blueman
 rsync 
 tldr
 tmux
@@ -61,12 +62,5 @@ cava
 phinger-cursors
 #syspower dont working with hyprland 
 gruvbox-plus-icon-theme-git
-packettracer
-gns3
 
-
-docker-io
-git 
-github-cli
-helix 
 

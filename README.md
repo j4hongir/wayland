@@ -1,22 +1,9 @@
-## Functional and calm arch rice
-## sway
+## sway and hypr workstation for advanced users
 
 ---
-
-![sway](https://i.ibb.co/NWcnHwB/screenshot-2024-12-31-230710.png)
-![sway](https://i.ibb.co/x5skCcS/screenshot-2024-12-31-230333.png)
-
+![sway](http://i.ibb.co/prxwwHP/image.png)
 ---
-
-## hyprland
-
----
-
-![ hypr ](https://i.ibb.co/3dQd8M1/screenshot-2025-01-10-213701.png)
-![hypr]( https://i.ibb.co/VmzTtG5/screenshot-2025-01-11-181951.png)
-
----
-sway and hyprland are configured almost the same way (and run the same scripts the same programs) 
+sway and hyprland are configured almost the same way (and run the same scripts and programs) 
 I may miss or change something, but here are my main hotkeys
 
 | **Shortcut**            | **Action**                                    |
