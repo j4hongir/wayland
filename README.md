@@ -1,6 +1,6 @@
 ## sway and hypr workstation for advanced users
 
----
+
 ![sway](https://i.ibb.co/prxwwHP/image.png)
 ---
 sway and hyprland are configured almost the same way (and run the same scripts and programs) 
