@@ -1,7 +1,7 @@
 ## sway and hypr workstation for advanced users
 
 ---
-![sway](http://i.ibb.co/prxwwHP/image.png)
+![sway](https://i.ibb.co/prxwwHP/image.png)
 ---
 sway and hyprland are configured almost the same way (and run the same scripts and programs) 
 I may miss or change something, but here are my main hotkeys
