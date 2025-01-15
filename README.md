@@ -54,3 +54,7 @@ I may miss or change something, but here are my main hotkeys
 | **Miscellaneous**        |                                               |
 | `Super + BackSpace`      | Reload Sway                                 |
 | `Super + Shift + Q`      | Execute `sys2.sh`                           |
+
+
+
+![arch](https://upload.wikimedia.org/wikipedia/commons/7/73/Archlinux-logo-inverted-version.png)
