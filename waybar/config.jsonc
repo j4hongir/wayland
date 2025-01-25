@@ -1,5 +1,6 @@
 {
     "layer": "top",
+    "spacing": 4,
     "spacing": 0,
     "height": 0,
 
@@ -15,7 +16,6 @@
     ],
 
     "modules-center": [
-        //"custom/music",
         "clock",
         "custom/notification"
     ],
@@ -24,6 +24,7 @@
         "tray",
         "network",
         "hyprland/language",
+        "sway/language",
         "cpu",
         "memory",
         "battery",
@@ -60,8 +61,13 @@
     "format-en": "US"
     },
 
+    "sway/language": {
+    "format": "{}",
+    "format-ru": "RU",
+    "format-en": "US"
+    },
+
     "custom/notification": {
-    //"tooltip": false,
     "format": "{icon}",
     "format-icons": {
       "notification": "<span foreground='red'><sup></sup></span>",
@@ -91,11 +97,8 @@
 
     
     "clock": {
-        // Основной формат отображения времени
         "format": "{:%H:%M}",
-        // Формат для всплывающей подсказки с календарем
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        // Настройки календаря
         "calendar": {
             "mode"          : "month",
             "mode-mon-col"  : 3,
@@ -112,16 +115,12 @@
         }
 
         },
-        // Действия при кликах
         "actions": {
-            //"on-click": "gnome-calendar", // или любой другой календарь
             "on-click-middle": "mode",
-            //"on-click-right": "shift_scroll",
             "on-click-right": "mode",
             "on-scroll-up": "shift_up",
             "on-scroll-down": "shift_down"
         },
-        // Интервал обновления
         "interval": 1
     },
 
@@ -173,7 +172,8 @@
         "format": "{} ",
         "scroll-step": 5,
         "on-scroll-up": "brightnessctl set +5%",
-        "on-scroll-down": "brightnessctl set 5%-"
+        "on-scroll-down": "brightnessctl set 5%-",
+        "tooltip": false
     },
 
     
@@ -184,9 +184,9 @@
         "exec": "~/.config/waybar/scripts/music.sh",
         "on-click": "playerctl previous",
         "on-click-right": "playerctl next",
-        "on-click-middle": "playerctl play-pause"
-    },        
-    
+        "on-click-middle": "playerctl play-pause",
+      "tooltip": false
+    },
 
     "pulseaudio": {
         "scroll-step": 5,

@@ -76,9 +76,6 @@ tooltip {
     background-color: #303536;
     border: 2px solid #434a4c;
     color: #d4be98;
-    /*background-color: #ddc7a1;*/
-    /*border: 2px solid #c7ab7a;*/
-    /*color: #1d2021;*/
 }
 
 #cpu.critical,
@@ -96,11 +93,6 @@ tooltip {
     color: #c14a4a;
 }
 
-#language {
-    background-color: #d4be98;
-    border: 2px solid #c7ab7a;
-    color: #1d2021;
-}
 #custom-notification{
     background-color: #303536;
     border: 2px solid #434a4c;
