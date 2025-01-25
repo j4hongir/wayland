@@ -57,12 +57,41 @@ gtk-engine-murrine
     gtk theme - https://www.gnome-look.org/p/1681313/
     cursor theme - https://github.com/sainnhe/capitaine-cursors/releases
 
-###
-yay
+### from aur
 door-knocker
 smash
 cava
-#syspower dont working with hyprland 
 gruvbox-plus-icon-theme-git
 superfile 
 
+
+###################for zsh####################
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+
+p10k configure
+##############################################
+
+
+###################vimplug####################
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+##############################################
+
+###################aur########################
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+##############################################
+
+##################for gtk4####################
+gsettings set org.gnome.desktop.interface cursor-theme 'Vimix-cursors'
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme 'Gruvbox-Dark'
+gsettings set org.gnome.desktop.interface icon-theme 'gruvbox-dark-icons-gtk'
+##############################################
