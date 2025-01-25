@@ -1,20 +1,23 @@
 networkmanager
+nm-aplet
 wayland
 wlroots
 xorg-server-xwayland
-xdg-desktop-portal 
-#xdg-desktop-portal-gtk
-xdg-desktop-portal-wlr 
+xdg-desktop-portal-gtk
+xdg-desktop-portal-hyprland
+#xdg-desktop-portal-wlr #for sway
 gnome-keyring
 mesa
 mesa-utils
-sddmn or gdm
+sddmn 
 swaybg
-hyprlock or swaylock 
+hyprlock 
+swaylock 
 pipewire pipewire-pulse wireplumber pavucontrol
-#hyprland #for hyprland 
+hyprland  
 #sway swaymsg # for sway
 fonts: MartianMono NF ; MartianMono NFM Cond Med
+vimix-cursors
 kitty
 ranger
 zsh
@@ -26,26 +29,26 @@ neovim
 chromium
 thunar
 obsidian
-dmenu
 grim
-slurp or flameshot 
-wl-clipboard
+slurp
+wl-clipboard 
 swaync
 cliphist
 bleachbit 
 lxappearance
 nwg-look
-swayimg or viewnior
+swayimg 
 powertop
 tlp
 bluez
 blueman
-rsync 
+rsync
+gnome-logs
 tldr
 tmux
 fzf
-virtualbox
-virtualbox-host-modules-arch
+#virtualbox
+#virtualbox-host-modules-arch
 obs-studio
 btop
 ranger
@@ -53,14 +56,13 @@ blueman
 gtk-engine-murrine
     gtk theme - https://www.gnome-look.org/p/1681313/
     cursor theme - https://github.com/sainnhe/capitaine-cursors/releases
-gnome-logs
+
 ###
-door-knocker
 yay
+door-knocker
 smash
 cava
-phinger-cursors
 #syspower dont working with hyprland 
 gruvbox-plus-icon-theme-git
-
+superfile 
 
