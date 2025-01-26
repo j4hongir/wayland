@@ -136,7 +136,6 @@
     "memory": {
         "format": " {percentage}%",
         "interval": 2,
-        "on-click": "kitty --title btop btop",
         "states": {
             "critical": 80
         }

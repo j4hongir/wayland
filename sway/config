@@ -2,9 +2,6 @@
 set $super Mod4
 set $alt Mod1
 
-#picom 
-exec --no-startup-id picom -b
-
 # set font
 font pango:MartianMono NFM Cond Med 10
 
@@ -12,10 +9,10 @@ font pango:MartianMono NFM Cond Med 10
 floating_modifier $super
 
 # wallpaper 
-exec swaybg -i ~/wayland/gruvwall.png -m fill
+exec swaybg -i ~/wayland/walls/gruvwall.png -m fill
 
 #звук 
-exec --no-startup-id pulseaudio --start 
+
 exec --no-startup-id swaync
 
 # start a terminal
@@ -27,22 +24,18 @@ bindsym $super+b exec chromium
 bindsym $super+f exec thunar
 bindsym $super+Shift+h exec obsidian
 
-
-# bindsym $super+u exec ~/./brightness.sh
 bindsym $super+m exec chromium --app=https://music.youtube.com
 bindsym $super+Shift+t exec chromium --app=https://web.telegram.org/k/
 
-bindsym $super+u exec --no-startup-id ~/wayland/./brightness.sh
 
 bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
 # kill focused window
 bindsym $super+x kill
-bindsym $alt+F4 kill
 
 bindsym $super+z [con_mark=_prev] focus
-exec ~/wayland/swaygg.sh
+exec ~/wayland/scripts/swaygg.sh
 
 # change focus
 bindsym $super+Left focus left
@@ -98,11 +91,9 @@ bindsym $super+Shift+4 move container to workspace 4
 bindsym $super+Shift+5 move container to workspace 5
 bindsym $super+Shift+6 move container to workspace 6
 
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $super+BackSpace exec "swaymsg reload"
 
-bindsym $super+Shift+q exec ~/wayland/sys2.sh
-# bindsym $super+Shift+q exec syspower
+bindsym $super+Shift+q exec ~/wayland/scripts/swaysys.sh
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -136,18 +127,18 @@ for_window [class=".*"] border pixel 2.5
 # hide_edge_borders smart
 hide_edge_borders none
 gaps inner 4
-gaps outer 3
+gaps outer 2
 # gaps top 31px
 
 exec --no-startup-id waybar
 
-bindsym $super+Shift+v exec  ~/wayland/./clipman.sh
+bindsym $super+Shift+v exec  ~/wayland/scripts/./clip.sh
 
-bindsym $super+o exec ~/wayland/./appfinder.sh  
+bindsym $super+o exec wofi --show drun  --hide-scroll  
 
-bindsym $super+y exec ~/wayland/./stat.sh
+bindsym $super+y exec python3 ~/Dashboard/my2.py 
 
-bindsym $super+Shift+m exec ~/wayland/./music.sh
+bindsym super+Shift+w exec ~/wayland/scripts/./screen.sh
 
 exec --no-startup-id  wl-paste --watch cliphist store
 
@@ -165,7 +156,6 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-bindsym super+Shift+w exec ~/wayland/./screen.sh
 
 
 
