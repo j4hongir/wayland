@@ -1,3 +1,4 @@
+output * bg /home/mars/wayland/walls/18.jpg fill
 # set modifier
 set $super Mod4
 set $alt Mod1
@@ -8,15 +9,12 @@ font pango:MartianMono NFM Cond Med 10
 # use mouse+$super to drag floating windows to their wanted position
 floating_modifier $super
 
-# wallpaper 
-exec swaybg -i ~/wayland/walls/gruvwall.png -m fill
-
-#звук 
 
 exec --no-startup-id swaync
 
 # start a terminal
 bindsym $super+t exec kitty 
+bindsym $super+w exec ~/wayland/scripts/swaywall.sh 
 
 bindsym $super+p exec hyprlock
 bindsym $super+b exec chromium
