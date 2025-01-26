@@ -24,6 +24,8 @@ bindsym $super+b exec chromium
 bindsym $super+f exec thunar
 bindsym $super+Shift+h exec obsidian
 
+bindsym $super+Shift+p exec hyprpicker -a
+
 bindsym $super+m exec chromium --app=https://music.youtube.com
 bindsym $super+Shift+t exec chromium --app=https://web.telegram.org/k/
 
@@ -111,13 +113,13 @@ bindsym $super+c mode "resize"
 
 
 # colour of border, background, text, indicator, and child_border
-client.focused             #fabd2f  #282828 #ebdbb2 #fabd2f  #fabd2f
-# client.focused             #fabd2f  #282828 #ebdbb2 #83a598 #83a598
-client.focused_inactive    #928374 #928374 #ebdbb2 #282828 #282828
+client.focused             #fabd2f  #928374 #ebdbb2 #fabd2f  #fabd2f
+# client.focused             #fabd2f  #928374 #ebdbb2 #83a598 #83a598
+client.focused_inactive    #928374 #928374 #ebdbb2 #928374 #928374
 client.unfocused           #7c6f64 #3c3836 #ebdbb2 #928374 #928374
-client.urgent              #fb4934 #282828 #ebdbb2 #d79921 #d79921
-client.placeholder         #928374 #3c3836 #ebdbb2 #282828 #282828
-client.background          #282828
+client.urgent              #fb4934 #928374 #ebdbb2 #d79921 #d79921
+client.placeholder         #928374 #3c3836 #ebdbb2 #928374 #928374
+client.background          #928374
 
 # window rules, you can find the window class using xprop
 # for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] floating enable
