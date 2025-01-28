@@ -31,6 +31,7 @@ thunar
 obsidian
 grim
 slurp
+macchina
 wl-clipboard 
 swaync
 cliphist
@@ -97,3 +98,15 @@ gsettings set org.gnome.desktop.interface icon-theme 'gruvbox-dark-icons-gtk'
 ##############################################
 
 git clone https://github.com/Jahamars/Dashboard.git
+
+
+#################for cli clock################
+git clone https://github.com/ckaznable/tenki
+cd tenki
+make build
+make install
+##############################################
+
+
+
+
