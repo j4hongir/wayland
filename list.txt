@@ -53,6 +53,7 @@ fzf
 obs-studio
 btop
 ranger
+calcurse 
 blueman
 gtk-engine-murrine
     gtk theme - https://www.gnome-look.org/p/1681313/

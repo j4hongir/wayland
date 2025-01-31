@@ -11,6 +11,7 @@ floating_modifier $super
 
 
 exec --no-startup-id swaync
+exec --no-startup-id hypridle
 
 # start a terminal
 bindsym $super+t exec kitty 
