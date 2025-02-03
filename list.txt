@@ -12,7 +12,7 @@ mesa-utils
 sddmn 
 swaybg
 hyprlock 
-swaylock 
+hypridle
 pipewire pipewire-pulse wireplumber pavucontrol
 hyprland  
 #sway swaymsg # for sway
