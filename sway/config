@@ -11,7 +11,7 @@ floating_modifier $super
 
 
 exec --no-startup-id swaync
-exec --no-startup-id hypridle
+exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 
 # start a terminal
 bindsym $super+t exec kitty 
