@@ -1,4 +1,4 @@
-output * bg /home/mars/wayland/walls/18.jpg fill
+output * bg /home/mars/wayland/walls/dragon.png fill
 # set modifier
 set $super Mod4
 set $alt Mod1
@@ -11,13 +11,14 @@ floating_modifier $super
 
 
 exec --no-startup-id swaync
+exec --no-startup-id nm-applet
 exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 
 # start a terminal
 bindsym $super+t exec kitty 
 bindsym $super+w exec ~/wayland/scripts/swaywall.sh 
 
-bindsym $super+p exec hyprlock
+bindsym $super+p exec swaylock -f  --show-keyboard-layout  -i ~/wayland/walls/gruvwall.png --inside-color 282828 --ring-color b8bb26 --text-color ebdbb2 --line-color 928374
 bindsym $super+b exec chromium
 
 bindsym $super+f exec thunar
@@ -99,14 +100,14 @@ bindsym $super+Shift+q exec ~/wayland/scripts/swaysys.sh
 # resize window (you can also use the mouse for that)
 mode "resize" {
 	bindsym Right resize grow width 5 px or 5 ppt
-	bindsym l resize grow width 5 px or 5 ppt
 	bindsym Up resize grow height 5 px or 5 ppt
-	bindsym i resize grow height 5 px or 5 ppt
 	bindsym Down resize shrink height 5 px or 5 ppt
-	bindsym k resize shrink height 5 px or 5 ppt
 	bindsym Left resize shrink width 5 px or 5 ppt
-	bindsym j resize shrink width 5 px or 5 ppt
 	bindsym Return mode "default"
+    bindsym h resize shrink width 80px
+    bindsym j resize grow height 80px
+    bindsym k resize shrink height 80px
+    bindsym l resize grow width 80px
 	}
 bindsym $super+c mode "resize"
 
@@ -137,7 +138,7 @@ bindsym $super+Shift+v exec  ~/wayland/scripts/./clip.sh
 
 bindsym $super+o exec wofi --show drun  --hide-scroll  
 
-bindsym $super+y exec python3 ~/Dashboard/my2.py 
+bindsym $super+y exec python3 ~/Dashboard/main.py 
 
 bindsym super+Shift+w exec ~/wayland/scripts/./screen.sh
 

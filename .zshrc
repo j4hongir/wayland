@@ -31,7 +31,13 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 
 
-plugins=(gh , git)
+plugins=(
+    gh
+    git
+    archlinux
+    zsh-syntax-highlighting
+    zsh-autosuggestions
+)
 
 
 
