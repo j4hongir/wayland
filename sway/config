@@ -9,6 +9,7 @@ font pango:MartianMono NFM Cond Med 10
 # use mouse+$super to drag floating windows to their wanted position
 floating_modifier $super
 
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 exec --no-startup-id swaync
 exec --no-startup-id nm-applet
