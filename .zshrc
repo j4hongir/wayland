@@ -1,10 +1,10 @@
-export ZSH="$HOME/.oh-my-zsh"
-source $ZSH/oh-my-zsh.sh
-
 eval "$(starship init zsh)"
 
 autoload -Uz compinit
 compinit
+
+source ~/.config/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -15,16 +15,6 @@ setopt HIST_FIND_NO_DUPS
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
-
-plugins=(
-    gh
-    git
-    archlinux
-    zsh-syntax-highlighting
-    zsh-autosuggestions
-)
-
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
@@ -51,7 +41,6 @@ alias ports='ss -tulpn'
 alias path='echo -e ${PATH//:/\\n}'
 alias note='micro ~/notes/today.md '
 
-
 ranger-cd() {
     local tempfile=$(mktemp)
     ranger --choosedir="$tempfile" "${@:-$(pwd)}" < $TTY
@@ -60,10 +49,7 @@ ranger-cd() {
 }
 zle -N ranger-cd
 bindkey '^o' ranger-cd
-##########################################
 
-
-##########################################
 compile_and_run_cpp() {
     local source_file="$1"
     local executable_file="${source_file%.cpp}"
@@ -78,10 +64,7 @@ mkcpp() {
         echo "Error: The file must have a .cpp extension"
     fi
 }
-############################################
 
-
-# Environment variables
 export EDITOR='nvim'
 export VISUAL='nvim'
 export LANG=en_US.UTF-8
@@ -114,17 +97,3 @@ setopt NUMERIC_GLOB_SORT
 setopt CORRECT
 setopt COMPLETE_IN_WORD
 
-###########################plvl10k###################################
-# # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# # Initialization code that may require console input (password prompts, [y/n]
-# # confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-# Source powerlevel10k
-# source ~/powerlevel10k/powerlevel10k.zsh-theme
-#///
-# # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-########################plvl10k######################################

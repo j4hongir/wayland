@@ -69,19 +69,18 @@ superfile
 
 
 ###################for zsh####################
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# zsh-custom-plugins 
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.config/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.config/zsh-syntax-highlighting
 
 # starship
 curl -sS https://starship.rs/install.sh | sh
 
-# # powerlevel10k
-# git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-#
-# p10k configure
-# ##############################################
+# ohmyzsh 
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+#############################################
+
 
 ###################vimplug####################
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
