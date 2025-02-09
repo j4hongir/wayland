@@ -6,6 +6,7 @@ xorg-server-xwayland
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
 #xdg-desktop-portal-wlr #for sway
+#sway swaymsg # for sway
 gnome-keyring
 mesa
 mesa-utils
@@ -15,7 +16,6 @@ hyprlock
 hypridle
 pipewire pipewire-pulse wireplumber pavucontrol
 hyprland  
-#sway swaymsg # for sway
 fonts: MartianMono NF ; MartianMono NFM Cond Med
 vimix-cursors
 kitty
@@ -73,6 +73,7 @@ superfile
 # zsh-custom-plugins 
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.config/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.config/zsh-syntax-highlighting
+git clone https://github.com/Aloxaf/fzf-tab ~/.config/fzf-tab
 
 # starship
 curl -sS https://starship.rs/install.sh | sh
