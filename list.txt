@@ -74,12 +74,14 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 # zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# powerlevel10k
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+# starship
+curl -sS https://starship.rs/install.sh | sh
 
-p10k configure
-##############################################
-
+# # powerlevel10k
+# git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+#
+# p10k configure
+# ##############################################
 
 ###################vimplug####################
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \

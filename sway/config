@@ -1,4 +1,4 @@
-output * bg /home/mars/wayland/walls/dragon.png fill
+output * bg /home/mars/wayland/walls/83a598.png fill
 # set modifier
 set $super Mod4
 set $alt Mod1
@@ -65,7 +65,7 @@ bindsym $super+h split h
 bindsym $super+v split v
 
 # change split direction for already opened windows
-bindsym $super+s layout toggle split
+bindsym $super+c layout toggle split
 
 # enter fullscreen mode for the focused container
 bindsym $super+Shift+f fullscreen toggle
@@ -110,7 +110,7 @@ mode "resize" {
     bindsym k resize shrink height 80px
     bindsym l resize grow width 80px
 	}
-bindsym $super+c mode "resize"
+bindsym $super+r mode "resize"
 
 
 # colour of border, background, text, indicator, and child_border
@@ -160,7 +160,12 @@ bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
-
-
+# set $opacity 0.9
+# for_window [class=".*"] opacity $opacity
+# for_window [app_id=".*"] opacity $opacity
 

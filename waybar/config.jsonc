@@ -33,9 +33,18 @@
     ],
 
     "sway/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
-        "tooltip": false
+        "format": "{icon}",
+        "tooltip": false,
+        "format-icons": {
+            "1": "󰲠",
+            "2": "󰲢",
+            "3": "󰲤",
+            "4": "󰲦",
+            "5": "󰲨",
+            "urgent": "",
+            "active": "",
+            "default": ""
+    }
     },
    
     

@@ -1,23 +1,11 @@
-# Enable Powerlevel10k instant prompt
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+export ZSH="$HOME/.oh-my-zsh"
+source $ZSH/oh-my-zsh.sh
 
-POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+eval "$(starship init zsh)"
 
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# Load and initialize the completion system
 autoload -Uz compinit
 compinit
 
-# Source powerlevel10k
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-
-# Source autosuggestions
-source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-# History settings
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -25,10 +13,8 @@ setopt SHARE_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 
-# Completion settings
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
 
 
 plugins=(
@@ -40,15 +26,11 @@ plugins=(
 )
 
 
-
-
-# Autosuggestions settings
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
-# Useful aliases
 alias ls='ls --color=auto'
 alias ll='ls -lah'
 alias grep='grep --color=auto'
@@ -99,8 +81,6 @@ mkcpp() {
 ############################################
 
 
-
-
 # Environment variables
 export EDITOR='nvim'
 export VISUAL='nvim'
@@ -114,7 +94,6 @@ setopt NO_BEEP
 
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# Key bindings
 bindkey '^[[A' up-line-or-search
 bindkey '^[[B' down-line-or-search
 bindkey '^[[H' beginning-of-line
@@ -128,8 +107,6 @@ setopt AUTO_PUSHD           # Автоматически добавлять ди
 setopt PUSHD_IGNORE_DUPS    # Не добавлять дубликаты
 setopt PUSHD_MINUS         # Поменять знак минус и плюс в pushd
 
-
-# Additional options
 setopt AUTO_CD
 setopt EXTENDED_GLOB
 setopt NO_CASE_GLOB
@@ -137,5 +114,17 @@ setopt NUMERIC_GLOB_SORT
 setopt CORRECT
 setopt COMPLETE_IN_WORD
 
-# Load powerlevel10k config
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+###########################plvl10k###################################
+# # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# # Initialization code that may require console input (password prompts, [y/n]
+# # confirmations, etc.) must go above this block; everything else may go below.
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
+# Source powerlevel10k
+# source ~/powerlevel10k/powerlevel10k.zsh-theme
+#///
+# # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+########################plvl10k######################################
