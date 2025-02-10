@@ -5,6 +5,7 @@ compinit
 
 source ~/.config/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.config/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.config/fzf-tab/fzf-tab.plugin.zsh 
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -41,6 +42,12 @@ alias ports='ss -tulpn'
 alias path='echo -e ${PATH//:/\\n}'
 alias note='micro ~/notes/today.md '
 
+
+
+########################ranger######################################
+autoload -Uz edit-command-line
+zle -N edit-command-line
+
 ranger-cd() {
     local tempfile=$(mktemp)
     ranger --choosedir="$tempfile" "${@:-$(pwd)}" < $TTY
@@ -49,7 +56,9 @@ ranger-cd() {
 }
 zle -N ranger-cd
 bindkey '^o' ranger-cd
+####################################################################
 
+########################cpp#########################################
 compile_and_run_cpp() {
     local source_file="$1"
     local executable_file="${source_file%.cpp}"
@@ -64,6 +73,7 @@ mkcpp() {
         echo "Error: The file must have a .cpp extension"
     fi
 }
+###################################################################
 
 export EDITOR='nvim'
 export VISUAL='nvim'
@@ -74,7 +84,6 @@ export TERM=xterm-256color
 export DISABLE_AUTO_UPDATE="true"
 export NO_BELL=true
 setopt NO_BEEP  
-
 export PATH="$HOME/.cargo/bin:$PATH"
 
 bindkey '^[[A' up-line-or-search
@@ -85,10 +94,10 @@ bindkey '^[[3~' delete-char
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
 
-DIRSTACKSIZE=20
-setopt AUTO_PUSHD           # Автоматически добавлять директории в стек
-setopt PUSHD_IGNORE_DUPS    # Не добавлять дубликаты
-setopt PUSHD_MINUS         # Поменять знак минус и плюс в pushd
+# DIRSTACKSIZE=20
+# setopt AUTO_PUSHD           # Автоматически добавлять директории в стек
+# setopt PUSHD_MINUS         # Поменять знак минус и плюс в pushd
+# setopt PUSHD_IGNORE_DUPS    # Не добавлять дубликаты
 
 setopt AUTO_CD
 setopt EXTENDED_GLOB
@@ -97,3 +106,59 @@ setopt NUMERIC_GLOB_SORT
 setopt CORRECT
 setopt COMPLETE_IN_WORD
 
+
+
+##########################testing#########################################
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --zsh)"
+
+# --- setup fzf theme using gruvbox colors ---
+fg="#ebdbb2"        # gruvbox light0
+bg="#282828"        # gruvbox dark0
+bg_highlight="#504945"  # gruvbox dark2
+yellow="#fabd2f"    # gruvbox bright_yellow
+orange="#fe8019"    # gruvbox bright_orange
+blue="#83a598"      # gruvbox bright_blue
+aqua="#8ec07c"      # gruvbox bright_aqua
+
+export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${yellow},fg+:${fg},bg+:${bg_highlight},hl+:${orange},info:${blue},prompt:${aqua},pointer:${aqua},marker:${aqua},spinner:${aqua},header:${aqua}"
+
+# -- Use fd instead of find --
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+# Use fd for listing path candidates
+_fzf_compgen_path() {
+    fd --hidden --exclude .git . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+    fd --type=d --hidden --exclude .git . "$1"
+}
+
+
+# Define preview commands with better quoting
+show_file_or_dir_preview='if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi'
+
+export FZF_CTRL_T_OPTS="--preview '${show_file_or_dir_preview}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+# Advanced customization of fzf options via _fzf_comprun function
+_fzf_comprun() {
+    local command=$1
+    shift
+    case "$command" in
+        cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+        export|unset) fzf --preview "eval 'echo \${}'" "$@" ;;
+        ssh)          fzf --preview 'dig {}' "$@" ;;
+        *)            fzf --preview "${show_file_or_dir_preview}" "$@" ;;
+    esac
+}
+
+# Set bat theme to gruvbox
+export BAT_THEME="gruvbox-dark"
+
+# Set eza alias with icons
+alias ls="eza --icons=always"
