@@ -120,5 +120,9 @@ git clone https://github.com/Jahamars/Dashboard.git
 ##############################################
 
 
+#################for power button#############
+sudo echo "HandlePowerKey=ignore" >> /etc/systemd/logind.conf
+#or if you have this line just change it 
+##############################################
 
 
