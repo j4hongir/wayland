@@ -2,6 +2,8 @@
 
 ![sway](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review.png)
 
+This repository contains advanced configuration files for Sway and Hyprland, if you prefer X then [click](https://github.com/Jahamars/i3).
+
 ---
 
 ⚠️ Warning!
@@ -232,7 +234,7 @@ I may miss or change something, but here are my main hotkeys
 | `r` | Reload Tmux config (`~/.tmux.conf`) and display a message |
 
 
-## Neovi
+## Neovim
 | **Shortcut**                     | **Description**                                                                 |
 |----------------------------------|---------------------------------------------------------------------------------|
 | `i + {`                          | Insert `{}` and place the cursor inside.                                        |
