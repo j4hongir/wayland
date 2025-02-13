@@ -1,6 +1,6 @@
 ## sway and hypr workstation for advanced users
 
-![sway](https://i.ibb.co/prxwwHP/image.png)
+![sway](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review.png)
 
 ---
 
@@ -12,6 +12,7 @@ Proceed at your own risk. 🚨
 ---
 
 ## tree 
+```bash
 
 wayland
 ├── config
@@ -103,6 +104,7 @@ wayland
     ├── kanagawa.png
     └── trees.jpg
 
+```
 ---
 
 sway and hyprland are configured almost the same way (and run the same scripts and programs) 
