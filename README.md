@@ -4,10 +4,11 @@
 
 ---
 
-⚠️ **Heads up!**  
-I provide a script for automatic setup, but **I don’t recommend using it**. Manual configuration is safer and helps you understand the system better. If you still use the script, **do so carefully** and back up your data first.
+⚠️ Warning!
+I have a script for automatic installation and configuration of everything you need. However, I do not recommend using it unless you are absolutely sure what it does. Automated setup can lead to unexpected results, especially if you already have a customized system or are using non-standard configurations.
 
-Proceed at your own risk. 🚨
+Advice:
+I strongly recommend setting everything up manually, step by step. This is not only safer but will also help you better understand how the system works and what changes are being made. If you still decide to use the script, do so at your own risk and make sure to back up your important data before running it.
 
 ---
 
