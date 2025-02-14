@@ -1,5 +1,9 @@
 eval "$(starship init zsh)"
 
+echo""
+~/tbt/./tbt.sh -d
+~/tbt/./tbt.sh -w
+
 autoload -Uz compinit
 compinit
 
@@ -22,8 +26,7 @@ ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
-alias ls='ls --color=auto'
-alias ll='ls -lah'
+alias ls="eza --icons=always"
 alias grep='grep --color=auto'
 alias ip='ip -color=auto'
 alias ..='cd ..'
@@ -40,8 +43,6 @@ alias trash='mv --force -t ~/.local/share/Trash '
 alias hg='history|grep'
 alias ports='ss -tulpn'
 alias path='echo -e ${PATH//:/\\n}'
-alias note='micro ~/notes/today.md '
-
 
 
 ########################ranger######################################
@@ -105,7 +106,6 @@ setopt NO_CASE_GLOB
 setopt NUMERIC_GLOB_SORT
 setopt CORRECT
 setopt COMPLETE_IN_WORD
-
 
 
 ##########################testing#########################################

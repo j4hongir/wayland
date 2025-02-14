@@ -126,3 +126,11 @@ sudo echo "HandlePowerKey=ignore" >> /etc/systemd/logind.conf
 ##############################################
 
 
+#################for time progress######################
+git clone https://github.com/jahamars/tbt ~/tbt
+########################################################
+
+
+#################for obs scripts ######################
+git clone https://github.com/jahamars/obs-scripts ~/obs-scripts
+########################################################
