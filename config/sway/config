@@ -19,7 +19,6 @@ exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 bindsym $super+t exec kitty 
 bindsym $super+w exec ~/wayland/scripts/swaywall.sh 
 
-bindsym $super+p exec swaylock -f  --show-keyboard-layout  -i ~/wayland/walls/gruvwall.png --inside-color 282828 --ring-color b8bb26 --text-color ebdbb2 --line-color 928374
 bindsym $super+b exec chromium
 
 bindsym $super+f exec thunar

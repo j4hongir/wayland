@@ -1,6 +1,6 @@
 * {
     border: none;
-    border-radius: 6px;
+    border-radius: 0px;
     min-height: 0;
     font-family: "MartianMono NFP Cond";
     font-weight: 700;
@@ -113,6 +113,13 @@ tooltip {
 }
 
 #battery {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    margin: 6px 6px 6px 0px;
+    color: #d4be98;
+}
+
+#custom-mode {
     background-color: #303536;
     border: 2px solid #434a4c;
     margin: 6px 6px 6px 0px;

@@ -16,6 +16,7 @@
     ],
 
     "modules-center": [
+        "custom/mode",
         "clock",
         "custom/notification"
     ],
@@ -32,6 +33,7 @@
         "pulseaudio"
     ],
 
+    
     "sway/workspaces": {
         "format": "{icon}",
         "tooltip": false,
@@ -46,6 +48,7 @@
             "default": ""
     }
     },
+
    
     
     "hyprland/workspaces": {
@@ -194,6 +197,13 @@
         "on-click-right": "playerctl next",
         "on-click-middle": "playerctl play-pause",
       "tooltip": false
+    },
+
+    "custom/mode": {
+            "exec": "~/.config/waybar/scripts/sway-mode.sh",
+            "return-type": "json",
+            "format": "{}",
+            "restart-interval": 0
     },
 
     "pulseaudio": {

@@ -1,0 +1,40 @@
+# Цвета Gruvbox
+font=MartianMono NFM Cond Med
+
+# Фон и цвета колец
+inside-color=#282828
+inside-clear-color=#282828
+inside-caps-lock-color=#282828
+inside-ver-color=#282828
+inside-wrong-color=#282828
+
+# Кольцо по умолчанию
+ring-color=#458588
+ring-clear-color=#98971a
+ring-caps-lock-color=#d79921
+ring-ver-color=#689d6a
+ring-wrong-color=#cc241d
+
+# Цвета текста
+text-color=#ebdbb2
+text-clear-color=#98971a
+text-caps-lock-color=#d79921
+text-ver-color=#689d6a
+text-wrong-color=#cc241d
+
+# Цвета разделителя
+separator-color=#504945
+
+# Цвета при вводе
+key-hl-color=#98971a
+bs-hl-color=#cc241d
+caps-lock-key-hl-color=#d79921
+caps-lock-bs-hl-color=#cc241d
+
+# Модификаторы
+line-color=#504945
+line-clear-color=#98971a
+line-caps-lock-color=#d79921
+line-ver-color=#689d6a
+line-wrong-color=#cc241d
+
