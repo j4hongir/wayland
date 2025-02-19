@@ -21,7 +21,7 @@ vimix-cursors
 ttf-martian-mono-nerd
 tela-circle-icon-theme-brown
 kitty
-ranger
+yazi
 zsh
 waybar
 git
@@ -53,11 +53,11 @@ eza
 bat 
 obs-studio
 btop
-ranger
 calcurse 
 blueman
 gedit
 gtk-engine-murrine
+git-delta # and comand ``git config --global core.pager "delta"`` you can run git diff and see delta 
 
 #xdg-desktop-portal-wlr #for sway
 #sway swaymsg # for sway

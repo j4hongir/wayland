@@ -45,18 +45,20 @@ alias ports='ss -tulpn'
 alias path='echo -e ${PATH//:/\\n}'
 
 
-########################ranger######################################
+########################navigate######################################
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
-ranger-cd() {
+yazi-cd() {
     local tempfile=$(mktemp)
-    ranger --choosedir="$tempfile" "${@:-$(pwd)}" < $TTY
+    # Запускаем yazi и передаем выбранный путь в tempfile
+    yazi --cwd-file="$tempfile" "${@:-$(pwd)}" < $TTY
+    # Если tempfile существует, переходим в выбранную директорию
     [ -f "$tempfile" ] && cd -- "$(cat "$tempfile")" && rm -f "$tempfile"
     VISUAL=true zle edit-command-line
 }
-zle -N ranger-cd
-bindkey '^o' ranger-cd
+zle -N yazi-cd
+bindkey '^o' yazi-cd
 ####################################################################
 
 ########################cpp#########################################
@@ -75,6 +77,13 @@ mkcpp() {
     fi
 }
 ###################################################################
+
+function gits() {
+    echo "\nEdited: "
+    git diff --name-only
+    echo "\nNew: "
+    git ls-files --others --exclude-standard
+}
 
 export EDITOR='nvim'
 export VISUAL='nvim'
