@@ -1,10 +1,9 @@
 #!/bin/bash
 # Save as ~/.config/waybar/scripts/brightness.sh
 
-# Get current brightness and max brightness in one call
-brightness_info=$(brightnessctl info)
-current=$(echo "$brightness_info" | grep -oP "Current brightness: \K[0-9]+")
-max=$(echo "$brightness_info" | grep -oP "Max brightness: \K[0-9]+")
+# Get current brightness and max brightness
+current=$(brightnessctl get)
+max=$(brightnessctl max)
 
 # Calculate percentage
 percentage=$(( (current * 100) / max ))

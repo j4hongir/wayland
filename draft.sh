@@ -53,7 +53,6 @@ bat
 obs-studio
 btop
 calcurse 
-blueman
 gedit
 gtk-engine-murrine
 git-delta # and comand ``git config --global core.pager "delta"`` you can run git diff and see delta 

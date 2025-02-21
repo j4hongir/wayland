@@ -21,12 +21,33 @@
 
     "modules-right": [
         "tray",
+        "network",
         "hyprland/language",
         "sway/language",
+        "cpu",
+        "memory",
+        "battery",
         "custom/brightness",
         "pulseaudio"
     ],
 
+    
+    "sway/workspaces": {
+        "format": "{icon}",
+        "tooltip": false,
+        "format-icons": {
+            "1": "󰲠",
+            "2": "󰲢",
+            "3": "󰲤",
+            "4": "󰲦",
+            "5": "󰲨",
+            "urgent": "",
+            "active": "",
+            "default": ""
+    }
+    },
+
+   
     
     "hyprland/workspaces": {
         "format": "{icon}",
@@ -112,6 +133,47 @@
         },
         "interval": 1
     },
+
+    "cpu": {
+        "format": " {usage}%",
+        "interval": 2,
+        "on-click": "kitty --title btop btop",
+        "states": {
+            "critical": 90
+        }
+    },
+
+    "memory": {
+        "format": " {percentage}%",
+        "interval": 2,
+        "states": {
+            "critical": 80
+        }
+    },
+
+    
+    "battery": {
+        "bat": "BAT0",
+        "adapter": "AC",
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰂄 {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "interval": 30
+    },
+
+    "network": {
+        "format-wifi" : "{bandwidthDownBits}",
+        "format-ethernet": "enth {bandwidthDownBits}",
+        "format-disconnected" : "󰤭",
+        "interval": 5,
+        "tooltip": false
+    },
+    
     
     "custom/brightness": {
         "exec": "~/.config/waybar/scripts/brightness.sh",
@@ -122,17 +184,33 @@
         "on-scroll-down": "brightnessctl set 5%-",
         "tooltip": false
     },
+
     
-    "pulseaudio": {
-    "format": "{icon}{volume}%",
-    "format-muted": " Muted",
-    "format-icons": {
-        "default": [" ", " ", " "]
+    "custom/music": {
+        "format": "{}",
+        "max-length": 40,
+        "interval": 1,
+        "exec": "~/.config/waybar/scripts/music.sh",
+        "on-click": "playerctl previous",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl play-pause",
+      "tooltip": false
     },
-    "scroll-step": 5,
-    "max-volume": 100,
-    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-    "on-click-right": "pavucontrol",
-    "tooltip": false
+
+    "custom/mode": {
+            "exec": "~/.config/waybar/scripts/sway-mode.sh",
+            "return-type": "json",
+            "format": "{}",
+            "restart-interval": 0
+    },
+
+    "pulseaudio": {
+        "scroll-step": 5,
+        "max-volume": 150,
+        "format": " {volume}%",
+        "format-bluetooth": "󰗾 {volume}%",
+        "nospacing": 1,
+        "on-click": "pavucontrol",
+        "tooltip": false
     }
 }

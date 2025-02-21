@@ -1,0 +1,34 @@
+{
+  "position": "bottom",
+  "layer": "bottom",
+  "margin": "2 6 8 6",
+  "modules-left": [ "custom/start", "custom/sep", "hyprland/workspaces"],
+  "modules-right": [ "pulseaudio", "clock", "custom/sep", "custom/power" ],
+  "custom/start": {
+    "on-click": "~/.config/rofi/launcher/launch.sh",
+    "format": "󰣇 "
+  },
+  "custom/sep": {
+    "format": "|",
+    "interval": "once",
+    "tooltip": false
+  },
+  "clock": {
+    "interval": 60,
+    "format": "{:%I:%M %p | %b, %d/%m/%Y}",
+    "on-click": "gnome-calendar"
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "  Muted",
+    "format-icons": {
+      "default": ["", "", ""] 
+    },
+    "scroll-step": 5,
+    "on-click": "wpctl set-mute @DEFAULT_SINK@ toggle"
+  },
+  "custom/power": {  
+    "on-click": "~/.config/rofi/powermenu/launch.sh",
+    "format": " "
+  }
+}

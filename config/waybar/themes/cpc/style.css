@@ -1,0 +1,128 @@
+/* Waybar Styling */
+
+@import "mocha.css";
+
+* {
+  font-family: "GeistMono Nerd Font";
+  font-size: 16px;
+  font-weight: bold;
+}
+
+window#waybar {
+  background-color: @base;
+  border: 1.5px solid;
+  border-color: @surface0;
+  border-radius: 12px;
+}
+
+#custom-start {
+  margin: 6px 2px 6px 6px;
+  padding: 2px 2px 2px 8px;
+  border-radius: 8px;
+  font-size: 20px;
+  border: 1.5px solid;
+  border-color: @surface0;
+  background-color: @base;
+  color: @mauve;
+  transition: 0.2s all;
+}
+
+#custom-start:hover {
+  border: 1.5px solid;
+  border-color: @surface1;
+  background-color: @surface0;
+  color: @mauve;
+}
+
+#workspaces button {
+  margin: 6px 3px;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  border-color: @surface0;
+  background-color: @surface0;
+  color: @text;
+  transition: 0.2s all;
+}
+
+#workspaces button:hover {
+  border: 1.5px solid;
+  border-color: @surface1;
+  background-color: @surface0;
+  color: @mauve;
+}
+
+#workspaces button.active {
+  border-color: @mauve;
+  background-color: @mauve;
+  color: @base;
+  padding: 4px 10px;
+}
+
+#workspaces button.active:hover {
+  border-color: @mauve;
+}
+
+#clock {
+  margin: 6px 2px 6px 2px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  border-color: @surface0;
+  background-color: @surface0;
+  color: @text;
+  transition: 0.2s all;
+}
+
+#clock:hover {
+  border: 1.5px solid;
+  border-color: @surface1;
+  background-color: @surface0;
+  color: @mauve;
+}
+
+#custom-sep {
+  color: @surface1;
+  margin: 0 5px;
+}
+
+#pulseaudio {
+  margin: 6px 3px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  border-color: @surface0;
+  background-color: @surface0;
+  color: @text;
+  transition: 0.2s all;
+}
+
+#pulseaudio:hover {
+  border: 1.5px solid;
+  border-color: @surface1;
+  background-color: @surface0;
+  color: @mauve;
+}
+
+#pulseaudio.muted {
+  color: @red;
+}
+
+#custom-power {
+  margin: 6px 6px 6px 2px;
+  padding: 2px 2px 2px 8px;
+  border-radius: 8px;
+  font-size: 20px;
+  border: 1.5px solid;
+  border-color: @surface0;
+  background-color: @base;
+  color: @mauve;
+  transition: 0.2s all;
+}
+
+#custom-power:hover {
+  border: 1.5px solid;
+  border-color: @surface1;
+  background-color: @surface0;
+  color: @mauve;
+}
