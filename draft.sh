@@ -8,7 +8,7 @@ xdg-desktop-portal-hyprland
 gnome-keyring
 mesa
 mesa-utils
-sddmn 
+sddm 
 swaybg
 hyprlock 
 hypridle
@@ -17,7 +17,6 @@ pipewire-pulse
 wireplumber 
 pavucontrol
 hyprland  
-vimix-cursors
 ttf-martian-mono-nerd
 tela-circle-icon-theme-brown
 kitty
@@ -82,6 +81,19 @@ gruvbox-plus-icon-theme-git
 # superfile 
 
 
+###################sddm theme#################
+git clone https://github.com/loadfred/tidy-sddm.git
+sudo mv ./tidy-sddm /usr/share/sddm/themes/
+
+/etc/sddm.conf
+
+```
+[Theme]
+Current=tidy-sddm
+```
+##############################################
+
+
 ###################for zsh####################
 # zsh-custom-plugins 
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.config/zsh-autosuggestions
@@ -99,6 +111,10 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 ##############################################
 
+
+################cursor-theme##################
+git clone https://github.com/Jahamars/gruvbox-cursor.git ~/.icons/gruvbox
+##############################################
 
 ##################for gtk4####################
 gsettings set org.gnome.desktop.interface cursor-theme 'Vimix-cursors'

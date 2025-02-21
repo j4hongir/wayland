@@ -5,9 +5,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.clipboard:append("unnamedplus")
 
-
-
-vim.opt.numberwidth = 4         -- Устанавливаем корректное значение ширины
+vim.opt.numberwidth = 4        
 
 -- Синтаксис и скроллинг
 vim.cmd("syntax on")
@@ -57,13 +55,14 @@ call plug#begin('~/.vim/plugged')
 Plug 'morhetz/gruvbox'                    " тема 
 Plug 'hrsh7th/nvim-cmp'                   " для автодоп 
 Plug 'hrsh7th/cmp-buffer'                 " для автодоп 
+Plug 'hrsh7th/cmp-path'                   " Источник для путей
+
 Plug 'numToStr/Comment.nvim'              " для коментариев 
 Plug 'nvim-telescope/telescope.nvim'      " telescope
 Plug 'nvim-lua/plenary.nvim'              " зависисмость для telescope 
 Plug 'mg979/vim-visual-multi'             " мултикурсор 
 Plug 'neovim/nvim-lspconfig'              " LSP для настройки clangd
 Plug 'hrsh7th/cmp-nvim-lsp'               " Источник для LSP
-Plug 'hrsh7th/cmp-path'                   " Источник для путей
 Plug 'nvim-lualine/lualine.nvim'          " строка состояние 
 Plug 'norcalli/nvim-colorizer.lua'        " цвета 
 Plug 'folke/noice.nvim'                   " сообшение подсказки для командной строки 
@@ -86,8 +85,6 @@ Plug 'folke/zen-mode.nvim'                " minimal zen mode
 "Plug 'L3MON4D3/LuaSnip'                  " сниппеты 
 call plug#end()
 ]])
-
-
 
 require("zen-mode").setup {
   window = {
@@ -116,10 +113,6 @@ vim.api.nvim_set_keymap("n", "<M-z>", ":ZenMode<CR>", { noremap = true, silent =
 
 
 
-
-
-
-
 -- notify
 require('notify').setup({
     stages = "slide", 
@@ -129,69 +122,6 @@ require('notify').setup({
     mah_height = 10,
 })
 vim.notify = require('notify')
-
-
--- -- treesitter 
--- require'nvim-treesitter.configs'.setup {
---   ensure_installed = { "c", "cpp", "python", "lua", "rust", "bash", "javascript" }, -- Укажите ваши языки
---   sync_install = false, -- Установка синхронно (true для медленных систем)
---   auto_install = true,  -- Автоматическая установка языков при открытии файла
---   highlight = {
---     enable = true,              -- Включить подсветку
---     additional_vim_regex_highlighting = false, -- Отключить стандартную подсветку
---   },
---   indent = {
---     enable = true,              -- Включить авто-отступы
---   },
---   textobjects = {                -- Настройка текстовых объектов
---     select = {
---       enable = true,
---       lookahead = true,          -- Подсказка ближайшего объекта
---       keymaps = {
---         ["af"] = "@function.outer", -- Выбрать всю функцию
---         ["if"] = "@function.inner", -- Внутри функции
---         ["ac"] = "@class.outer",    -- Весь класс
---         ["ic"] = "@class.inner",    -- Внутри класса
---       },
---     },
---     move = {
---       enable = true,
---       set_jumps = true, -- Добавить перемещения в историю `jump`
---       goto_next_start = {
---         ["]f"] = "@function.outer",
---         ["]c"] = "@class.outer",
---       },
---       goto_previous_start = {
---         ["[f"] = "@function.outer",
---         ["[c"] = "@class.outer",
---       },
---     },
---   },
---   playground = {
---     enable = true,
---     updatetime = 25,            -- Время обновления в миллисекундах
---     persist_queries = false,    -- Не сохранять запросы между сессиями
---   },
--- }
---
---
--- -- Настройка индикации текущего контекста
--- require'treesitter-context'.setup{
---   enable = true,                -- Включить
---   throttle = true,              -- Обновлять при прокрутке
---   max_lines = 0,                -- Показать весь контекст (0 - без ограничений)
--- }
---
---
--- -- Ключи для Playground
--- vim.api.nvim_set_keymap('n', '<leader>tp', ':TSPlaygroundToggle<CR>', { noremap = true, silent = true })
---
--- -- Ключи для навигации по текстовым объектам
--- vim.api.nvim_set_keymap('n', '[f', '<cmd>lua vim.treesitter.goto_prev_start("@function.outer")<CR>', { silent = true })
--- vim.api.nvim_set_keymap('n', ']f', '<cmd>lua vim.treesitter.goto_next_start("@function.outer")<CR>', { silent = true })
--- vim.api.nvim_set_keymap('n', '[c', '<cmd>lua vim.treesitter.goto_prev_start("@class.outer")<CR>', { silent = true })
--- vim.api.nvim_set_keymap('n', ']c', '<cmd>lua vim.treesitter.goto_next_start("@class.outer")<CR>', { silent = true })
-
 
 
 --cursor efect
@@ -285,30 +215,21 @@ vim.api.nvim_create_autocmd("VimEnter", {
 --  lsp config
 local cmp = require'cmp'
 
+
 cmp.setup({
-  sources = {
-    { name = 'buffer' }, -- Предлагает завершение из текущего буфера
-  },
   mapping = {
     ['<C-n>'] = cmp.mapping.select_next_item(), -- Перебор вниз
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- Перебор вверх
     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Выбор завершения
-  },
-})
-
-local cmp = require'cmp'
-cmp.setup({
-  mapping = {
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4), -- Скролл вверх
+    ['<C-f>'] = cmp.mapping.scroll_docs(4), -- Скролл вниз
+    ['<C-Space>'] = cmp.mapping.complete(), -- Вызов меню автодополнения
+    ['<C-e>'] = cmp.mapping.abort(), -- Закрытие меню
   },
   sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-  }, {
-    { name = 'buffer' },
+    { name = 'nvim_lsp' }, -- Источник LSP
+    { name = 'path' },     -- Поддрежка путей
+    { name = 'buffer' },   -- Источник буфера
   })
 })
 
@@ -328,7 +249,7 @@ nvim_lsp.pylsp.setup({
   settings = {
     pylsp = {
       plugins = {
-        pycodestyle = { enabled = true, ignore = {'W391'}, maxLineLength = 88 },
+        pycodestyle = { enabled = true, ignore = {'W391'}, maxLineLength = 100 },
         pyflakes = { enabled = true },
         pylint = { enabled = false },
         yapf = { enabled = false },
@@ -338,19 +259,18 @@ nvim_lsp.pylsp.setup({
 })
 
 
--- Настройка rust-analyzer
-require('lspconfig').rust_analyzer.setup({
-    capabilities = require('cmp_nvim_lsp').default_capabilities(),
-    on_attach = function(client, bufnr)
-        local buf_map = vim.api.nvim_buf_set_keymap
-        local opts = { noremap = true, silent = true }
-        buf_map(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-        buf_map(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        buf_map(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-        buf_map(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    end,
-})
-
+-- -- Настройка rust-analyzer
+-- require('lspconfig').rust_analyzer.setup({
+--     capabilities = require('cmp_nvim_lsp').default_capabilities(),
+--     on_attach = function(client, bufnr)
+--         local buf_map = vim.api.nvim_buf_set_keymap
+--         local opts = { noremap = true, silent = true }
+--         buf_map(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+--         buf_map(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+--         buf_map(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+--         buf_map(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+--     end,
+-- })
 
 
 -- -- go to last change line at the start 
@@ -362,7 +282,6 @@ require('lspconfig').rust_analyzer.setup({
 --     end
 --   end,
 -- })
-
 
 
 -- manping to with mowing
@@ -458,11 +377,8 @@ require("noice").setup({
 })
 
 
-
-
 -- hiding comandline
 vim.opt.cmdheight = 0
-
 
 
 -- create the highlight groups in the highlight setup hook, so they are reset
@@ -506,50 +422,6 @@ require("ibl").setup { indent = { highlight = highlight } }
 --     },
 --   },
 -- }
---
-
-
-
-
--- -- Подключаем LSP
--- local lspconfig = require('lspconfig')
---
--- -- Настройка Bash LSP
--- lspconfig.bashls.setup{}
---
--- -- Подключаем nvim-cmp
--- local cmp = require('cmp')
---
--- cmp.setup({
---   snippet = {
---     expand = function(args)
---       vim.fn["vsnip#anonymous"](args.body) -- Можно заменить на другой сникет-движок
---     end,
---   },
---   mapping = {
---     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
---     ['<C-f>'] = cmp.mapping.scroll_docs(4),
---     ['<C-Space>'] = cmp.mapping.complete(),
---     ['<C-e>'] = cmp.mapping.abort(),
---     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Подтвердить выбор
---   },
---   sources = cmp.config.sources({
---     { name = 'nvim_lsp' },
---     { name = 'buffer' },
---     { name = 'path' },
---   })
--- })
---
--- -- Подключаем LSP к nvim-cmp
--- local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- lspconfig.bashls.setup{
---   capabilities = capabilities,
--- }
---
-
-
-
-
 
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
@@ -579,8 +451,6 @@ map('n', '<A-w>_', '<C-w>_', opts)
 map('n', '<A-w>o', '<C-w>o', opts)
 
 
-
-
 local telescope = require('telescope.builtin')
 
 -- Создаём пользовательскую команду Tabbi
@@ -601,7 +471,4 @@ vim.api.nvim_create_user_command('Tabbi', function()
     end,
   })
 end, { desc = "Open recent files in horizontal split" })
-
-
-
 
