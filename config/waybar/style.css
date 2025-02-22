@@ -21,13 +21,9 @@ tooltip {
 
 #clock,
 #tray,
-#cpu,
-#memory,
-#battery,
 #language,
-#network,
 #custom-notification,
-#custom-music,
+#backlight,
 #pulseaudio {
     margin: 6px 6px 6px 0px;
     padding: 2px 8px;
@@ -80,13 +76,6 @@ tooltip {
 }
 
 
-#cpu.critical,
-#memory.critical {
-    background-color: #ddc7a1;
-    border: 2px solid #c7ab7a;
-    color: #c14a4a;
-}
-
 #battery.warning,
 #battery.critical,
 #battery.urgent {
@@ -102,7 +91,7 @@ tooltip {
 }
 
 
-#custom-brightness{
+#backlight{
     background-color: #303536;
     border: 2px solid #434a4c;
     margin: 6px 6px 6px 0px;

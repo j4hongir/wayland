@@ -23,7 +23,7 @@
         "tray",
         "hyprland/language",
         "sway/language",
-        "custom/brightness",
+        "backlight",
         "pulseaudio"
     ],
 
@@ -71,8 +71,8 @@
     "return-type": "json",
     "exec-if": "which swaync-client",
     "exec": "swaync-client -swb",
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw",
+    "on-click-right": "swaync-client -t -sw",
+    "on-click": "swaync-client -d -sw",
     "escape": true
   },
 
@@ -104,25 +104,34 @@
         }
 
         },
+        "on-click-right": "solanum",
         "actions": {
             "on-click-middle": "mode",
-            "on-click-right": "mode",
             "on-scroll-up": "shift_up",
             "on-scroll-down": "shift_down"
         },
         "interval": 1
     },
-    
-    "custom/brightness": {
-        "exec": "~/.config/waybar/scripts/brightness.sh",
-        "interval": 1,
-        "format": "{} ",
-        "scroll-step": 5,
+
+
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃝", "󰃠"],
+        "interval": 60,
         "on-scroll-up": "brightnessctl set +5%",
         "on-scroll-down": "brightnessctl set 5%-",
-        "tooltip": false
+        "smooth-scrolling-threshold": 1,
+        "tooltip": false,
+        
+        "states": {
+            "low": 0,
+            "medium": 50,
+            "high": 75
+        }
     },
-    
+
+
     "pulseaudio": {
     "format": "{icon}{volume}%",
     "format-muted": " Muted",
