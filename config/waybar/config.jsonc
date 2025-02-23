@@ -27,6 +27,21 @@
         "pulseaudio"
     ],
 
+
+    "sway/workspaces": {
+        "format": "{icon}",
+        "tooltip": false,
+        "format-icons": {
+            "1": "󰲠",
+            "2": "󰲢",
+            "3": "󰲤",
+            "4": "󰲦",
+            "5": "󰲨",
+            "urgent": "",
+            "active": "",
+            "default": ""
+    }
+    },
     
     "hyprland/workspaces": {
         "format": "{icon}",

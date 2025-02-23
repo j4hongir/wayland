@@ -15,7 +15,7 @@ else
         
         Quit*) swaymsg exit ;;
         
-        Lock*) swaylock -i ~/wayland/walls/gruvwall.png ;;
+        Lock*) swaylock -i ~/wayland/walls/trees.png ;;
         
         Suspend) systemctl suspend ;;
         

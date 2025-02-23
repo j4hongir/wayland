@@ -1,4 +1,4 @@
-output * bg /home/mars/wayland/walls/83a598.png fill
+output * bg ~/wayland/walls/trees.jpg fill
 # set modifier
 set $super Mod4
 set $alt Mod1
@@ -9,118 +9,144 @@ font pango:MartianMono NFM Cond Med 10
 # use mouse+$super to drag floating windows to their wanted position
 floating_modifier $super
 
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+# exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+exec export XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
 
 exec --no-startup-id swaync
 exec --no-startup-id nm-applet
 exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 
 # start a terminal
-bindsym --to-code $super+t exec kitty 
-bindsym --to-code $super+w exec ~/wayland/scripts/swaywall.sh 
+bindsym $super+t exec kitty 
+bindsym $super+w exec ~/wayland/scripts/swaywall.sh 
 
-bindsym --to-code $super+p exec swaylock -f  --show-keyboard-layout  -i ~/wayland/walls/gruvwall.png --inside-color 282828 --ring-color b8bb26 --text-color ebdbb2 --line-color 928374
-bindsym --to-code $super+b exec chromium
+bindsym $super+b exec chromium
 
-bindsym --to-code $super+f exec thunar
-bindsym --to-code $super+Shift+h exec obsidian
+bindsym $super+f exec thunar
+bindsym $super+Shift+h exec obsidian
 
-bindsym --to-code $super+Shift+p exec hyprpicker -a
+bindsym $super+Shift+p exec hyprpicker -a
 
-bindsym --to-code $super+m exec chromium --app=https://music.youtube.com
-bindsym --to-code $super+Shift+t exec chromium --app=https://web.telegram.org/k/
+bindsym $super+m exec chromium --app=https://music.youtube.com
+bindsym $super+Shift+t exec chromium --app=https://web.telegram.org/k/
 
 
-bindsym --to-code XF86MonBrightnessUp exec brightnessctl set 5%+
-bindsym --to-code XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
 # kill focused window
-bindsym --to-code $super+x kill
+bindsym $super+x kill
 
-bindsym --to-code $super+z [con_mark=_prev] focus
+bindsym $super+z [con_mark=_prev] focus
 exec ~/wayland/scripts/swaygg.sh
 
 # change focus
-bindsym --to-code $super+Left focus left
-bindsym --to-code $super+j focus left
-bindsym --to-code $super+Down focus down
-bindsym --to-code $super+k focus down
-bindsym --to-code $super+Up focus up
-bindsym --to-code $super+i focus up
-bindsym --to-code $super+Right focus right
-bindsym --to-code $super+l focus right
+bindsym $super+Left focus left
+bindsym $super+j focus left
+bindsym $super+Down focus down
+bindsym $super+k focus down
+bindsym $super+Up focus up
+bindsym $super+i focus up
+bindsym $super+Right focus right
+bindsym $super+l focus right
 
 # move focused window
-bindsym --to-code $super+Shift+Left move left
-bindsym --to-code $super+Shift+j move left
-bindsym --to-code $super+Shift+Down move down
-bindsym --to-code $super+Shift+k move down
-bindsym --to-code $super+Shift+Up move up
-bindsym --to-code $super+Shift+i move up
-bindsym --to-code $super+Shift+Right move right
-bindsym --to-code $super+Shift+l move right
+bindsym $super+Shift+Left move left
+bindsym $super+Shift+j move left
+bindsym $super+Shift+Down move down
+bindsym $super+Shift+k move down
+bindsym $super+Shift+Up move up
+bindsym $super+Shift+i move up
+bindsym $super+Shift+Right move right
+bindsym $super+Shift+l move right
 
 # split in horizontal or vertical orientation
-bindsym --to-code $super+h split h
-bindsym --to-code $super+v split v
+bindsym $super+h split h
+bindsym $super+v split v
 
 # change split direction for already opened windows
-bindsym --to-code $super+c layout toggle split
+bindsym $super+c layout toggle split
 
 # enter fullscreen mode for the focused container
-bindsym --to-code $super+Shift+f fullscreen toggle
+bindsym $super+Shift+f fullscreen toggle
 
 # toggle tiling / floating
-bindsym --to-code $super+e floating toggle
+bindsym $super+e floating toggle
 
 # change focus between tiling / floating windows
-#bindsym --to-code $super+z focus mode_toggle
+#bindsym $super+z focus mode_toggle
 
 # switch to workspace
-bindsym --to-code $super+Control+Right workspace next
-bindsym --to-code $super+Control+Left workspace prev
-bindsym --to-code $alt+1 workspace 1
-bindsym --to-code $alt+2 workspace 2
-bindsym --to-code $alt+3 workspace 3
-bindsym --to-code $alt+4 workspace 4
-bindsym --to-code $alt+5 workspace 5
-bindsym --to-code $alt+6 workspace 6
+bindsym $super+Control+Right workspace next
+bindsym $super+Control+Left workspace prev
+bindsym $alt+1 workspace 1
+bindsym $alt+2 workspace 2
+bindsym $alt+3 workspace 3
+bindsym $alt+4 workspace 4
+bindsym $alt+5 workspace 5
+bindsym $alt+6 workspace 6
 
 # move focused container to workspace
-bindsym --to-code $super+Shift+1 move container to workspace 1
-bindsym --to-code $super+Shift+2 move container to workspace 2
-bindsym --to-code $super+Shift+3 move container to workspace 3
-bindsym --to-code $super+Shift+4 move container to workspace 4
-bindsym --to-code $super+Shift+5 move container to workspace 5
-bindsym --to-code $super+Shift+6 move container to workspace 6
+bindsym $super+Shift+1 move container to workspace 1
+bindsym $super+Shift+2 move container to workspace 2
+bindsym $super+Shift+3 move container to workspace 3
+bindsym $super+Shift+4 move container to workspace 4
+bindsym $super+Shift+5 move container to workspace 5
+bindsym $super+Shift+6 move container to workspace 6
 
-bindsym --to-code $super+BackSpace exec "swaymsg reload"
+bindsym $super+BackSpace exec "swaymsg reload"
 
-bindsym --to-code $super+Shift+q exec ~/wayland/scripts/swaysys.sh
+bindsym $super+Shift+q exec ~/wayland/scripts/swaysys.sh
 
-# resize window (you can also use the mouse for that)
+
+set $focused #fabd2f
+set $focused_inactive #928374
+set $unfocused #7c6f64
+set $urgent #fb4934
+set $placeholder #928374
+set $resize_border #ff0000
+
+client.focused             $focused     #928374 #ebdbb2 $focused     $focused
+client.focused_inactive    $focused_inactive $focused_inactive #ebdbb2 $focused_inactive $focused_inactive
+client.unfocused          $unfocused   #3c3836 #ebdbb2 #928374   #928374
+client.urgent             $urgent      #928374 #ebdbb2 #d79921   #d79921
+client.placeholder        $placeholder #3c3836 #ebdbb2 #928374   #928374
+client.background         #928374
+
 mode "resize" {
-	bindsym --to-code Right resize grow width 5 px or 5 ppt
-	bindsym --to-code Up resize grow height 5 px or 5 ppt
-	bindsym --to-code Down resize shrink height 5 px or 5 ppt
-	bindsym --to-code Left resize shrink width 5 px or 5 ppt
-	bindsym --to-code Return mode "default"
+    bindsym --to-code Right resize grow width 5 px or 5 ppt
+    bindsym --to-code Up resize grow height 5 px or 5 ppt
+    bindsym --to-code Down resize shrink height 5 px or 5 ppt
+    bindsym --to-code Left resize shrink width 5 px or 5 ppt
+    
     bindsym --to-code h resize shrink width 80px
     bindsym --to-code j resize grow height 80px
     bindsym --to-code k resize shrink height 80px
     bindsym --to-code l resize grow width 80px
-	}
-bindsym --to-code $super+r mode "resize"
 
 
-# colour of border, background, text, indicator, and child_border
-client.focused             #fabd2f  #928374 #ebdbb2 #fabd2f  #fabd2f
-# client.focused             #fabd2f  #928374 #ebdbb2 #83a598 #83a598
-client.focused_inactive    #928374 #928374 #ebdbb2 #928374 #928374
-client.unfocused           #7c6f64 #3c3836 #ebdbb2 #928374 #928374
-client.urgent              #fb4934 #928374 #ebdbb2 #d79921 #d79921
-client.placeholder         #928374 #3c3836 #ebdbb2 #928374 #928374
-client.background          #928374
+    bindsym --to-code Escape mode "default"; \
+        client.focused $focused #928374 #ebdbb2 $focused $focused
+    
+        bindsym --to-code Return mode "default"; \
+        client.focused $focused #928374 #ebdbb2 $focused $focused
+}
+
+bindsym --to-code $super+r mode "resize"; \
+    client.focused $resize_border $resize_border #ebdbb2 $resize_border $resize_border
+
+
+
+# # colour of border, background, text, indicator, and child_border
+# client.focused             #fabd2f  #928374 #ebdbb2 #fabd2f  #fabd2f
+# # client.focused             #fabd2f  #928374 #ebdbb2 #83a598 #83a598
+# client.focused_inactive    #928374 #928374 #ebdbb2 #928374 #928374
+# client.unfocused           #7c6f64 #3c3836 #ebdbb2 #928374 #928374
+# client.urgent              #fb4934 #928374 #ebdbb2 #d79921 #d79921
+# client.placeholder         #928374 #3c3836 #ebdbb2 #928374 #928374
+# client.background          #928374
 
 # window rules, you can find the window class using xprop
 # for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] floating enable
@@ -135,13 +161,13 @@ gaps outer 2
 
 exec --no-startup-id waybar
 
-bindsym --to-code $super+Shift+v exec  ~/wayland/scripts/./clip.sh
+bindsym $super+Shift+v exec  ~/wayland/scripts/./clip.sh
 
-bindsym --to-code $super+o exec wofi --show drun  --hide-scroll  
+bindsym $super+o exec wofi --show drun  --hide-scroll  
 
-bindsym --to-code $super+y exec python3 ~/Dashboard/main.py 
+bindsym $super+y exec python3 ~/Dashboard/main.py 
 
-bindsym --to-code super+Shift+w exec ~/wayland/scripts/./screen.sh
+bindsym super+Shift+w exec ~/wayland/scripts/./screen.sh
 
 exec --no-startup-id  wl-paste --watch cliphist store
 
@@ -155,20 +181,17 @@ input "type:touchpad" {
     natural_scroll enabled
 }
 
-bindsym --to-code XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym --to-code XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym --to-code XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 
-bindsym --to-code XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-bindsym --to-code XF86AudioPlay exec playerctl play-pause
-bindsym --to-code XF86AudioNext exec playerctl next
-bindsym --to-code XF86AudioPrev exec playerctl previous
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
 # set $opacity 0.9
 # for_window [class=".*"] opacity $opacity
 # for_window [app_id=".*"] opacity $opacity
 
-
-
-seat * xcursor_theme gruvbox 10
