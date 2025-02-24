@@ -21,6 +21,8 @@ tooltip {
 
 #clock,
 #tray,
+#battery,
+#idle_inhibitor,
 #language,
 #custom-notification,
 #backlight,
@@ -72,17 +74,10 @@ tooltip {
     color: #d4be98
 }
 #pulseaudio.muted {
-  color: #c14a4a;;
+  color: #c14a4a;
 }
 
 
-#battery.warning,
-#battery.critical,
-#battery.urgent {
-    background-color: #ddc7a1;
-    border: 2px solid #c7ab7a;
-    color: #c14a4a;
-}
 
 #custom-notification{
     background-color: #303536;
@@ -110,4 +105,30 @@ tooltip label {
     margin: 4px;
 }
 
+#idle_inhibitor {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    color: #d4be98;
+}
 
+#battery {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    color: #d4be98;
+}
+
+#battery.critical {
+  color: #c14a4a;
+}
+
+#battery.warning {
+    color: #fabd2f;
+}
+
+#battery.good {
+    color: #b8bb26;
+}
+
+#battery.good {
+    color: #d4be98;
+}

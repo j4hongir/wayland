@@ -41,6 +41,7 @@ nwg-look
 swayimg 
 powertop
 tlp
+slimbookbattery
 bluez
 blueman
 gnome-logs
