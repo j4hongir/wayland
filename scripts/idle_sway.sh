@@ -1,6 +1,7 @@
-#!/bin/bash
-swayidle -w \
-     timeout 500 'notify-send "Locking after 10 seconds"' \
-     timeout 515 'swaylock -i ~/wayland/walls/trees.jpg' \
-     timeout 520 'swaymsg "output * dpms off"; systemctl suspend' resume 'swaymsg "output * dpms on"' \
-     before-sleep 'swaylock ~/wayland/walls/gruvwall.png'
+
+exec_always swayidle -w \
+    timeout 600 'swaylock -f -i ~/wayland/walls/gruvwall.png' \
+    timeout 615 'swaymsg "output * dpms off"' \
+        resume 'swaymsg "output * dpms on"' \
+    timeout 620 'systemctl suspend' \
+    before-sleep 'swaylock -f -i ~/wayland/walls/gruvwall.png'

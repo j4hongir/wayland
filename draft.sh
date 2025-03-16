@@ -41,7 +41,6 @@ nwg-look
 swayimg 
 powertop
 tlp
-slimbookbattery
 bluez
 blueman
 gnome-logs
@@ -150,3 +149,14 @@ git clone https://github.com/jahamars/tbt ~/tbt
 #################for obs scripts ######################
 git clone https://github.com/jahamars/obs-scripts ~/obs-scripts
 ########################################################
+
+
+
+-----------------------------------------------------------------
+
+tokyo-night-icons
+https://github.com/ljmill/tokyo-night-icons/releases/
+
+gtk
+https://github.com/Fausto-Korpsvart/Tokyonight-GTK-Theme.git
+
