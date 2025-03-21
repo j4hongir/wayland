@@ -24,7 +24,7 @@ bindsym --to-code $super+w exec ~/wayland/scripts/swaywall.sh
 
 bindsym --to-code $super+b exec chromium
 
-bindsym --to-code $super+f exec thunar
+bindsym --to-code $super+f exec nautilus 
 bindsym --to-code $super+Shift+h exec obsidian
 
 bindsym --to-code $super+Shift+p exec hyprpicker -a
@@ -99,6 +99,7 @@ bindsym --to-code $super+Shift+6 move container to workspace 6
 bindsym --to-code $super+BackSpace exec "swaymsg reload"
 
 bindsym --to-code $super+Shift+q exec ~/wayland/scripts/swaysys.sh
+bindsym --to-code XF86PowerOff exec ~/wayland/scripts/swaysys.sh
 
 
 set $focused #fabd2f

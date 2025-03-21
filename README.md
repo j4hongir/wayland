@@ -164,16 +164,18 @@ I may miss or change something, but here are my main hotkeys
 
 
 ## Shell (ZSH)
-| Shortcut | Description |
-|----------|-------------|
-| `ctrl + O` | Open ranger file manager |
-| `alt + Left/Right` | Move between words |
-| `Home` (`^[[H`) | Go to beginning of line |
-| `End` (`^[[F`) | Go to end of line |
-| `Delete` (`^[[3~`) | Delete character |
-| `Up Arrow` (`^[[A`) | Search history up |
-| `Down Arrow` (`^[[B`) | Search history down |
-
+| Shortcut           | Description               |
+| ------------------ | ------------------------- |
+| `ctrl + O`         | Open\|cd (yazi)           |
+| `alt + Left/Right` | Move between words        |
+| `Home`             | Go to beginning of line   |
+| `End`              | Go to end of line         |
+| `Up Arrow`         | Search history up         |
+| `Down Arrow`       | Search history down       |
+| `alt+c`            | fzf folders               |
+| `ctrl+r`           | fzf comands               |
+| `ctrl+t`           | fzf all files and folders |
+| `comand ** + tab`  | fzf all                   |
 
 ## Aliases
 | Alias | Command/Function |
