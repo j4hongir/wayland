@@ -132,3 +132,42 @@ tooltip label {
 #battery.good {
     color: #d4be98;
 }
+
+/* Настройка меню Network Manager в стиле Gruvbox */
+menu {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #282828; 
+    min-width: 320px;
+    border: 1px solid #fabd2f;
+}
+menuitem {
+    padding: 12px;
+    margin: 3px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+menuitem:hover {
+    background-color: #504945; 
+}
+
+menuitem label {
+    color: #ebdbb2; 
+    font-weight: normal;
+}
+menuitem:active {
+    background-color: #98971a; 
+}
+menuitem:selected {
+    background-color: #458588; 
+}
+separator {
+    margin: 6px 0;
+    background-color: #665c54; 
+}
+menuitem image {
+    color: #d79921; 
+}
+menu arrow {
+    color: #b8bb26; 
+}

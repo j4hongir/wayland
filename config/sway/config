@@ -3,6 +3,12 @@ output * bg /home/mars/wayland/walls/nasa.png fill
 set $super Mod4
 set $alt Mod1
 
+#swafx################
+default_border pixel 2
+default_floating_border pixel 2
+corner_radius 6
+######################
+
 # set font
 font pango:MartianMono NFM Cond Med 10
 
@@ -17,6 +23,7 @@ exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DE
 exec --no-startup-id swaync
 exec --no-startup-id nm-applet
 exec --no-startup-id ~/wayland/scripts/idle_sway.sh
+exec --no-startup-id wlsunset -l 57.1522 -L 65.5272 -t 4500 -T 6000
 
 # start a terminal
 bindsym --to-code $super+t exec kitty 
