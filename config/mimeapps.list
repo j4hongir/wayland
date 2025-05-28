@@ -1,0 +1,61 @@
+[Default Applications]
+# Браузеры и веб-контент
+text/html=chromium.desktop
+x-scheme-handler/http=chromium.desktop
+x-scheme-handler/https=chromium.desktop
+x-scheme-handler/about=chromium.desktop
+x-scheme-handler/unknown=chromium.desktop
+x-scheme-handler/chrome=chromium.desktop
+application/x-extension-htm=chromium.desktop
+application/x-extension-html=chromium.desktop
+application/x-extension-shtml=chromium.desktop
+application/xhtml+xml=chromium.desktop
+application/x-extension-xhtml=chromium.desktop
+application/x-extension-xht=chromium.desktop
+application/xml=chromium.desktop
+
+# Текстовые файлы и код (nvim через терминал)
+text/plain=kitty-nvim.desktop
+text/x-csrc=kitty-nvim.desktop
+text/x-c++src=kitty-nvim.desktop
+application/x-shellscript=kitty-nvim.desktop
+
+# Изображения
+image/jpeg=swayimg.desktop
+image/png=swayimg.desktop
+image/webp=swayimg.desktop
+
+# Видео
+video/mp4=chromium.desktop
+
+# Документы
+application/pdf=org.gnome.Evince.desktop
+
+# Файловый менеджер
+inode/directory=org.gnome.Nautilus.desktop
+
+# Мессенджеры
+x-scheme-handler/tg=org.telegram.desktop.desktop
+x-scheme-handler/sms=org.gnome.Shell.Extensions.GSConnect.desktop
+x-scheme-handler/tel=org.gnome.Shell.Extensions.GSConnect.desktop
+
+# Специфичные приложения
+x-scheme-handler/discord-424004941485572097=discord-424004941485572097.desktop
+application/x-vmdk-disk=virtualbox.desktop
+
+[Added Associations]
+# Изображения - альтернативы
+image/jpeg=org.gnome.Loupe.desktop;viewnior.desktop;
+image/png=org.gnome.Loupe.desktop;viewnior.desktop;chromium.desktop;
+image/webp=org.gnome.Loupe.desktop;viewnior.desktop;
+
+# PDF - альтернативы
+application/pdf=org.pwmt.zathura.desktop;chromium.desktop;
+
+# Видео - альтернативы
+video/mp4=google-chrome.desktop;
+
+# Веб - альтернативы (только firefox как запасной)
+x-scheme-handler/http=firefox.desktop;
+x-scheme-handler/https=firefox.desktop;
+text/html=firefox.desktop;
