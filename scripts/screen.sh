@@ -3,14 +3,11 @@ SCREENSHOT_DIR=~/Pictures/screens
 mkdir -p "$SCREENSHOT_DIR"
 FILENAME="screenshot-$(date +'%Y-%m-%d-%H%M%S').png"
 FILEPATH="$SCREENSHOT_DIR/$FILENAME"
-
 pre_size=0
 if [ -f "$FILEPATH" ]; then
     pre_size=$(stat -c%s "$FILEPATH")
 fi
-
 grim -g "$(slurp)" "$FILEPATH" 2>/dev/null
-
 if [ -f "$FILEPATH" ]; then
     post_size=$(stat -c%s "$FILEPATH")
     
@@ -22,4 +19,4 @@ if [ -f "$FILEPATH" ]; then
     else
         rm -f "$FILEPATH"
     fi
-fi
+f
