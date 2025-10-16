@@ -4,9 +4,9 @@ set $super Mod4
 set $alt Mod1
 
 #swafx################
-default_border pixel 2
-default_floating_border pixel 2
-corner_radius 6
+# default_border pixel 2
+# default_floating_border pixel 2
+# corner_radius 6
 ######################
 
 # set font
@@ -16,8 +16,8 @@ font pango:MartianMono NFM Cond Med 10
 floating_modifier $super
 
 # exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+# exec export XDG_CURRENT_DESKTOP=sway
 
-exec export XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
 
 exec --no-startup-id swaync
@@ -134,15 +134,14 @@ mode "resize" {
     bindsym --to-code k resize shrink height 80px
     bindsym --to-code l resize grow width 80px
 
-
-    bindsym --to-code --to-code Escape mode "default"; \
+    bindsym --to-code Escape mode "default"; \
         client.focused $focused #928374 #ebdbb2 $focused $focused
     
-        bindsym --to-code --to-code Return mode "default"; \
+    bindsym --to-code Return mode "default"; \
         client.focused $focused #928374 #ebdbb2 $focused $focused
 }
 
-bindsym --to-code --to-code $super+r mode "resize"; \
+bindsym --to-code $super+r mode "resize"; \
     client.focused $resize_border $resize_border #ebdbb2 $resize_border $resize_border
 
 
@@ -169,7 +168,7 @@ gaps outer 2
 
 exec --no-startup-id waybar
 
-bindsym --to-code $super+Shift+v exec  ~/wayland/scripts/./clip.sh
+bindsym --to-code $super+Shift+v exec  ~/wayland/scripts/clip.sh
 
 bindsym --to-code $super+o exec wofi --show drun  --hide-scroll  
 
