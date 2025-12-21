@@ -1,4 +1,4 @@
-output * bg /home/mars/wayland/walls/nasa.png fill
+output * bg /home/mars/wayland/walls/hmmm.jpg fill
 # set modifier
 set $super Mod4
 set $alt Mod1
@@ -16,11 +16,12 @@ font pango:MartianMono NFM Cond Med 10
 floating_modifier $super
 
 # exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-# exec export XDG_CURRENT_DESKTOP=sway
 
+exec export XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
 
 exec --no-startup-id swaync
+# exec --no-startup-id pulseaudio
 exec --no-startup-id nm-applet
 exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 exec --no-startup-id wlsunset -l 57.1522 -L 65.5272 -t 4500 -T 6000
@@ -31,13 +32,13 @@ bindsym --to-code $super+w exec ~/wayland/scripts/swaywall.sh
 
 bindsym --to-code $super+b exec chromium
 
-bindsym --to-code $super+f exec nautilus 
+bindsym --to-code $super+f exec nautilus
 bindsym --to-code $super+Shift+h exec obsidian
 
 bindsym --to-code $super+Shift+p exec hyprpicker -a
 
 bindsym --to-code $super+m exec chromium --app=https://music.youtube.com
-bindsym --to-code $super+Shift+t exec chromium --app=https://web.telegram.org/k/
+bindsym --to-code $super+Shift+t exec telegram-desktop
 
 
 bindsym --to-code XF86MonBrightnessUp exec brightnessctl set 5%+
@@ -134,10 +135,11 @@ mode "resize" {
     bindsym --to-code k resize shrink height 80px
     bindsym --to-code l resize grow width 80px
 
+
     bindsym --to-code Escape mode "default"; \
         client.focused $focused #928374 #ebdbb2 $focused $focused
     
-    bindsym --to-code Return mode "default"; \
+        bindsym --to-code Return mode "default"; \
         client.focused $focused #928374 #ebdbb2 $focused $focused
 }
 
@@ -174,7 +176,7 @@ bindsym --to-code $super+o exec wofi --show drun  --hide-scroll
 
 bindsym --to-code $super+y exec python3 ~/Dashboard/main.py 
 
-bindsym --to-code super+Shift+w exec ~/wayland/scripts/./screen.sh
+bindsym --to-code super+Shift+w exec ~/wayland/scripts/screen.sh
 
 exec --no-startup-id  wl-paste --watch cliphist store
 
@@ -185,6 +187,8 @@ input * {
 
 input "type:touchpad" {
     tap enabled
+
+    pointer_accel -0.1
     natural_scroll enabled
 }
 
@@ -201,4 +205,8 @@ bindsym --to-code XF86AudioPrev exec playerctl previous
 # set $opacity 0.9
 # for_window [class=".*"] opacity $opacity
 # for_window [app_id=".*"] opacity $opacity
+
+
+bindsym --to-code $super+s scratchpad show
+bindsym --to-code $super+Shift+s move scratchpad
 
