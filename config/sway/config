@@ -1,4 +1,4 @@
-output * bg /home/mars/wayland/walls/hmmm.jpg fill
+output * bg /home/mars/wayland/walls/this-wallpaper-is-not-available.png fill
 # set modifier
 set $super Mod4
 set $alt Mod1
@@ -210,3 +210,7 @@ bindsym --to-code XF86AudioPrev exec playerctl previous
 bindsym --to-code $super+s scratchpad show
 bindsym --to-code $super+Shift+s move scratchpad
 
+
+
+# bindsym --whole-window button8 nop
+# bindsym --whole-window button9 nop

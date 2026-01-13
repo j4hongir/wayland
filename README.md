@@ -1,16 +1,6 @@
-## sway and hypr workstation for advanced users
+## This repo contains advanced dotfiles for sway and hyprland and more
 
 ![sway](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review.png)
-
-This repository contains advanced configuration files for Sway and Hyprland, if you prefer X then [click](https://github.com/Jahamars/i3).
-
----
-
-⚠️ Warning!
-I have a script for automatic installation and configuration of everything you need. However, I do not recommend using it unless you are absolutely sure what it does. Automated setup can lead to unexpected results, especially if you already have a customized system or are using non-standard configurations.
-
-Advice:
-I strongly recommend setting everything up manually, step by step. This is not only safer but will also help you better understand how the system works and what changes are being made. If you still decide to use the script, do so at your own risk and make sure to back up your important data before running it.
 
 ---
 
@@ -19,93 +9,132 @@ I strongly recommend setting everything up manually, step by step. This is not o
 
 wayland
 ├── config
-│   ├── cava
-│   │   ├── config
-│   │   └── shaders
-│   │       ├── bar_spectrum.frag
-│   │       ├── northern_lights.frag
-│   │       └── pass_through.vert
-│   ├── gtk-3.0
-│   │   └── settings.ini
-│   ├── gtk-4.0
-│   │   └── settings.ini
-│   ├── helix
-│   │   └── config.toml
-│   ├── hypr
-│   │   ├── env.conf
-│   │   ├── hypridle.conf
-│   │   ├── hyprland.conf
-│   │   └── hyprlock.conf
-│   ├── kitty
-│   │   └── kitty.conf
-│   ├── macchina
-│   │   ├── ascii.txt
-│   │   ├── macchina.toml
-│   │   └── themes
-│   │       └── Carbon.toml
-│   ├── nvim
-│   │   ├── init.lua
-│   │   ├── init.lua.back
-│   │   └── init.vim.back
-│   ├── starship.toml
-│   ├── sway
-│   │   └── config
-│   ├── swaync
-│   │   ├── config.json
-│   │   └── style.css
-│   ├── waybar
-│   │   ├── block
-│   │   │   ├── config.jsonc
-│   │   │   └── style.css
-│   │   ├── config.jsonc
-│   │   ├── scripts
-│   │   │   ├── bluetooth.sh
-│   │   │   ├── brightness.sh
-│   │   │   └── music.sh
-│   │   └── style.css
-│   └── wofi
-│       └── style.css
+│   ├── btop
+│   │   ├── btop.conf
+│   │   └── themes
+│   │       └── gruv.theme
+│   ├── cava
+│   │   ├── config
+│   │   └── shaders
+│   │       ├── bar_spectrum.frag
+│   │       ├── northern_lights.frag
+│   │       └── pass_through.vert
+│   ├── gtk-3.0
+│   │   └── settings.ini
+│   ├── gtk-4.0
+│   │   └── settings.ini
+│   ├── helix
+│   │   └── config.toml
+│   ├── hypr
+│   │   ├── env.conf
+│   │   ├── hypridle.conf
+│   │   ├── hyprland.conf
+│   │   ├── hyprlock.conf
+│   │   └── wallpaper.conf
+│   ├── kitty
+│   │   └── kitty.conf
+│   ├── macchina
+│   │   ├── ascii.txt
+│   │   ├── macchina.toml
+│   │   └── themes
+│   │       └── Carbon.toml
+│   ├── mimeapps.list
+│   ├── nvim
+│   │   ├── init.lua
+│   │   ├── init.lua.back
+│   │   ├── init.vim.back
+│   │   └── minimal.lua
+│   ├── pacman.conf
+│   ├── starship.toml
+│   ├── sway
+│   │   └── config
+│   ├── swaylock
+│   │   └── config
+│   ├── swaync
+│   │   ├── config.json
+│   │   └── style.css
+│   ├── tlp.conf
+│   ├── tofi
+│   │   └── config
+│   ├── waybar
+│   │   ├── config.jsonc
+│   │   ├── style.css
+│   │   └── themes
+│   │       ├── 0.5
+│   │       │   ├── config.jsonc
+│   │       │   ├── scripts
+│   │       │   │   ├── bluetooth.sh
+│   │       │   │   ├── brightness.sh
+│   │       │   │   ├── music.sh
+│   │       │   │   └── sway-mode.sh
+│   │       │   └── style.css
+│   │       ├── block
+│   │       │   ├── config.jsonc
+│   │       │   └── style.css
+│   │       └── cpc
+│   │           ├── config.jsonc
+│   │           ├── mocha.css
+│   │           └── style.css
+│   └── wofi
+│       └── style.css
 ├── draft.sh
 ├── Gruvbox-Dark
-│   ├── gtk-2.0
-│   ├── gtk-3.0
-│   ├── gtk-4.0
-│   ├── index.theme
-│   └── plank
-│       └── dock.theme
+│   ├── gtk-2.0
+│   │   ├── apps.rc
+│   │   ├── assets
+│   │   ├── gtkrc
+│   │   ├── hacks.rc
+│   │   └── main.rc
+│   ├── gtk-3.0
+│   │   ├── assets
+│   │   ├── gtk.css
+│   │   ├── gtk-dark.css
+│   │   └── thumbnail.png
+│   ├── gtk-4.0
+│   │   ├── assets
+│   │   ├── gtk.css
+│   │   ├── gtk-dark.css
+│   │   └── thumbnail.png
+│   ├── index.theme
+│   └── plank
+│       └── dock.theme
 ├── install.sh
 ├── old
-│   ├── appfinder.sh
-│   ├── brightness.sh
-│   ├── idle_hypr.sh
-│   ├── idle_sway.sh
-│   └── stat.sh
+│   ├── appfinder.sh
+│   ├── brightness.sh
+│   ├── idle_hypr.sh
+│   ├── idle_sway.sh
+│   └── stat.sh
 ├── package.list
 ├── photos
-│   ├── forneofetch.png
-│   └── review.png
+│   ├── forneofetch.png
+│   └── review.png
 ├── README.md
 ├── scripts
-│   ├── clip.sh
-│   ├── hyprsys.sh
-│   ├── idle_sway.sh
-│   ├── pipes.sh
-│   ├── rain.sh
-│   ├── screen.sh
-│   ├── swaygg.sh
-│   ├── swaysys.sh
-│   ├── swaywall.sh
-│   ├── tmux.sh
-│   ├── wall.sh
-│   ├── xdg.sh
-│   └── xdg_sway.sh
+│   ├── clip.sh
+│   ├── hyprsys.sh
+│   ├── idle_sway.sh
+│   ├── screen.sh
+│   ├── swaygg.sh
+│   ├── swaysys.sh
+│   ├── swaywall.sh
+│   ├── tmux.sh
+│   ├── tofi
+│   │   └── wall.sh
+│   ├── wall.sh
+│   ├── xdg.sh
+│   └── xdg_sway.sh
+├── smth
+│   ├── fetch.sh
+│   ├── pipes.sh
+│   └── rain.sh
 └── walls
-    ├── 83a598.png
-    ├── dragon.png
-    ├── error.jpg
-    ├── gruvwall.png
-    ├── kanagawa.png
+    ├── black.jpg
+    ├── nasa.png
+    ├── this-wallpaper-is-not-available.png
     └── trees.jpg
+
+40 directories, 322 files
 
 ```
 ---
