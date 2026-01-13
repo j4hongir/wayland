@@ -1,5 +1,4 @@
-## This repo contains advanced dotfiles for sway and hyprland and more
-
+# Advanced config files based on arch, hyprland, and sway.
 ![sway](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review.png)
 
 ---
