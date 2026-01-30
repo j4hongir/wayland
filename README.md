@@ -370,6 +370,6 @@ I may miss or change something, but here are my main hotkeys
 | `XF86AudioPrev`                  | Play the previous track (requires `playerctl`).                                 |
 | `XF86PowerOff`                   | Execute the system script (`$sys`).                                             |
 
-
+   
 
 ![arch](https://upload.wikimedia.org/wikipedia/commons/7/73/Archlinux-logo-inverted-version.png)
