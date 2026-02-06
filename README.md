@@ -7,6 +7,7 @@
 ```bash
 
 wayland
+.
 ├── config
 │   ├── btop
 │   │   ├── btop.conf
@@ -77,34 +78,10 @@ wayland
 │   └── wofi
 │       └── style.css
 ├── draft.sh
-├── Gruvbox-Dark
-│   ├── gtk-2.0
-│   │   ├── apps.rc
-│   │   ├── assets
-│   │   ├── gtkrc
-│   │   ├── hacks.rc
-│   │   └── main.rc
-│   ├── gtk-3.0
-│   │   ├── assets
-│   │   ├── gtk.css
-│   │   ├── gtk-dark.css
-│   │   └── thumbnail.png
-│   ├── gtk-4.0
-│   │   ├── assets
-│   │   ├── gtk.css
-│   │   ├── gtk-dark.css
-│   │   └── thumbnail.png
-│   ├── index.theme
-│   └── plank
-│       └── dock.theme
 ├── install.sh
-├── old
-│   ├── appfinder.sh
-│   ├── brightness.sh
-│   ├── idle_hypr.sh
-│   ├── idle_sway.sh
-│   └── stat.sh
+├── LICENSE
 ├── package.list
+├── pacmanq.log
 ├── photos
 │   ├── forneofetch.png
 │   └── review.png
@@ -127,13 +104,24 @@ wayland
 │   ├── fetch.sh
 │   ├── pipes.sh
 │   └── rain.sh
+├── themes
+│   ├── gruvbox-cursor
+│   │   ├── cursors
+│   │   └── index.theme
+│   └── gruvbox-dark
+│       ├── gtk-2.0
+│       ├── gtk-3.0
+│       ├── gtk-4.0
+│       ├── index.theme
+│       └── plank
+│           └── dock.theme
 └── walls
     ├── black.jpg
     ├── nasa.png
     ├── this-wallpaper-is-not-available.png
     └── trees.jpg
 
-40 directories, 322 files
+43 directories, 437 files
 
 ```
 ---
