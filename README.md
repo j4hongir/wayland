@@ -1,4 +1,4 @@
-## Advanced config files based on arch, hyprland and sway
+## Advanced dots based on arch, sway and hyprland
 ![sway](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review.png)
 
 ---
