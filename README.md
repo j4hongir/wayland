@@ -1,4 +1,4 @@
-## Advanced dots based on arch, sway and hyprland
+## Advanced dots based on arch
 ![sway](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review.png)
 
 ---
@@ -16,9 +16,6 @@ wayland
 │   ├── cava
 │   │   ├── config
 │   │   └── shaders
-│   │       ├── bar_spectrum.frag
-│   │       ├── northern_lights.frag
-│   │       └── pass_through.vert
 │   ├── gtk-3.0
 │   │   └── settings.ini
 │   ├── gtk-4.0
@@ -41,7 +38,6 @@ wayland
 │   ├── mimeapps.list
 │   ├── nvim
 │   │   ├── init.lua
-│   │   ├── init.lua.back
 │   │   ├── init.vim.back
 │   │   └── minimal.lua
 │   ├── pacman.conf
@@ -61,20 +57,8 @@ wayland
 │   │   ├── style.css
 │   │   └── themes
 │   │       ├── 0.5
-│   │       │   ├── config.jsonc
-│   │       │   ├── scripts
-│   │       │   │   ├── bluetooth.sh
-│   │       │   │   ├── brightness.sh
-│   │       │   │   ├── music.sh
-│   │       │   │   └── sway-mode.sh
-│   │       │   └── style.css
 │   │       ├── block
-│   │       │   ├── config.jsonc
-│   │       │   └── style.css
 │   │       └── cpc
-│   │           ├── config.jsonc
-│   │           ├── mocha.css
-│   │           └── style.css
 │   └── wofi
 │       └── style.css
 ├── draft.sh
@@ -83,8 +67,6 @@ wayland
 ├── package.list
 ├── pacmanq.log
 ├── photos
-│   ├── forneofetch.png
-│   └── review.png
 ├── README.md
 ├── scripts
 │   ├── clip.sh
@@ -114,7 +96,6 @@ wayland
 │       ├── gtk-4.0
 │       ├── index.theme
 │       └── plank
-│           └── dock.theme
 └── walls
     ├── black.jpg
     ├── nasa.png
