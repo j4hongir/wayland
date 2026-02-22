@@ -1,499 +1,511 @@
 #!/usr/bin/env bash
-# ============================================================
-#  dotfiles installer — wayland / arch-based
-#  Usage:  bash install.sh [--dry-run] [--no-packages] [--no-symlinks]
-#  Logs:   ~/dotfiles-install.log
-# ============================================================
+# =============================================================================
+#  wayland dotfiles installer
+#  Usage:  ./install.sh [OPTIONS]
+#
+#  Options:
+#    --dry-run        показать что будет, ничего не менять
+#    --no-packages    пропустить установку пакетов
+#    --no-symlinks    пропустить симлинки
+#    --no-services    пропустить сервисы
+#    --no-shell       пропустить настройку шелла
+#    --only-packages  только пакеты
+#    --rollback       откатить последние изменения
+#    -h|--help        помощь
+# =============================================================================
 
 set -Euo pipefail
 
-# ─── CONSTANTS ──────────────────────────────────────────────
+# ── ПУТИ ─────────────────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$SCRIPT_DIR"
-HOME_DIR="$HOME"
-LOG_FILE="$HOME_DIR/dotfiles-install.log"
-BACKUP_DIR="$HOME_DIR/.dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
+LOG_FILE="$HOME/.dotfiles-install.log"
+BACKUP_BASE="$HOME/.dotfiles-backup"
+BACKUP_DIR="$BACKUP_BASE/$(date +%Y%m%d_%H%M%S)"
 PACKAGE_LIST="$DOTFILES_DIR/package.list"
 
-# AUR helper (yay preferred, falls back to paru)
-AUR_HELPER=""
-
-# ─── FLAGS ──────────────────────────────────────────────────
+# ── ФЛАГИ ────────────────────────────────────────────────────────────────────
 DRY_RUN=false
 SKIP_PACKAGES=false
 SKIP_SYMLINKS=false
 SKIP_SERVICES=false
+SKIP_SHELL=false
+ONLY_PACKAGES=false
+DO_ROLLBACK=false
+AUR_HELPER=""
 
-# ─── COLORS ─────────────────────────────────────────────────
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-BOLD='\033[1m'
-NC='\033[0m'
+# ── ЦВЕТА ────────────────────────────────────────────────────────────────────
+if [[ -t 1 ]]; then
+  R='\033[0;31m' G='\033[0;32m' Y='\033[1;33m'
+  B='\033[0;34m' C='\033[0;36m' BOLD='\033[1m' N='\033[0m'
+else
+  R='' G='' Y='' B='' C='' BOLD='' N=''
+fi
 
-# ─── LOGGING ────────────────────────────────────────────────
-log()  { local ts; ts=$(date '+%Y-%m-%d %H:%M:%S'); echo "[$ts] $*" | tee -a "$LOG_FILE"; }
-info() { log "INFO  $*"; echo -e "${BLUE}→${NC} $*"; }
-ok()   { log "OK    $*"; echo -e "${GREEN}✓${NC} $*"; }
-warn() { log "WARN  $*"; echo -e "${YELLOW}⚠${NC}  $*"; }
-err()  { log "ERROR $*"; echo -e "${RED}✗${NC} $*" >&2; }
+# ── ЛОГИРОВАНИЕ ──────────────────────────────────────────────────────────────
+_ts()  { date '+%Y-%m-%d %H:%M:%S'; }
+log()  { echo "[$(_ts)] $*" >> "$LOG_FILE"; }
+info() { echo -e "${B}→${N} $*";  log "INFO  $*"; }
+ok()   { echo -e "${G}✓${N} $*";  log "OK    $*"; }
+warn() { echo -e "${Y}⚠${N}  $*"; log "WARN  $*"; }
+err()  { echo -e "${R}✗${N} $*" >&2; log "ERROR $*"; }
 die()  { err "$*"; exit 1; }
-sep()  { echo -e "${CYAN}──────────────────────────────────────────${NC}"; log "--- $* ---"; }
+sep()  { echo -e "\n${C}${BOLD}━━━ $* ━━━${N}"; log "=== $* ==="; }
 
-# ─── ARG PARSING ────────────────────────────────────────────
+# ── АРГУМЕНТЫ ────────────────────────────────────────────────────────────────
 for arg in "$@"; do
-  case $arg in
+  case "$arg" in
     --dry-run)       DRY_RUN=true ;;
     --no-packages)   SKIP_PACKAGES=true ;;
     --no-symlinks)   SKIP_SYMLINKS=true ;;
     --no-services)   SKIP_SERVICES=true ;;
-    -h|--help)
-      echo "Usage: $0 [--dry-run] [--no-packages] [--no-symlinks] [--no-services]"
-      echo "  --dry-run      Show what would be done, don't change anything"
-      echo "  --no-packages  Skip package installation"
-      echo "  --no-symlinks  Skip config symlinks"
-      echo "  --no-services  Skip systemd service enabling"
-      exit 0 ;;
-    *) warn "Unknown argument: $arg" ;;
+    --no-shell)      SKIP_SHELL=true ;;
+    --only-packages) ONLY_PACKAGES=true ;;
+    --rollback)      DO_ROLLBACK=true ;;
+    -h|--help) grep '^#  ' "${BASH_SOURCE[0]}" | sed 's/^#  //'; exit 0 ;;
+    *) warn "Неизвестный аргумент: $arg" ;;
   esac
 done
 
-# ─── HELPERS ────────────────────────────────────────────────
+# ── ХЕЛПЕРЫ ──────────────────────────────────────────────────────────────────
 run() {
   if $DRY_RUN; then
-    echo -e "  ${YELLOW}[DRY]${NC} $*"
-    log "DRY   $*"
-  else
-    log "RUN   $*"
-    "$@"
+    echo -e "  ${Y}[DRY]${N} $*"; log "DRY $*"; return 0
   fi
+  log "RUN $*"; "$@"
 }
 
-# Backup a file/dir before touching it
 backup() {
-  local target="$1"
-  if [[ -e "$target" || -L "$target" ]]; then
-    local dest="$BACKUP_DIR/${target#$HOME_DIR/}"
-    run mkdir -p "$(dirname "$dest")"
-    run cp -a "$target" "$dest"
-    log "BACKUP $target → $dest"
-  fi
+  local t="$1"
+  [[ -e "$t" || -L "$t" ]] || return 0
+  local rel
+  [[ "$t" == /etc/* ]] && rel="etc/${t#/etc/}" || rel="${t#"$HOME/"}"
+  local dst="$BACKUP_DIR/$rel"
+  mkdir -p "$(dirname "$dst")"
+  cp -a "$t" "$dst"
+  log "BACKUP $t → $dst"
 }
 
-# Create a symlink safely (backs up existing target first)
 symlink() {
-  local src="$1"   # absolute path inside dotfiles repo
-  local dst="$2"   # absolute destination path
-
-  if [[ ! -e "$src" ]]; then
-    warn "Source not found, skipping symlink: $src"
+  local src="$1" dst="$2"
+  if [[ ! -e "$src" && ! -d "$src" ]]; then
+    warn "Не найдено: $src — пропускаю"
     return 0
   fi
-
   if [[ -L "$dst" && "$(readlink "$dst")" == "$src" ]]; then
-    ok "Already linked: $dst"
-    return 0
+    ok "Уже: $dst"; return 0
   fi
-
-  backup "$dst"
-
   if ! $DRY_RUN; then
+    backup "$dst"
     rm -rf "$dst"
     mkdir -p "$(dirname "$dst")"
-    ln -s "$src" "$dst"
+    ln -sf "$src" "$dst"
   else
-    echo -e "  ${YELLOW}[DRY]${NC} ln -s $src $dst"
+    echo -e "  ${Y}[DRY]${N} ln -sf $src → $dst"
   fi
-  ok "Linked: $dst → $src"
+  ok "Слинкован: $dst"
 }
 
-# ─── PREFLIGHT ──────────────────────────────────────────────
+# ── ОТКАТ ────────────────────────────────────────────────────────────────────
+do_rollback() {
+  sep "ОТКАТ"
+  local last
+  last=$(find "$BACKUP_BASE" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
+  [[ -z "$last" ]] && die "Нет бэкапов в $BACKUP_BASE"
+  warn "Восстанавливаю из: $last"
+  while IFS= read -r f; do
+    local rel="${f#"$last/"}"
+    local orig
+    [[ "$rel" == etc/* ]] && orig="/$rel" || orig="$HOME/$rel"
+    mkdir -p "$(dirname "$orig")"
+    cp -a "$f" "$orig"
+    ok "Восстановлено: $orig"
+  done < <(find "$last" \( -type f -o -type l \))
+  ok "Откат завершён"
+}
+
+# ── PREFLIGHT ─────────────────────────────────────────────────────────────────
 preflight() {
-  sep "Preflight checks"
+  sep "Проверки"
+  command -v pacman &>/dev/null || die "pacman не найден — только Arch-based!"
+  ok "pacman найден"
+  [[ $EUID -ne 0 ]] || die "Не запускай от root!"
+  ok "Пользователь: $USER"
+  [[ -d "$DOTFILES_DIR/config" ]] || die "config/ не найден в $DOTFILES_DIR"
+  ok "Dotfiles: $DOTFILES_DIR"
+  [[ -f "$PACKAGE_LIST" ]] && ok "package.list найден" || warn "package.list не найден"
 
-  # Must be Arch-based
-  if ! command -v pacman &>/dev/null; then
-    die "pacman not found. This script only works on Arch-based distros."
-  fi
-  ok "pacman found"
+  $DRY_RUN || mkdir -p "$BACKUP_DIR"
+  ok "Бэкап: $BACKUP_DIR"
 
-  # Not root
-  if [[ $EUID -eq 0 ]]; then
-    die "Do not run as root. Run as your normal user."
-  fi
-  ok "Running as user: $USER"
-
-  # dotfiles repo integrity
-  [[ -d "$DOTFILES_DIR/config" ]] || die "config/ directory not found in $DOTFILES_DIR"
-  ok "Dotfiles directory: $DOTFILES_DIR"
-
-  # Create backup dir (unless dry-run)
-  if ! $DRY_RUN; then
-    mkdir -p "$BACKUP_DIR"
-    info "Backup location: $BACKUP_DIR"
-  fi
-
-  # Detect AUR helper
-  if command -v yay  &>/dev/null; then AUR_HELPER="yay"
+  # AUR helper
+  if   command -v yay  &>/dev/null; then AUR_HELPER="yay"
   elif command -v paru &>/dev/null; then AUR_HELPER="paru"
-  else AUR_HELPER=""
   fi
-  [[ -n "$AUR_HELPER" ]] && ok "AUR helper: $AUR_HELPER" || warn "No AUR helper found (yay/paru). AUR packages will be skipped."
+  [[ -n "$AUR_HELPER" ]] && ok "AUR helper: $AUR_HELPER" \
+    || warn "AUR helper не найден — попробую установить yay"
 }
 
-# ─── PACKAGE INSTALLATION ───────────────────────────────────
-install_packages() {
-  sep "Package installation"
-
-  if [[ ! -f "$PACKAGE_LIST" ]]; then
-    warn "package.list not found, skipping package install"
-    return 0
+# ── УСТАНОВКА YAY ────────────────────────────────────────────────────────────
+install_yay() {
+  [[ -n "$AUR_HELPER" ]] && return 0
+  sep "Установка yay"
+  if $DRY_RUN; then
+    echo -e "  ${Y}[DRY]${N} git clone yay && makepkg -si"; return 0
   fi
+  sudo pacman -S --needed --noconfirm git base-devel 2>/dev/null || true
+  local tmp; tmp=$(mktemp -d)
+  git clone --depth=1 https://aur.archlinux.org/yay.git "$tmp/yay" \
+    && pushd "$tmp/yay" >/dev/null \
+    && MAKEFLAGS="-j$(nproc)" makepkg -si --noconfirm \
+    && popd >/dev/null \
+    && AUR_HELPER="yay" \
+    && ok "yay установлен" \
+    || warn "Не удалось установить yay — AUR пакеты пропущу"
+  rm -rf "$tmp"
+}
 
-  # Read package names (first column, strip version)
-  local pkgs=()
+# ── УСТАНОВКА ПАКЕТОВ ────────────────────────────────────────────────────────
+install_packages() {
+  sep "Установка пакетов"
+  [[ -f "$PACKAGE_LIST" ]] || { warn "package.list не найден"; return 0; }
+
+  # Читаем список — первое слово, пропускаем # и пустые строки
+  local all_pkgs=()
   while IFS= read -r line; do
-    [[ -z "$line" || "$line" =~ ^# ]] && continue
-    pkgs+=( "$(echo "$line" | awk '{print $1}')" )
+    line="${line#"${line%%[![:space:]]*}"}"   # ltrim
+    line="${line%"${line##*[![:space:]]}"}"   # rtrim
+    [[ -z "$line" || "$line" == \#* ]] && continue
+    all_pkgs+=("${line%% *}")
   done < "$PACKAGE_LIST"
 
-  info "Total packages in list: ${#pkgs[@]}"
+  local total="${#all_pkgs[@]}"
+  info "Пакетов в списке: $total"
+  [[ $total -eq 0 ]] && { warn "Список пустой"; return 0; }
 
-  # Split into official and AUR (we try official first)
-  info "Updating pacman databases..."
-  run sudo pacman -Sy --noconfirm 2>/dev/null || warn "pacman -Sy failed, continuing"
+  # Обновить БД pacman
+  info "Синхронизация баз данных..."
+  if ! $DRY_RUN; then
+    # NOCONFIRM через переменную окружения — надёжнее чем флаг
+    DEBIAN_FRONTEND=noninteractive sudo pacman -Sy --noconfirm 2>&1 \
+      | tail -3; true
+  fi
+
+  # Получить все пакеты из репо одним вызовом
+  local repo_list=""
+  local installed_list=""
+  if ! $DRY_RUN; then
+    repo_list=$(pacman -Ssq 2>/dev/null | sort -u)
+    installed_list=$(pacman -Qq 2>/dev/null | sort -u)
+  fi
 
   local official=()
   local aur=()
+  local already=0
 
-  for pkg in "${pkgs[@]}"; do
-    if pacman -Si "$pkg" &>/dev/null 2>&1; then
+  for pkg in "${all_pkgs[@]}"; do
+    if [[ -n "$installed_list" ]] && echo "$installed_list" | grep -qx "$pkg" 2>/dev/null; then
+      already=$((already + 1))
+      continue
+    fi
+    if $DRY_RUN || echo "$repo_list" | grep -qx "$pkg" 2>/dev/null; then
       official+=("$pkg")
     else
       aur+=("$pkg")
     fi
   done
 
-  info "Official repo packages: ${#official[@]}"
-  info "Potential AUR packages:  ${#aur[@]}"
+  ok "Уже установлено: $already"
+  info "Нужно (official): ${#official[@]}"
+  info "Нужно (AUR):      ${#aur[@]}"
 
-  # Install official packages (only missing ones)
-  local missing_official=()
-  for pkg in "${official[@]}"; do
-    pacman -Qi "$pkg" &>/dev/null 2>&1 || missing_official+=("$pkg")
-  done
-
-  if [[ ${#missing_official[@]} -gt 0 ]]; then
-    info "Installing ${#missing_official[@]} missing official packages..."
-    run sudo pacman -S --noconfirm --needed "${missing_official[@]}" \
-      || warn "Some official packages failed to install (see log)"
-  else
-    ok "All official packages already installed"
-  fi
-
-  # Install AUR packages
-  if [[ -n "$AUR_HELPER" && ${#aur[@]} -gt 0 ]]; then
-    local missing_aur=()
-    for pkg in "${aur[@]}"; do
-      pacman -Qi "$pkg" &>/dev/null 2>&1 || missing_aur+=("$pkg")
-    done
-    if [[ ${#missing_aur[@]} -gt 0 ]]; then
-      info "Installing ${#missing_aur[@]} AUR packages via $AUR_HELPER..."
-      run "$AUR_HELPER" -S --noconfirm --needed "${missing_aur[@]}" \
-        || warn "Some AUR packages failed to install"
+  # ── Официальные — чанками по 50 ──────────────────────────────────────────
+  if [[ ${#official[@]} -gt 0 ]]; then
+    info "Устанавливаю официальные пакеты..."
+    if ! $DRY_RUN; then
+      local i=0 chunk_size=50 n="${#official[@]}"
+      while [[ $i -lt $n ]]; do
+        local chunk=("${official[@]:$i:$chunk_size}")
+        local end=$(( i + ${#chunk[@]} ))
+        info "  Чанк [$((i+1))–$end / $n]..."
+        # --noconfirm + PACMAN_NOCONFIRM чтобы точно не зависало
+        sudo pacman -S --needed --noconfirm --noprogressbar "${chunk[@]}" \
+          2>&1 | tee -a "$LOG_FILE" \
+          | grep -E "^(error:|warning:|:: installing|installing |upgrading )" \
+          || true
+        i=$(( i + chunk_size ))
+      done
+      ok "Официальные пакеты установлены"
     else
-      ok "All AUR packages already installed"
+      echo -e "  ${Y}[DRY]${N} pacman -S --needed --noconfirm [${#official[@]} пакетов]"
     fi
-  elif [[ ${#aur[@]} -gt 0 ]]; then
-    warn "Skipping ${#aur[@]} AUR packages (no AUR helper)"
+  else
+    ok "Все официальные пакеты уже есть"
   fi
+
+  # ── AUR пакеты ───────────────────────────────────────────────────────────
+  if [[ ${#aur[@]} -gt 0 ]]; then
+    if [[ -n "$AUR_HELPER" ]]; then
+      info "Устанавливаю AUR пакеты через $AUR_HELPER..."
+      local failed=()
+      for pkg in "${aur[@]}"; do
+        if ! $DRY_RUN; then
+          info "  AUR: $pkg"
+          "$AUR_HELPER" -S --needed --noconfirm "$pkg" \
+            2>&1 | tee -a "$LOG_FILE" | tail -2 || true
+          pacman -Qi "$pkg" &>/dev/null || failed+=("$pkg")
+        else
+          echo -e "  ${Y}[DRY]${N} $AUR_HELPER -S $pkg"
+        fi
+      done
+      [[ ${#failed[@]} -gt 0 ]] \
+        && warn "Не установлено: ${failed[*]}" \
+        || ok "Все AUR пакеты установлены"
+    else
+      warn "Нет AUR helper — пропускаю ${#aur[@]} пакетов:"
+      printf '  - %s\n' "${aur[@]}"
+      warn "После установки yay выполни: yay -S --needed ${aur[*]}"
+    fi
+  fi
+
+  sep "Итог"
+  ok "Уже было:   $already"
+  ok "Official:   ${#official[@]}"
+  ok "AUR:        ${#aur[@]}"
 }
 
-# ─── SYMLINKS ───────────────────────────────────────────────
-# Maps: dotfiles relative path → $HOME destination
-declare -A SYMLINK_MAP=(
-  # hyprland
-  ["config/hypr"]="$HOME_DIR/.config/hypr"
-  # sway
-  ["config/sway"]="$HOME_DIR/.config/sway"
-  # waybar
-  ["config/waybar"]="$HOME_DIR/.config/waybar"
-  # kitty
-  ["config/kitty"]="$HOME_DIR/.config/kitty"
-  # nvim
-  ["config/nvim"]="$HOME_DIR/.config/nvim"
-  # helix
-  ["config/helix"]="$HOME_DIR/.config/helix"
-  # wofi
-  ["config/wofi"]="$HOME_DIR/.config/wofi"
-  # tofi
-  ["config/tofi"]="$HOME_DIR/.config/tofi"
-  # swaync
-  ["config/swaync"]="$HOME_DIR/.config/swaync"
-  # swaylock
-  ["config/swaylock"]="$HOME_DIR/.config/swaylock"
-  # btop
-  ["config/btop"]="$HOME_DIR/.config/btop"
-  # cava
-  ["config/cava"]="$HOME_DIR/.config/cava"
-  # macchina
-  ["config/macchina"]="$HOME_DIR/.config/macchina"
-  # gtk
-  ["config/gtk-3.0"]="$HOME_DIR/.config/gtk-3.0"
-  ["config/gtk-4.0"]="$HOME_DIR/.config/gtk-4.0"
-  # starship
-  ["config/starship.toml"]="$HOME_DIR/.config/starship.toml"
-  # pacman
-  ["config/pacman.conf"]="$HOME_DIR/.config/pacman.conf"
-  # tmux
-  ["config/.tmux.conf"]="$HOME_DIR/.tmux.conf"
-  # mimeapps
-  ["config/mimeapps.list"]="$HOME_DIR/.config/mimeapps.list"
-  # scripts (keep in wayland/scripts, just make scripts executable)
-)
-
+# ── СИМЛИНКИ ─────────────────────────────────────────────────────────────────
 create_symlinks() {
-  sep "Creating symlinks"
+  sep "Симлинки"
 
-  for rel_src in "${!SYMLINK_MAP[@]}"; do
-    local abs_src="$DOTFILES_DIR/$rel_src"
-    local dst="${SYMLINK_MAP[$rel_src]}"
-    symlink "$abs_src" "$dst"
+  # "относительный_путь|абсолютный_путь_назначения"
+  local -a links=(
+    "config/hypr|$HOME/.config/hypr"
+    "config/sway|$HOME/.config/sway"
+    "config/waybar|$HOME/.config/waybar"
+    "config/kitty|$HOME/.config/kitty"
+    "config/nvim|$HOME/.config/nvim"
+    "config/helix|$HOME/.config/helix"
+    "config/wofi|$HOME/.config/wofi"
+    "config/tofi|$HOME/.config/tofi"
+    "config/swaync|$HOME/.config/swaync"
+    "config/swaylock|$HOME/.config/swaylock"
+    "config/btop|$HOME/.config/btop"
+    "config/cava|$HOME/.config/cava"
+    "config/macchina|$HOME/.config/macchina"
+    "config/gtk-3.0|$HOME/.config/gtk-3.0"
+    "config/gtk-4.0|$HOME/.config/gtk-4.0"
+    "config/starship.toml|$HOME/.config/starship.toml"
+    "config/mimeapps.list|$HOME/.config/mimeapps.list"
+    "config/.tmux.conf|$HOME/.tmux.conf"
+  )
+
+  for entry in "${links[@]}"; do
+    symlink "$DOTFILES_DIR/${entry%%|*}" "${entry##*|}"
   done
 
-  # pacman.conf is system-wide — special handling
+  # pacman.conf → /etc/pacman.conf
   if [[ -f "$DOTFILES_DIR/config/pacman.conf" ]]; then
-    info "pacman.conf: copying to /etc/pacman.conf (requires sudo)"
-    backup "/etc/pacman.conf"
-    run sudo cp "$DOTFILES_DIR/config/pacman.conf" /etc/pacman.conf \
-      && ok "pacman.conf installed" \
-      || warn "Failed to copy pacman.conf"
+    info "pacman.conf → /etc/pacman.conf"
+    if ! $DRY_RUN; then
+      backup "/etc/pacman.conf"
+      sudo cp "$DOTFILES_DIR/config/pacman.conf" /etc/pacman.conf \
+        && ok "pacman.conf установлен" || warn "Не удалось скопировать pacman.conf"
+    else
+      echo -e "  ${Y}[DRY]${N} sudo cp pacman.conf /etc/pacman.conf"
+    fi
   fi
 
   # tlp.conf → /etc/tlp.conf
   if [[ -f "$DOTFILES_DIR/config/tlp.conf" ]]; then
-    info "tlp.conf: copying to /etc/tlp.conf (requires sudo)"
-    backup "/etc/tlp.conf"
-    run sudo cp "$DOTFILES_DIR/config/tlp.conf" /etc/tlp.conf \
-      && ok "tlp.conf installed" \
-      || warn "Failed to copy tlp.conf"
-  fi
-}
-
-# ─── SCRIPTS ────────────────────────────────────────────────
-setup_scripts() {
-  sep "Making scripts executable"
-  find "$DOTFILES_DIR/scripts" -name "*.sh" | while read -r f; do
-    run chmod +x "$f" && ok "chmod +x $f"
-  done
-  # smth scripts too
-  find "$DOTFILES_DIR/smth" -name "*.sh" 2>/dev/null | while read -r f; do
-    run chmod +x "$f"
-  done
-}
-
-# ─── THEMES ─────────────────────────────────────────────────
-setup_themes() {
-  sep "Setting up themes"
-
-  local themes_dst="$HOME_DIR/.local/share/themes"
-  local icons_dst="$HOME_DIR/.local/share/icons"
-  run mkdir -p "$themes_dst" "$icons_dst"
-
-  # GTK theme
-  if [[ -d "$DOTFILES_DIR/themes/gruvbox-dark-gtk" ]]; then
-    symlink "$DOTFILES_DIR/themes/gruvbox-dark-gtk" "$themes_dst/gruvbox-dark-gtk"
-  fi
-
-  # Cursor theme
-  if [[ -d "$DOTFILES_DIR/themes/gruvbox-cursor" ]]; then
-    symlink "$DOTFILES_DIR/themes/gruvbox-cursor" "$icons_dst/gruvbox-cursor"
-  fi
-}
-
-# ─── WALLS ──────────────────────────────────────────────────
-setup_walls() {
-  sep "Wallpapers"
-  # walls stay in the dotfiles dir; configs reference $HOME/wayland/walls
-  # Create a ~/wayland symlink pointing to the dotfiles dir if not already there
-  local wayland_link="$HOME_DIR/wayland"
-  if [[ ! -e "$wayland_link" ]]; then
-    run ln -s "$DOTFILES_DIR" "$wayland_link"
-    ok "Created ~/wayland → $DOTFILES_DIR"
-  elif [[ -L "$wayland_link" && "$(readlink "$wayland_link")" == "$DOTFILES_DIR" ]]; then
-    ok "~/wayland already points to $DOTFILES_DIR"
-  else
-    warn "~/wayland exists but points elsewhere or is a real dir. Not touching it."
-    warn "Your scripts expect ~/wayland/walls — please adjust manually."
-  fi
-}
-
-# ─── SYSTEMD SERVICES ───────────────────────────────────────
-setup_services() {
-  sep "Systemd services"
-
-  local user_services=(
-    "pipewire"
-    "pipewire-pulse"
-    "wireplumber"
-  )
-  local system_services=(
-    "NetworkManager"
-    "bluetooth"
-    "tlp"
-    "sddm"
-  )
-
-  for svc in "${user_services[@]}"; do
-    if systemctl --user list-unit-files "$svc.service" &>/dev/null 2>&1; then
-      run systemctl --user enable --now "$svc.service" \
-        && ok "User service enabled: $svc" \
-        || warn "Could not enable user service: $svc"
-    else
-      warn "User service not found: $svc"
-    fi
-  done
-
-  for svc in "${system_services[@]}"; do
-    if systemctl list-unit-files "$svc.service" &>/dev/null 2>&1; then
-      run sudo systemctl enable "$svc.service" \
-        && ok "System service enabled: $svc" \
-        || warn "Could not enable system service: $svc"
-    else
-      warn "System service not found: $svc"
-    fi
-  done
-}
-
-# ─── SHELL ──────────────────────────────────────────────────
-setup_shell() {
-  sep "Shell setup"
-
-  # Add starship init to zshrc if not present
-  local zshrc="$HOME_DIR/.zshrc"
-  local starship_line='eval "$(starship init zsh)"'
-
-  if [[ ! -f "$zshrc" ]]; then
-    run touch "$zshrc"
-  fi
-
-  if ! grep -qF "starship init" "$zshrc" 2>/dev/null; then
+    info "tlp.conf → /etc/tlp.conf"
     if ! $DRY_RUN; then
-      echo "" >> "$zshrc"
-      echo "# Starship prompt" >> "$zshrc"
-      echo "$starship_line" >> "$zshrc"
+      backup "/etc/tlp.conf"
+      sudo cp "$DOTFILES_DIR/config/tlp.conf" /etc/tlp.conf \
+        && ok "tlp.conf установлен" || warn "Не удалось скопировать tlp.conf"
+    else
+      echo -e "  ${Y}[DRY]${N} sudo cp tlp.conf /etc/tlp.conf"
     fi
-    ok "Added starship init to .zshrc"
-  else
-    ok "starship init already in .zshrc"
-  fi
-
-  # Set zsh as default shell
-  if [[ "$SHELL" != "$(command -v zsh)" ]] && command -v zsh &>/dev/null; then
-    info "Changing default shell to zsh..."
-    run chsh -s "$(command -v zsh)" "$USER" \
-      && ok "Shell changed to zsh" \
-      || warn "Could not change shell (you may need to do it manually)"
-  else
-    ok "Shell is already zsh (or zsh not installed)"
   fi
 }
 
-# ─── ROLLBACK ───────────────────────────────────────────────
-rollback() {
-  sep "ROLLBACK"
-  warn "Rolling back to $BACKUP_DIR ..."
+# ── ТЕМЫ ─────────────────────────────────────────────────────────────────────
+setup_themes() {
+  sep "Темы"
+  local td="$HOME/.local/share/themes" id="$HOME/.local/share/icons"
+  run mkdir -p "$td" "$id"
+  [[ -d "$DOTFILES_DIR/themes/gruvbox-dark-gtk" ]] \
+    && symlink "$DOTFILES_DIR/themes/gruvbox-dark-gtk" "$td/gruvbox-dark-gtk"
+  [[ -d "$DOTFILES_DIR/themes/gruvbox-cursor" ]] \
+    && symlink "$DOTFILES_DIR/themes/gruvbox-cursor" "$id/gruvbox-cursor"
+}
 
-  if [[ ! -d "$BACKUP_DIR" ]]; then
-    err "Backup dir not found: $BACKUP_DIR"
-    return 1
-  fi
-
-  # Restore every backed-up file
-  find "$BACKUP_DIR" -type f -o -type l | while read -r backed_up; do
-    local rel="${backed_up#$BACKUP_DIR/}"
-    local original="$HOME_DIR/$rel"
-    mkdir -p "$(dirname "$original")"
-    cp -a "$backed_up" "$original"
-    log "RESTORE $original"
+# ── СКРИПТЫ ──────────────────────────────────────────────────────────────────
+setup_scripts() {
+  sep "Права на скрипты"
+  for dir in "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/smth" "$DOTFILES_DIR/old"; do
+    [[ -d "$dir" ]] || continue
+    while IFS= read -r f; do
+      run chmod +x "$f" && ok "chmod +x $(basename "$f")"
+    done < <(find "$dir" -name "*.sh" -type f)
   done
-  ok "Rollback complete"
 }
 
-# ─── SUMMARY ────────────────────────────────────────────────
-summary() {
-  sep "Installation summary"
-  ok "Log file:    $LOG_FILE"
-  ok "Backup dir:  $BACKUP_DIR"
+# ── ~/wayland ────────────────────────────────────────────────────────────────
+setup_wayland_link() {
+  sep "~/wayland"
+  local link="$HOME/wayland"
+  if [[ "$DOTFILES_DIR" == "$link" ]]; then
+    ok "Уже в ~/wayland — симлинк не нужен"; return 0
+  fi
+  if [[ -L "$link" && "$(readlink "$link")" == "$DOTFILES_DIR" ]]; then
+    ok "~/wayland → $DOTFILES_DIR (уже)"; return 0
+  fi
+  if [[ -e "$link" && ! -L "$link" ]]; then
+    warn "~/wayland — реальная директория, не трогаю"; return 0
+  fi
+  run ln -sf "$DOTFILES_DIR" "$link" && ok "~/wayland → $DOTFILES_DIR"
+}
+
+# ── СЕРВИСЫ ──────────────────────────────────────────────────────────────────
+setup_services() {
+  sep "Systemd сервисы"
+
+  # Пользовательские — нужно быть в графической сессии чтобы полностью заработало
+  # Поэтому просто enable без --now (--now может завалиться в chroot/ssh)
+  local user_svcs=("pipewire" "pipewire-pulse" "wireplumber")
+  local sys_svcs=("NetworkManager" "bluetooth" "tlp" "sddm")
+
+  info "Пользовательские сервисы..."
+  for svc in "${user_svcs[@]}"; do
+    # Ищем unit файл напрямую — надёжнее чем systemctl в ssh сессии
+    if find /usr/lib/systemd/user/ /etc/systemd/user/ \
+         -name "${svc}.service" 2>/dev/null | grep -q .; then
+      if ! $DRY_RUN; then
+        systemctl --user enable "$svc.service" 2>/dev/null \
+          && ok "  [user] enabled: $svc" \
+          || warn "  Не удалось enable: $svc (нормально в SSH — будет работать после логина)"
+      else
+        echo -e "  ${Y}[DRY]${N} systemctl --user enable $svc"
+      fi
+    else
+      warn "  unit не найден: $svc — пакет установлен?"
+    fi
+  done
+
+  info "Системные сервисы..."
+  for svc in "${sys_svcs[@]}"; do
+    # Ищем unit файл
+    if find /usr/lib/systemd/system/ /etc/systemd/system/ \
+         -name "${svc}.service" 2>/dev/null | grep -q .; then
+      if ! $DRY_RUN; then
+        sudo systemctl enable "$svc.service" 2>/dev/null \
+          && ok "  [system] enabled: $svc" \
+          || warn "  Не удалось enable: $svc"
+      else
+        echo -e "  ${Y}[DRY]${N} sudo systemctl enable $svc"
+      fi
+    else
+      warn "  unit не найден: $svc — пакет установлен?"
+    fi
+  done
+
+  # Обязательно включить lingering чтобы user-сервисы стартовали при загрузке
+  if ! $DRY_RUN; then
+    sudo loginctl enable-linger "$USER" 2>/dev/null \
+      && ok "loginctl linger включён для $USER" || true
+  fi
+}
+
+# ── ШЕЛЛ ─────────────────────────────────────────────────────────────────────
+setup_shell() {
+  sep "Шелл"
+  local zshrc="$HOME/.zshrc"
+  [[ -f "$zshrc" ]] || run touch "$zshrc"
+
+  if command -v starship &>/dev/null; then
+    if ! grep -qF "starship init" "$zshrc" 2>/dev/null; then
+      $DRY_RUN || printf '\n# Starship prompt\neval "$(starship init zsh)"\n' >> "$zshrc"
+      ok "starship добавлен в .zshrc"
+    else
+      ok "starship уже в .zshrc"
+    fi
+  else
+    warn "starship не установлен"
+  fi
+
+  if command -v zsh &>/dev/null; then
+    local zsh_bin; zsh_bin="$(command -v zsh)"
+    if [[ "$SHELL" != "$zsh_bin" ]]; then
+      run chsh -s "$zsh_bin" "$USER" \
+        && ok "Шелл → zsh" \
+        || warn "Не удалось: chsh -s $zsh_bin $USER"
+    else
+      ok "Шелл уже zsh"
+    fi
+  fi
+}
+
+# ── ИТОГ ─────────────────────────────────────────────────────────────────────
+print_summary() {
+  sep "ГОТОВО"
   echo ""
-  echo -e "${BOLD}${GREEN}All done! 🎉${NC}"
+  echo -e "${G}${BOLD}╔══════════════════════════════════════╗${N}"
+  echo -e "${G}${BOLD}║   Установка завершена! 🎉            ║${N}"
+  echo -e "${G}${BOLD}╚══════════════════════════════════════╝${N}"
+  echo ""
+  ok "Лог:   $LOG_FILE"
+  ok "Бэкап: $BACKUP_DIR"
   echo ""
   if $DRY_RUN; then
-    echo -e "${YELLOW}This was a DRY RUN — nothing was actually changed.${NC}"
-    echo "Re-run without --dry-run to apply changes."
-  else
-    echo "You may need to log out and back in for all changes to take effect."
-    echo "If something went wrong, run:"
-    echo "  bash $0 --rollback"
+    echo -e "${Y}DRY RUN — ничего не изменено. Убери --dry-run чтобы применить.${N}"
+    return
   fi
+  echo -e "  ${B}Дальнейшие шаги:${N}"
+  echo "  1. Перезагрузись: sudo reboot"
+  echo "  2. На экране SDDM выбери Hyprland или Sway"
+  echo "  3. Если что-то сломалось: bash $0 --rollback"
+  echo ""
 }
 
-# ─── ROLLBACK MODE ──────────────────────────────────────────
-if [[ "${1:-}" == "--rollback" ]]; then
-  # Find the most recent backup
-  BACKUP_DIR=$(find "$HOME_DIR/.dotfiles-backup" -mindepth 1 -maxdepth 1 -type d | sort | tail -1)
-  rollback
-  exit 0
-fi
-
-# ─── TRAP — auto-rollback on fatal error ────────────────────
-cleanup() {
-  local exit_code=$?
-  if [[ $exit_code -ne 0 ]]; then
-    err "Script failed with exit code $exit_code"
-    err "Attempting automatic rollback..."
-    rollback || true
-    err "Check $LOG_FILE for details"
-  fi
+# ── TRAP ─────────────────────────────────────────────────────────────────────
+_on_error() {
+  local code=$?; [[ $code -eq 0 ]] && return
+  err "Упал с кодом $code — лог: $LOG_FILE"
+  [[ -d "$BACKUP_DIR" ]] && { err "Автооткат..."; do_rollback || true; }
 }
-trap cleanup EXIT
+trap '_on_error' ERR
 
-# ═══════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════════════════════
 #  MAIN
-# ═══════════════════════════════════════════════════════════
-echo ""
-echo -e "${BOLD}${CYAN}╔══════════════════════════════════════╗${NC}"
-echo -e "${BOLD}${CYAN}║  wayland dotfiles installer          ║${NC}"
-echo -e "${BOLD}${CYAN}╚══════════════════════════════════════╝${NC}"
-echo ""
-
-$DRY_RUN && warn "DRY RUN MODE — no changes will be made"
-
-# Initialize log
+# ═════════════════════════════════════════════════════════════════════════════
 mkdir -p "$(dirname "$LOG_FILE")"
-echo "" >> "$LOG_FILE"
-log "========================================"
-log "Install started at $(date)"
-log "Script dir: $DOTFILES_DIR"
-log "User: $USER, Home: $HOME_DIR"
-log "Flags: dry-run=$DRY_RUN no-packages=$SKIP_PACKAGES no-symlinks=$SKIP_SYMLINKS"
+{ echo ""; echo "=== Старт: $(date) | $USER | $DOTFILES_DIR ==="; } >> "$LOG_FILE"
+
+$DO_ROLLBACK && { do_rollback; exit 0; }
+
+echo ""
+echo -e "${C}${BOLD}╔══════════════════════════════════════╗${N}"
+echo -e "${C}${BOLD}║     wayland dotfiles installer       ║${N}"
+echo -e "${C}${BOLD}╚══════════════════════════════════════╝${N}"
+echo ""
+$DRY_RUN && warn "DRY RUN — изменений не будет"
 
 preflight
 
-$SKIP_PACKAGES  || install_packages
-$SKIP_SYMLINKS  || create_symlinks
-$SKIP_SYMLINKS  || setup_themes
+if $ONLY_PACKAGES; then
+  install_yay; install_packages
+  print_summary; trap - ERR; exit 0
+fi
 
+$SKIP_PACKAGES || { install_yay; install_packages; }
+$SKIP_SYMLINKS || { create_symlinks; setup_themes; }
 setup_scripts
-setup_walls
+setup_wayland_link
+$SKIP_SERVICES || setup_services
+$SKIP_SHELL    || setup_shell
 
-$SKIP_SERVICES  || setup_services
-setup_shell
-
-summary
-
-log "Install finished at $(date)"
-trap - EXIT   # disarm rollback trap on success
+print_summary
+log "=== Финиш: $(date) ==="
+trap - ERR
 exit 0
