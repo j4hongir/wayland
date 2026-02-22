@@ -1,478 +1,499 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# ============================================================
+#  dotfiles installer — wayland / arch-based
+#  Usage:  bash install.sh [--dry-run] [--no-packages] [--no-symlinks]
+#  Logs:   ~/dotfiles-install.log
+# ============================================================
 
-# ============================================================================
-# Arch Linux Wayland Environment Installation Script (Improved)
-# ============================================================================
+set -Euo pipefail
 
-set -e  # Exit on error
+# ─── CONSTANTS ──────────────────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$SCRIPT_DIR"
+HOME_DIR="$HOME"
+LOG_FILE="$HOME_DIR/dotfiles-install.log"
+BACKUP_DIR="$HOME_DIR/.dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
+PACKAGE_LIST="$DOTFILES_DIR/package.list"
 
-# Colors
-readonly GREEN='\033[0;32m'
-readonly BLUE='\033[0;34m'
-readonly RED='\033[0;31m'
-readonly YELLOW='\033[1;33m'
-readonly NC='\033[0m'
+# AUR helper (yay preferred, falls back to paru)
+AUR_HELPER=""
 
-# Directories
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly CONFIG_DIR="${SCRIPT_DIR}/config"
-readonly LOG_FILE="${HOME}/.install_wayland.log"
-readonly BACKUP_DIR="${HOME}/.config_backup_$(date +%Y%m%d_%H%M%S)"
+# ─── FLAGS ──────────────────────────────────────────────────
+DRY_RUN=false
+SKIP_PACKAGES=false
+SKIP_SYMLINKS=false
+SKIP_SERVICES=false
 
-# ============================================================================
-# Helper Functions
-# ============================================================================
+# ─── COLORS ─────────────────────────────────────────────────
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m'
 
-log() {
-    echo -e "${2:-$NC}[$(date +'%Y-%m-%d %H:%M:%S')] $1${NC}" | tee -a "$LOG_FILE"
+# ─── LOGGING ────────────────────────────────────────────────
+log()  { local ts; ts=$(date '+%Y-%m-%d %H:%M:%S'); echo "[$ts] $*" | tee -a "$LOG_FILE"; }
+info() { log "INFO  $*"; echo -e "${BLUE}→${NC} $*"; }
+ok()   { log "OK    $*"; echo -e "${GREEN}✓${NC} $*"; }
+warn() { log "WARN  $*"; echo -e "${YELLOW}⚠${NC}  $*"; }
+err()  { log "ERROR $*"; echo -e "${RED}✗${NC} $*" >&2; }
+die()  { err "$*"; exit 1; }
+sep()  { echo -e "${CYAN}──────────────────────────────────────────${NC}"; log "--- $* ---"; }
+
+# ─── ARG PARSING ────────────────────────────────────────────
+for arg in "$@"; do
+  case $arg in
+    --dry-run)       DRY_RUN=true ;;
+    --no-packages)   SKIP_PACKAGES=true ;;
+    --no-symlinks)   SKIP_SYMLINKS=true ;;
+    --no-services)   SKIP_SERVICES=true ;;
+    -h|--help)
+      echo "Usage: $0 [--dry-run] [--no-packages] [--no-symlinks] [--no-services]"
+      echo "  --dry-run      Show what would be done, don't change anything"
+      echo "  --no-packages  Skip package installation"
+      echo "  --no-symlinks  Skip config symlinks"
+      echo "  --no-services  Skip systemd service enabling"
+      exit 0 ;;
+    *) warn "Unknown argument: $arg" ;;
+  esac
+done
+
+# ─── HELPERS ────────────────────────────────────────────────
+run() {
+  if $DRY_RUN; then
+    echo -e "  ${YELLOW}[DRY]${NC} $*"
+    log "DRY   $*"
+  else
+    log "RUN   $*"
+    "$@"
+  fi
 }
 
-log_error() {
-    log "ERROR: $1" "$RED" >&2
+# Backup a file/dir before touching it
+backup() {
+  local target="$1"
+  if [[ -e "$target" || -L "$target" ]]; then
+    local dest="$BACKUP_DIR/${target#$HOME_DIR/}"
+    run mkdir -p "$(dirname "$dest")"
+    run cp -a "$target" "$dest"
+    log "BACKUP $target → $dest"
+  fi
 }
 
-log_success() {
-    log "✓ $1" "$GREEN"
+# Create a symlink safely (backs up existing target first)
+symlink() {
+  local src="$1"   # absolute path inside dotfiles repo
+  local dst="$2"   # absolute destination path
+
+  if [[ ! -e "$src" ]]; then
+    warn "Source not found, skipping symlink: $src"
+    return 0
+  fi
+
+  if [[ -L "$dst" && "$(readlink "$dst")" == "$src" ]]; then
+    ok "Already linked: $dst"
+    return 0
+  fi
+
+  backup "$dst"
+
+  if ! $DRY_RUN; then
+    rm -rf "$dst"
+    mkdir -p "$(dirname "$dst")"
+    ln -s "$src" "$dst"
+  else
+    echo -e "  ${YELLOW}[DRY]${NC} ln -s $src $dst"
+  fi
+  ok "Linked: $dst → $src"
 }
 
-log_info() {
-    log "→ $1" "$BLUE"
+# ─── PREFLIGHT ──────────────────────────────────────────────
+preflight() {
+  sep "Preflight checks"
+
+  # Must be Arch-based
+  if ! command -v pacman &>/dev/null; then
+    die "pacman not found. This script only works on Arch-based distros."
+  fi
+  ok "pacman found"
+
+  # Not root
+  if [[ $EUID -eq 0 ]]; then
+    die "Do not run as root. Run as your normal user."
+  fi
+  ok "Running as user: $USER"
+
+  # dotfiles repo integrity
+  [[ -d "$DOTFILES_DIR/config" ]] || die "config/ directory not found in $DOTFILES_DIR"
+  ok "Dotfiles directory: $DOTFILES_DIR"
+
+  # Create backup dir (unless dry-run)
+  if ! $DRY_RUN; then
+    mkdir -p "$BACKUP_DIR"
+    info "Backup location: $BACKUP_DIR"
+  fi
+
+  # Detect AUR helper
+  if command -v yay  &>/dev/null; then AUR_HELPER="yay"
+  elif command -v paru &>/dev/null; then AUR_HELPER="paru"
+  else AUR_HELPER=""
+  fi
+  [[ -n "$AUR_HELPER" ]] && ok "AUR helper: $AUR_HELPER" || warn "No AUR helper found (yay/paru). AUR packages will be skipped."
 }
 
-log_warning() {
-    log "⚠ $1" "$YELLOW"
-}
+# ─── PACKAGE INSTALLATION ───────────────────────────────────
+install_packages() {
+  sep "Package installation"
 
-# Check if command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
-}
+  if [[ ! -f "$PACKAGE_LIST" ]]; then
+    warn "package.list not found, skipping package install"
+    return 0
+  fi
 
-# Prompt user for confirmation
-confirm() {
-    local prompt="${1:-Continue?}"
-    local response
-    read -r -p "$(echo -e ${YELLOW}${prompt} [y/N]:${NC} )" response
-    [[ "$response" =~ ^[Yy]$ ]]
-}
+  # Read package names (first column, strip version)
+  local pkgs=()
+  while IFS= read -r line; do
+    [[ -z "$line" || "$line" =~ ^# ]] && continue
+    pkgs+=( "$(echo "$line" | awk '{print $1}')" )
+  done < "$PACKAGE_LIST"
 
-# Backup existing config
-backup_config() {
-    if [ -d "$HOME/.config" ]; then
-        log_info "Creating backup of existing config..."
-        mkdir -p "$BACKUP_DIR"
-        
-        # Backup only directories that will be overwritten
-        for dir in "$CONFIG_DIR"/*; do
-            local dirname=$(basename "$dir")
-            if [ -d "$HOME/.config/$dirname" ]; then
-                cp -r "$HOME/.config/$dirname" "$BACKUP_DIR/"
-                log_success "Backed up ~/.config/$dirname"
-            fi
-        done
-        
-        log_success "Backup created at: $BACKUP_DIR"
-    fi
-}
+  info "Total packages in list: ${#pkgs[@]}"
 
-# Parse package.list file
-parse_package_list() {
-    local section="$1"
-    local packages=()
-    local in_section=false
-    
-    while IFS= read -r line; do
-        # Remove comments and whitespace
-        line=$(echo "$line" | sed 's/#.*//' | xargs)
-        
-        # Skip empty lines
-        [ -z "$line" ] && continue
-        
-        # Check for section markers
-        if [[ "$line" =~ ^\[.*\]$ ]]; then
-            if [[ "$line" == "[$section]" ]]; then
-                in_section=true
-            else
-                in_section=false
-            fi
-            continue
-        fi
-        
-        # Add package if in correct section
-        if [ "$in_section" = true ]; then
-            packages+=("$line")
-        fi
-    done < "${SCRIPT_DIR}/package.list"
-    
-    echo "${packages[@]}"
-}
+  # Split into official and AUR (we try official first)
+  info "Updating pacman databases..."
+  run sudo pacman -Sy --noconfirm 2>/dev/null || warn "pacman -Sy failed, continuing"
 
-# Install official packages
-install_official_packages() {
-    log_info "Reading official packages from package.list..."
-    local packages=($(parse_package_list "official"))
-    
-    if [ ${#packages[@]} -eq 0 ]; then
-        log_warning "No official packages found in package.list"
-        return
-    fi
-    
-    log_info "Found ${#packages[@]} official packages"
-    log_info "Packages: ${packages[*]}"
-    
-    if confirm "Install official packages?"; then
-        log_info "Updating system..."
-        sudo pacman -Syu --noconfirm
-        
-        log_info "Installing official packages..."
-        if sudo pacman -S --needed --noconfirm "${packages[@]}"; then
-            log_success "Official packages installed successfully"
-        else
-            log_error "Failed to install some official packages"
-            return 1
-        fi
-    fi
-}
+  local official=()
+  local aur=()
 
-# Install yay AUR helper
-install_yay() {
-    if command_exists yay; then
-        log_success "yay is already installed"
-        return 0
-    fi
-    
-    log_info "Installing yay AUR helper..."
-    
-    # Install base-devel if not present
-    if ! pacman -Qq base-devel &>/dev/null; then
-        sudo pacman -S --needed --noconfirm base-devel
-    fi
-    
-    local yay_dir="/tmp/yay_$$"
-    git clone https://aur.archlinux.org/yay.git "$yay_dir"
-    
-    if (cd "$yay_dir" && makepkg -si --noconfirm); then
-        rm -rf "$yay_dir"
-        log_success "yay installed successfully"
+  for pkg in "${pkgs[@]}"; do
+    if pacman -Si "$pkg" &>/dev/null 2>&1; then
+      official+=("$pkg")
     else
-        rm -rf "$yay_dir"
-        log_error "Failed to install yay"
-        return 1
+      aur+=("$pkg")
     fi
-}
+  done
 
-# Install AUR packages
-install_aur_packages() {
-    if ! command_exists yay; then
-        log_error "yay is not installed. Cannot install AUR packages."
-        return 1
-    fi
-    
-    log_info "Reading AUR packages from package.list..."
-    local packages=($(parse_package_list "aur"))
-    
-    if [ ${#packages[@]} -eq 0 ]; then
-        log_warning "No AUR packages found in package.list"
-        return
-    fi
-    
-    log_info "Found ${#packages[@]} AUR packages"
-    log_info "Packages: ${packages[*]}"
-    
-    if confirm "Install AUR packages?"; then
-        log_info "Installing AUR packages..."
-        if yay -S --needed --noconfirm "${packages[@]}"; then
-            log_success "AUR packages installed successfully"
-        else
-            log_error "Failed to install some AUR packages"
-            return 1
-        fi
-    fi
-}
+  info "Official repo packages: ${#official[@]}"
+  info "Potential AUR packages:  ${#aur[@]}"
 
-# Copy configuration files
-copy_configs() {
-    if [ ! -d "$CONFIG_DIR" ]; then
-        log_error "Config directory not found: $CONFIG_DIR"
-        return 1
-    fi
-    
-    log_info "Copying configuration files..."
-    
-    if confirm "Copy configuration files? (Existing configs will be backed up)"; then
-        backup_config
-        
-        if cp -r "$CONFIG_DIR"/* "$HOME/.config/"; then
-            log_success "Configuration files copied successfully"
-        else
-            log_error "Failed to copy configuration files"
-            return 1
-        fi
-    fi
-}
+  # Install official packages (only missing ones)
+  local missing_official=()
+  for pkg in "${official[@]}"; do
+    pacman -Qi "$pkg" &>/dev/null 2>&1 || missing_official+=("$pkg")
+  done
 
-# Setup ZSH plugins
-setup_zsh() {
-    if ! command_exists zsh; then
-        log_warning "ZSH is not installed. Skipping ZSH setup."
-        return
-    fi
-    
-    log_info "Setting up ZSH plugins..."
-    
-    local plugins=(
-        "zsh-autosuggestions:https://github.com/zsh-users/zsh-autosuggestions"
-        "zsh-syntax-highlighting:https://github.com/zsh-users/zsh-syntax-highlighting.git"
-        "fzf-tab:https://github.com/Aloxaf/fzf-tab"
-    )
-    
-    for plugin in "${plugins[@]}"; do
-        local name="${plugin%%:*}"
-        local url="${plugin#*:}"
-        local target="$HOME/.config/$name"
-        
-        if [ -d "$target" ]; then
-            log_success "$name already installed"
-        else
-            log_info "Installing $name..."
-            if git clone "$url" "$target"; then
-                log_success "$name installed"
-            else
-                log_error "Failed to install $name"
-            fi
-        fi
+  if [[ ${#missing_official[@]} -gt 0 ]]; then
+    info "Installing ${#missing_official[@]} missing official packages..."
+    run sudo pacman -S --noconfirm --needed "${missing_official[@]}" \
+      || warn "Some official packages failed to install (see log)"
+  else
+    ok "All official packages already installed"
+  fi
+
+  # Install AUR packages
+  if [[ -n "$AUR_HELPER" && ${#aur[@]} -gt 0 ]]; then
+    local missing_aur=()
+    for pkg in "${aur[@]}"; do
+      pacman -Qi "$pkg" &>/dev/null 2>&1 || missing_aur+=("$pkg")
     done
-    
-    # Set ZSH as default shell
-    if [ "$SHELL" != "$(which zsh)" ]; then
-        if confirm "Set ZSH as default shell?"; then
-            chsh -s "$(which zsh)"
-            log_success "ZSH set as default shell"
-        fi
-    fi
-}
-
-# Install Starship prompt
-install_starship() {
-    if command_exists starship; then
-        log_success "Starship is already installed"
-        return 0
-    fi
-    
-    log_info "Installing Starship prompt..."
-    if curl -sS https://starship.rs/install.sh | sh -s -- -y; then
-        log_success "Starship installed successfully"
+    if [[ ${#missing_aur[@]} -gt 0 ]]; then
+      info "Installing ${#missing_aur[@]} AUR packages via $AUR_HELPER..."
+      run "$AUR_HELPER" -S --noconfirm --needed "${missing_aur[@]}" \
+        || warn "Some AUR packages failed to install"
     else
-        log_error "Failed to install Starship"
-        return 1
+      ok "All AUR packages already installed"
     fi
+  elif [[ ${#aur[@]} -gt 0 ]]; then
+    warn "Skipping ${#aur[@]} AUR packages (no AUR helper)"
+  fi
 }
 
-# Install vim-plug for Neovim
-install_vim_plug() {
-    local plug_file="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
-    
-    if [ -f "$plug_file" ]; then
-        log_success "vim-plug is already installed"
-        return 0
-    fi
-    
-    log_info "Installing vim-plug..."
-    if curl -fLo "$plug_file" --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-        log_success "vim-plug installed successfully"
+# ─── SYMLINKS ───────────────────────────────────────────────
+# Maps: dotfiles relative path → $HOME destination
+declare -A SYMLINK_MAP=(
+  # hyprland
+  ["config/hypr"]="$HOME_DIR/.config/hypr"
+  # sway
+  ["config/sway"]="$HOME_DIR/.config/sway"
+  # waybar
+  ["config/waybar"]="$HOME_DIR/.config/waybar"
+  # kitty
+  ["config/kitty"]="$HOME_DIR/.config/kitty"
+  # nvim
+  ["config/nvim"]="$HOME_DIR/.config/nvim"
+  # helix
+  ["config/helix"]="$HOME_DIR/.config/helix"
+  # wofi
+  ["config/wofi"]="$HOME_DIR/.config/wofi"
+  # tofi
+  ["config/tofi"]="$HOME_DIR/.config/tofi"
+  # swaync
+  ["config/swaync"]="$HOME_DIR/.config/swaync"
+  # swaylock
+  ["config/swaylock"]="$HOME_DIR/.config/swaylock"
+  # btop
+  ["config/btop"]="$HOME_DIR/.config/btop"
+  # cava
+  ["config/cava"]="$HOME_DIR/.config/cava"
+  # macchina
+  ["config/macchina"]="$HOME_DIR/.config/macchina"
+  # gtk
+  ["config/gtk-3.0"]="$HOME_DIR/.config/gtk-3.0"
+  ["config/gtk-4.0"]="$HOME_DIR/.config/gtk-4.0"
+  # starship
+  ["config/starship.toml"]="$HOME_DIR/.config/starship.toml"
+  # pacman
+  ["config/pacman.conf"]="$HOME_DIR/.config/pacman.conf"
+  # tmux
+  ["config/.tmux.conf"]="$HOME_DIR/.tmux.conf"
+  # mimeapps
+  ["config/mimeapps.list"]="$HOME_DIR/.config/mimeapps.list"
+  # scripts (keep in wayland/scripts, just make scripts executable)
+)
+
+create_symlinks() {
+  sep "Creating symlinks"
+
+  for rel_src in "${!SYMLINK_MAP[@]}"; do
+    local abs_src="$DOTFILES_DIR/$rel_src"
+    local dst="${SYMLINK_MAP[$rel_src]}"
+    symlink "$abs_src" "$dst"
+  done
+
+  # pacman.conf is system-wide — special handling
+  if [[ -f "$DOTFILES_DIR/config/pacman.conf" ]]; then
+    info "pacman.conf: copying to /etc/pacman.conf (requires sudo)"
+    backup "/etc/pacman.conf"
+    run sudo cp "$DOTFILES_DIR/config/pacman.conf" /etc/pacman.conf \
+      && ok "pacman.conf installed" \
+      || warn "Failed to copy pacman.conf"
+  fi
+
+  # tlp.conf → /etc/tlp.conf
+  if [[ -f "$DOTFILES_DIR/config/tlp.conf" ]]; then
+    info "tlp.conf: copying to /etc/tlp.conf (requires sudo)"
+    backup "/etc/tlp.conf"
+    run sudo cp "$DOTFILES_DIR/config/tlp.conf" /etc/tlp.conf \
+      && ok "tlp.conf installed" \
+      || warn "Failed to copy tlp.conf"
+  fi
+}
+
+# ─── SCRIPTS ────────────────────────────────────────────────
+setup_scripts() {
+  sep "Making scripts executable"
+  find "$DOTFILES_DIR/scripts" -name "*.sh" | while read -r f; do
+    run chmod +x "$f" && ok "chmod +x $f"
+  done
+  # smth scripts too
+  find "$DOTFILES_DIR/smth" -name "*.sh" 2>/dev/null | while read -r f; do
+    run chmod +x "$f"
+  done
+}
+
+# ─── THEMES ─────────────────────────────────────────────────
+setup_themes() {
+  sep "Setting up themes"
+
+  local themes_dst="$HOME_DIR/.local/share/themes"
+  local icons_dst="$HOME_DIR/.local/share/icons"
+  run mkdir -p "$themes_dst" "$icons_dst"
+
+  # GTK theme
+  if [[ -d "$DOTFILES_DIR/themes/gruvbox-dark-gtk" ]]; then
+    symlink "$DOTFILES_DIR/themes/gruvbox-dark-gtk" "$themes_dst/gruvbox-dark-gtk"
+  fi
+
+  # Cursor theme
+  if [[ -d "$DOTFILES_DIR/themes/gruvbox-cursor" ]]; then
+    symlink "$DOTFILES_DIR/themes/gruvbox-cursor" "$icons_dst/gruvbox-cursor"
+  fi
+}
+
+# ─── WALLS ──────────────────────────────────────────────────
+setup_walls() {
+  sep "Wallpapers"
+  # walls stay in the dotfiles dir; configs reference $HOME/wayland/walls
+  # Create a ~/wayland symlink pointing to the dotfiles dir if not already there
+  local wayland_link="$HOME_DIR/wayland"
+  if [[ ! -e "$wayland_link" ]]; then
+    run ln -s "$DOTFILES_DIR" "$wayland_link"
+    ok "Created ~/wayland → $DOTFILES_DIR"
+  elif [[ -L "$wayland_link" && "$(readlink "$wayland_link")" == "$DOTFILES_DIR" ]]; then
+    ok "~/wayland already points to $DOTFILES_DIR"
+  else
+    warn "~/wayland exists but points elsewhere or is a real dir. Not touching it."
+    warn "Your scripts expect ~/wayland/walls — please adjust manually."
+  fi
+}
+
+# ─── SYSTEMD SERVICES ───────────────────────────────────────
+setup_services() {
+  sep "Systemd services"
+
+  local user_services=(
+    "pipewire"
+    "pipewire-pulse"
+    "wireplumber"
+  )
+  local system_services=(
+    "NetworkManager"
+    "bluetooth"
+    "tlp"
+    "sddm"
+  )
+
+  for svc in "${user_services[@]}"; do
+    if systemctl --user list-unit-files "$svc.service" &>/dev/null 2>&1; then
+      run systemctl --user enable --now "$svc.service" \
+        && ok "User service enabled: $svc" \
+        || warn "Could not enable user service: $svc"
     else
-        log_error "Failed to install vim-plug"
-        return 1
+      warn "User service not found: $svc"
     fi
-}
+  done
 
-# Configure GTK settings
-configure_gtk() {
-    if ! command_exists gsettings; then
-        log_warning "gsettings not found. Skipping GTK configuration."
-        return
-    fi
-    
-    log_info "Configuring GTK settings..."
-    
-    local settings=(
-        "org.gnome.desktop.interface:cursor-theme:Vimix-cursors"
-        "org.gnome.desktop.interface:color-scheme:prefer-dark"
-        "org.gnome.desktop.interface:gtk-theme:Gruvbox-Dark"
-        "org.gnome.desktop.interface:icon-theme:gruvbox-dark-icons-gtk"
-    )
-    
-    for setting in "${settings[@]}"; do
-        local schema="${setting%%:*}"
-        local rest="${setting#*:}"
-        local key="${rest%%:*}"
-        local value="${rest#*:}"
-        
-        if gsettings set "$schema" "$key" "$value" 2>/dev/null; then
-            log_success "Set $key to $value"
-        else
-            log_warning "Failed to set $key"
-        fi
-    done
-}
-
-# Install Gruvbox theme
-install_gruvbox_theme() {
-    local theme_dir="$HOME/.themes/Gruvbox-Dark"
-    
-    if [ -d "$theme_dir" ]; then
-        log_success "Gruvbox-Dark theme already installed"
-        return 0
-    fi
-    
-    if [ -d "${SCRIPT_DIR}/Gruvbox-Dark" ]; then
-        log_info "Installing Gruvbox-Dark theme..."
-        mkdir -p "$HOME/.themes"
-        cp -r "${SCRIPT_DIR}/Gruvbox-Dark" "$theme_dir"
-        log_success "Gruvbox-Dark theme installed"
+  for svc in "${system_services[@]}"; do
+    if systemctl list-unit-files "$svc.service" &>/dev/null 2>&1; then
+      run sudo systemctl enable "$svc.service" \
+        && ok "System service enabled: $svc" \
+        || warn "Could not enable system service: $svc"
     else
-        log_warning "Gruvbox-Dark directory not found in script directory"
+      warn "System service not found: $svc"
     fi
+  done
 }
 
-# Install custom applications
-install_custom_apps() {
-    log_info "Installing custom applications..."
-    
-    # Install tenki (weather app)
-    if ! command_exists tenki; then
-        log_info "Installing tenki..."
-        local tenki_dir="/tmp/tenki_$$"
-        if git clone https://github.com/ckaznable/tenki "$tenki_dir"; then
-            if (cd "$tenki_dir" && make build && sudo make install); then
-                log_success "tenki installed successfully"
-            else
-                log_error "Failed to build/install tenki"
-            fi
-            rm -rf "$tenki_dir"
-        else
-            log_error "Failed to clone tenki repository"
-        fi
-    else
-        log_success "tenki is already installed"
+# ─── SHELL ──────────────────────────────────────────────────
+setup_shell() {
+  sep "Shell setup"
+
+  # Add starship init to zshrc if not present
+  local zshrc="$HOME_DIR/.zshrc"
+  local starship_line='eval "$(starship init zsh)"'
+
+  if [[ ! -f "$zshrc" ]]; then
+    run touch "$zshrc"
+  fi
+
+  if ! grep -qF "starship init" "$zshrc" 2>/dev/null; then
+    if ! $DRY_RUN; then
+      echo "" >> "$zshrc"
+      echo "# Starship prompt" >> "$zshrc"
+      echo "$starship_line" >> "$zshrc"
     fi
-    
-    # Clone Dashboard
-    local dashboard_dir="$HOME/Dashboard"
-    if [ ! -d "$dashboard_dir" ]; then
-        log_info "Cloning Dashboard..."
-        if git clone https://github.com/Jahamars/Dashboard.git "$dashboard_dir"; then
-            log_success "Dashboard cloned to $dashboard_dir"
-        else
-            log_error "Failed to clone Dashboard"
-        fi
-    else
-        log_success "Dashboard already exists"
-    fi
+    ok "Added starship init to .zshrc"
+  else
+    ok "starship init already in .zshrc"
+  fi
+
+  # Set zsh as default shell
+  if [[ "$SHELL" != "$(command -v zsh)" ]] && command -v zsh &>/dev/null; then
+    info "Changing default shell to zsh..."
+    run chsh -s "$(command -v zsh)" "$USER" \
+      && ok "Shell changed to zsh" \
+      || warn "Could not change shell (you may need to do it manually)"
+  else
+    ok "Shell is already zsh (or zsh not installed)"
+  fi
 }
 
-# Enable system services
-enable_services() {
-    log_info "Enabling system services..."
-    
-    local services=(
-        "NetworkManager"
-        "bluetooth"
-        "tlp"
-    )
-    
-    for service in "${services[@]}"; do
-        if systemctl is-enabled "$service" &>/dev/null; then
-            log_success "$service is already enabled"
-        else
-            if sudo systemctl enable "$service" 2>/dev/null; then
-                log_success "Enabled $service"
-            else
-                log_warning "Failed to enable $service (may not be installed)"
-            fi
-        fi
-    done
+# ─── ROLLBACK ───────────────────────────────────────────────
+rollback() {
+  sep "ROLLBACK"
+  warn "Rolling back to $BACKUP_DIR ..."
+
+  if [[ ! -d "$BACKUP_DIR" ]]; then
+    err "Backup dir not found: $BACKUP_DIR"
+    return 1
+  fi
+
+  # Restore every backed-up file
+  find "$BACKUP_DIR" -type f -o -type l | while read -r backed_up; do
+    local rel="${backed_up#$BACKUP_DIR/}"
+    local original="$HOME_DIR/$rel"
+    mkdir -p "$(dirname "$original")"
+    cp -a "$backed_up" "$original"
+    log "RESTORE $original"
+  done
+  ok "Rollback complete"
 }
 
-# Print post-installation instructions
-print_post_install() {
-    echo ""
-    echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${GREEN}║         Installation Completed Successfully!              ║${NC}"
-    echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
-    echo ""
-    echo -e "${BLUE}Next steps:${NC}"
-    echo "  1. Reboot your system: sudo reboot"
-    echo "  2. Select Hyprland or Sway from your display manager"
-    echo "  3. Open Neovim and run :PlugInstall to install plugins"
-    echo "  4. Check Dashboard in ~/Dashboard directory"
-    echo ""
-    echo -e "${BLUE}Useful commands:${NC}"
-    echo "  • View logs: cat $LOG_FILE"
-    echo "  • Restore backup: cp -r $BACKUP_DIR/* ~/.config/"
-    echo "  • Update packages: yay -Syu"
-    echo ""
-    echo -e "${YELLOW}Note: Some changes require a system reboot to take effect.${NC}"
-    echo ""
+# ─── SUMMARY ────────────────────────────────────────────────
+summary() {
+  sep "Installation summary"
+  ok "Log file:    $LOG_FILE"
+  ok "Backup dir:  $BACKUP_DIR"
+  echo ""
+  echo -e "${BOLD}${GREEN}All done! 🎉${NC}"
+  echo ""
+  if $DRY_RUN; then
+    echo -e "${YELLOW}This was a DRY RUN — nothing was actually changed.${NC}"
+    echo "Re-run without --dry-run to apply changes."
+  else
+    echo "You may need to log out and back in for all changes to take effect."
+    echo "If something went wrong, run:"
+    echo "  bash $0 --rollback"
+  fi
 }
 
-# ============================================================================
-# Main Installation Flow
-# ============================================================================
+# ─── ROLLBACK MODE ──────────────────────────────────────────
+if [[ "${1:-}" == "--rollback" ]]; then
+  # Find the most recent backup
+  BACKUP_DIR=$(find "$HOME_DIR/.dotfiles-backup" -mindepth 1 -maxdepth 1 -type d | sort | tail -1)
+  rollback
+  exit 0
+fi
 
-main() {
-    log_info "Starting Wayland environment installation..."
-    log_info "Script directory: $SCRIPT_DIR"
-    log_info "Log file: $LOG_FILE"
-    
-    # Check if running on Arch Linux
-    if [ ! -f /etc/arch-release ]; then
-        log_error "This script is designed for Arch Linux"
-        exit 1
-    fi
-    
-    # Check if package.list exists
-    if [ ! -f "${SCRIPT_DIR}/package.list" ]; then
-        log_error "package.list not found in script directory"
-        exit 1
-    fi
-    
-    echo -e "${BLUE}"
-    echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║     Arch Linux Wayland Environment Installation           ║"
-    echo "║                                                            ║"
-    echo "║  This script will:                                         ║"
-    echo "║  • Install system packages from package.list               ║"
-    echo "║  • Setup Hyprland/Sway window managers                     ║"
-    echo "║  • Configure development environment                       ║"
-    echo "║  • Install themes and customizations                       ║"
-    echo "╚════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
-    
-    if ! confirm "Do you want to continue with the installation?"; then
-        log_info "Installation cancelled by user"
-        exit 0
-    fi
-    
-    # Installation steps
-    install_official_packages || log_warning "Some official packages failed to install"
-    install_yay || log_error "Failed to install yay. Cannot continue with AUR packages."
-    install_aur_packages || log_warning "Some AUR packages failed to install"
-    
-    copy_configs || log_error "Failed to copy configuration files"
-    install_gruvbox_theme
-    
-    setup_zsh
-    install_starship
-    install_vim_plug
-    
-    configure_gtk
-    install_custom_apps
-    enable_services
-    
-    print_post_install
+# ─── TRAP — auto-rollback on fatal error ────────────────────
+cleanup() {
+  local exit_code=$?
+  if [[ $exit_code -ne 0 ]]; then
+    err "Script failed with exit code $exit_code"
+    err "Attempting automatic rollback..."
+    rollback || true
+    err "Check $LOG_FILE for details"
+  fi
 }
+trap cleanup EXIT
 
-# Run main function
-main "$@"
+# ═══════════════════════════════════════════════════════════
+#  MAIN
+# ═══════════════════════════════════════════════════════════
+echo ""
+echo -e "${BOLD}${CYAN}╔══════════════════════════════════════╗${NC}"
+echo -e "${BOLD}${CYAN}║  wayland dotfiles installer          ║${NC}"
+echo -e "${BOLD}${CYAN}╚══════════════════════════════════════╝${NC}"
+echo ""
+
+$DRY_RUN && warn "DRY RUN MODE — no changes will be made"
+
+# Initialize log
+mkdir -p "$(dirname "$LOG_FILE")"
+echo "" >> "$LOG_FILE"
+log "========================================"
+log "Install started at $(date)"
+log "Script dir: $DOTFILES_DIR"
+log "User: $USER, Home: $HOME_DIR"
+log "Flags: dry-run=$DRY_RUN no-packages=$SKIP_PACKAGES no-symlinks=$SKIP_SYMLINKS"
+
+preflight
+
+$SKIP_PACKAGES  || install_packages
+$SKIP_SYMLINKS  || create_symlinks
+$SKIP_SYMLINKS  || setup_themes
+
+setup_scripts
+setup_walls
+
+$SKIP_SERVICES  || setup_services
+setup_shell
+
+summary
+
+log "Install finished at $(date)"
+trap - EXIT   # disarm rollback trap on success
+exit 0
