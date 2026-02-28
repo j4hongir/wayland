@@ -24,16 +24,16 @@
     ],
     "widget-config": {
         "title": {
-            "text": "Уведомления",
+            "text": "notifications",
             "clear-all-button": true,
-            "button-text": "Очистить"
+            "button-text": "clear"
         },
         "dnd": {
-            "text": "Не беспокоить"
+            "text": "dnd"
         },
         "label": {
             "max-lines": 5,
-            "text": "Центр управления"
+            "text": "soc"
         },
         "mpris": {
             "image-size": 96,

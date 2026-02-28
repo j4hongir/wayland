@@ -10,9 +10,9 @@ info() { echo -e "${C}→${N} $*"; }
 warn() { echo -e "${Y}⚠${N}  $*"; }
 die()  { echo -e "${R}✗${N} $*" >&2; exit 1; }
 
-[[ $EUID -ne 0 ]] || die "Не от root!"
-command -v pacman &>/dev/null || die "Только Arch!"
-[[ -f "$PKGLIST" ]] || die "Нет package.list"
+[[ $EUID -ne 0 ]] || die "run as user"
+command -v pacman &>/dev/null || die "arch only"
+[[ -f "$PKGLIST" ]] || die "package.list not found"
 
 pkgs=()
 while IFS= read -r line; do
@@ -40,7 +40,7 @@ for pkg in "${pkgs[@]}"; do
     fi
 done
 
-ok "Уже: $skip | Official: ${#official[@]} | AUR: ${#aur[@]}"
+ok "aleady: $skip | Official: ${#official[@]} | AUR: ${#aur[@]}"
 
 [[ ${#official[@]} -gt 0 ]] && \
     sudo pacman -S --needed --noconfirm "${official[@]}" 2>&1 \
@@ -62,7 +62,7 @@ if [[ ${#aur[@]} -gt 0 ]]; then
     for pkg in "${aur[@]}"; do
         "$aur_bin" -S --needed --noconfirm "$pkg" 2>&1 | tail -1 || failed+=("$pkg")
     done
-    [[ ${#failed[@]} -gt 0 ]] && warn "Не установлено: ${failed[*]}"
+    [[ ${#failed[@]} -gt 0 ]] && warn "not installed: ${failed[*]}"
 fi
 
 for svc in NetworkManager bluetooth sddm tlp; do
@@ -73,7 +73,7 @@ sudo loginctl enable-linger "$USER" 2>/dev/null || true
 
 link() {
     local src="$1" dst="$2"
-    [[ -e "$src" || -d "$src" ]] || { warn "Нет: $src"; return; }
+    [[ -e "$src" || -d "$src" ]] || { warn "not: $src"; return; }
     mkdir -p "$(dirname "$dst")"
     [[ -L "$dst" && "$(readlink "$dst")" == "$src" ]] && return
     [[ -e "$dst" && ! -L "$dst" ]] && mv "$dst" "${dst}.bak"
@@ -123,4 +123,4 @@ for grp in seat video input; do
     getent group "$grp" &>/dev/null && sudo usermod -aG "$grp" "$USER" 2>/dev/null || true
 done
 
-ok "Готово — sudo reboot"
+ok "done — sudo reboot"

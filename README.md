@@ -341,4 +341,3 @@ I may miss or change something, but here are my main hotkeys
 
    
 
-![arch](https://upload.wikimedia.org/wikipedia/commons/7/73/Archlinux-logo-inverted-version.png)
