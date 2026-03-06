@@ -1,6 +1,7 @@
+
 * {
     border: none;
-    border-radius: 6px;
+    border-radius: 0px;
     min-height: 0;
     font-family: "MartianMono NFP Cond";
     font-weight: 800;
@@ -142,6 +143,14 @@ tooltip label {
     font-weight: 800;
 }
 
+#mode {
+    background-color: #cc241d;
+    border: 2px solid #fb4934;
+    color: #ebdbb2;
+    margin: 6px 6px 6px 0px;
+    padding: 2px 8px;
+    font-weight: 800;
+}
 
 menu {
     padding: 10px;
@@ -180,6 +189,5 @@ menuitem image {
 menu arrow {
     color: #b8bb26; 
 }
-
 
 

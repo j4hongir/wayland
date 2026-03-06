@@ -111,53 +111,56 @@ sway and hyprland are configured almost the same way (and run the same scripts a
 I may miss or change something, but here are my main hotkeys
 
 
-## sway
-| Keybinding | Action |
-|------------|--------|
-| `super + t` | Open Kitty terminal |
-| `super + w` | Run wallpaper change script (`swaywall.sh`) |
-| `super + p` | Lock screen with `swaylock` |
-| `super + b` | Open Chromium |
-| `super + f` | Open Thunar file manager |
-| `super + Shift + h` | Open Obsidian |
-| `super + Shift + p` | Launch `hyprpicker` (color picker) |
-| `super + m` | Open YouTube Music in Chromium (PWA mode) |
-| `super + Shift + t` | Open Telegram Web in Chromium (PWA mode) |
-| `XF86MonBrightnessUp` | Increase brightness by 5% |
-| `XF86MonBrightnessDown` | Decrease brightness by 5% |
-| `super + x` | Kill focused window |
-| `super + z` | Focus previous marked container |
-| `super + Left / j` | Focus left window |
-| `super + Down / k` | Focus downward window |
-| `super + Up / i` | Focus upward window |
-| `super + Right / l` | Focus right window |
-| `super + Shift + Left / j` | Move window left |
-| `super + Shift + Down / k` | Move window down |
-| `super + Shift + Up / i` | Move window up |
-| `super + Shift + Right / l` | Move window right |
-| `super + h` | Split container horizontally |
-| `super + v` | Split container vertically |
-| `super + c` | Toggle split layout |
-| `super + Shift + f` | Toggle fullscreen mode |
-| `super + e` | Toggle floating mode |
-| `super + Control + Right` | Switch to next workspace |
-| `super + Control + Left` | Switch to previous workspace |
-| `alt + 1-6` | Switch to workspace 1-6 |
-| `super + Shift + 1-6` | Move focused window to workspace 1-6 |
-| `super + BackSpace` | Reload Sway configuration |
-| `super + Shift + q` | Run system script (`swaysys.sh`) |
-| `super + r` | Enter resize mode |
-| `super + Shift + v` | Run clipboard script (`clip.sh`) |
-| `super + o` | Open Wofi application launcher |
-| `super + y` | Run Python dashboard script |
-| `super + Shift + w` | Run screen capture script (`screen.sh`) |
-| `XF86AudioRaiseVolume` | Increase volume by 5% |
-| `XF86AudioLowerVolume` | Decrease volume by 5% |
-| `XF86AudioMute` | Toggle mute for speakers |
-| `XF86AudioMicMute` | Toggle mute for microphone |
-| `XF86AudioPlay` | Play/Pause media |
-| `XF86AudioNext` | Next media track |
-| `XF86AudioPrev` | Previous media track |
+## sway/hyprland
+| | |
+|---|---|
+|`Super + T`|Terminal|
+|`Super + B`|Browser|
+|`Super + F`|File Manager|
+|`Super + O`|App Launcher|
+|`Super + Shift + G`|Obsidian (notes)|
+|`Super + Y`|Dashboard|
+|`Super + W`|Change wallpaper|
+|`Super + Shift + P`|Color picker|
+|`Super + Shift + V`|Clipboard (history)|
+|`Super + Shift + W`|Screenshot|
+|`Super + X`|Close window|
+|`Super + E`|Float / tile|
+|`Super + Shift + F`|Fullscreen|
+|`Super + C`|Change split direction|
+|`Super + N`|Split horizontal|
+|`Super + M`|Split vertical|
+|`Super + Z`|Focus previous window|
+|`Super + S`|Show scratchpad|
+|`Super + Shift + S`|Send window to scratchpad|
+|`Super + H` or `Super + ←`|Focus left|
+|`Super + L` or `Super + →`|Focus right|
+|`Super + K` or `Super + ↑`|Focus up|
+|`Super + J` or `Super + ↓`|Focus down|
+|`Super + Shift + H` or `Super + Shift + ←`|Move left|
+|`Super + Shift + L` or `Super + Shift + →`|Move right|
+|`Super + Shift + K` or `Super + Shift + ↑`|Move up|
+|`Super + Shift + J` or `Super + Shift + ↓`|Move down|
+|`Super + R`|Enter resize mode (border turns red)|
+|`H` or `←`|Shrink width|
+|`L` or `→`|Expand width|
+|`K` or `↑`|Shrink height|
+|`J` or `↓`|Expand height|
+|`Escape` or `Enter`|Exit resize mode|
+|`Alt + 1 … 6`|Switch to workspace 1–6|
+|`Super + Shift + 1 … 6`|Move window to workspace 1–6|
+|`F1` — Mute|Toggle mute|
+|`F2` — Vol–|Volume down|
+|`F3` — Vol+`|Volume up|
+|`F4` — Mic mute|Toggle mic mute|
+|`F7` — Play/Pause|Play / Pause|
+|`F8` — Prev|Previous track|
+|`F9` — Next|Next track|
+|`F5` — Bright–|Brightness −10%|
+|`F6` — Bright+`|Brightness +10%|
+|`Super + Shift + Q`|System menu (logout, reboot, lock)|
+|`Power button`|System menu|
+|`Super + Backspace`|Reload config (Sway only)|
 
 
 ## Shell (ZSH)
@@ -283,61 +286,3 @@ I may miss or change something, but here are my main hotkeys
 | `ctrl + f` (in autocompletion)   | Scroll documentation down.                                                      |
 | `CR` (in autocompletion)         | Confirm the selected suggestion.                                                |
 | `:Tabbi`                         | Open recent files in a horizontal split using Telescope.                        |
-
-
-## Hyprland
-| **Shortcut**                     | **Description**                                                                 |
-|----------------------------------|---------------------------------------------------------------------------------|
-| `super + Y`                      | Open the dashboard (`$dashboard`).                                              |
-| `super + W`                      | Change the wallpaper (`$wall`).                                                 |
-| `super + T`                      | Open the terminal (`$terminal`).                                                |
-| `super + B`                      | Open the browser (`$browser`).                                                  |
-| `super + SHIFT + H`              | Open Obsidian notes (`$notes`).                                                 |
-| `super + SHIFT + V`              | Open the clipboard manager (`$clipman`).                                         |
-| `super + SHIFT + Q`              | Open the system script (`$sys`).                                                |
-| `super + SHIFT + T`              | Open Telegram (`$telegram`).                                                    |
-| `super + M`                      | Open YouTube Music (`$music`).                                                  |
-| `super + Z`                      | Move focus upwards.                                                             |
-| `super + SHIFT + W`              | Take a screenshot (`$screen`).                                                  |
-| `super + SHIFT + F`              | Toggle fullscreen mode.                                                         |
-| `super + X`                      | Close the active window.                                                        |
-| `super + F`                      | Open the file manager (`$fileManager`).                                          |
-| `super + E`                      | Toggle floating mode for the active window.                                      |
-| `super + O`                      | Open the application launcher (`$menu`).                                         |
-| `super + P`                      | Toggle pseudotiling (dwindle layout).                                            |
-| `super + C`                      | Toggle split layout (dwindle layout).                                            |
-| `super + LEFT`                   | Move focus to the left window.                                                  |
-| `super + RIGHT`                  | Move focus to the right window.                                                 |
-| `super + UP`                     | Move focus to the window above.                                                 |
-| `super + DOWN`                   | Move focus to the window below.                                                 |
-| `super + SHIFT + LEFT`           | Move the active window to the left.                                             |
-| `super + SHIFT + RIGHT`          | Move the active window to the right.                                            |
-| `super + SHIFT + UP`             | Move the active window upwards.                                                 |
-| `super + SHIFT + DOWN`           | Move the active window downwards.                                               |
-| `super + Q`                      | Move all windows to workspace 4.                                                |
-| `super + L`                      | Resize the active window to the right.                                          |
-| `super + H`                      | Resize the active window to the left.                                           |
-| `super + K`                      | Resize the active window upwards.                                               |
-| `super + J`                      | Resize the active window downwards.                                             |
-| `ALT + [1-9, 0]`                 | Switch to workspace [1-10].                                                     |
-| `super + SHIFT + [1-9, 0]`       | Move the active window to workspace [1-10].                                     |
-| `super + S`                      | Toggle special workspace (`magic`).                                             |
-| `super + SHIFT + S`              | Move the active window to the special workspace (`magic`).                      |
-| `super + MOUSE_DOWN`             | Switch to the next workspace.                                                   |
-| `super + MOUSE_UP`               | Switch to the previous workspace.                                               |
-| `super + MOUSE_LEFT_CLICK`       | Move the active window (click and drag).                                        |
-| `super + MOUSE_RIGHT_CLICK`      | Resize the active window (click and drag).                                      |
-| `XF86AudioRaiseVolume`           | Increase volume by 5%.                                                          |
-| `XF86AudioLowerVolume`           | Decrease volume by 5%.                                                          |
-| `XF86AudioMute`                  | Toggle mute for audio.                                                          |
-| `XF86AudioMicMute`               | Toggle mute for the microphone.                                                 |
-| `XF86MonBrightnessUp`            | Increase screen brightness by 10%.                                              |
-| `XF86MonBrightnessDown`          | Decrease screen brightness by 10%.                                              |
-| `XF86AudioNext`                  | Play the next track (requires `playerctl`).                                     |
-| `XF86AudioPause`                 | Toggle play/pause (requires `playerctl`).                                       |
-| `XF86AudioPlay`                  | Toggle play/pause (requires `playerctl`).                                       |
-| `XF86AudioPrev`                  | Play the previous track (requires `playerctl`).                                 |
-| `XF86PowerOff`                   | Execute the system script (`$sys`).                                             |
-
-   
-
