@@ -111,10 +111,9 @@ wayland
 ```
 ---
 
-# Keybindings
+## keybindings
 
 ### wm (hyprland/sway)
-
 |                                            |                                      |
 | ------------------------------------------ | ------------------------------------ |
 | `Super + T`                                | Terminal                             |
@@ -180,8 +179,8 @@ wayland
 | `Ctrl + T` | Fuzzy find files (fzf)              |
 | `Alt + C`  | Fuzzy cd into directory (fzf)       |
 | `Ctrl + R` | Fuzzy search command history (fzf)  |
-#### aliases
 
+#### aliases
 |                     |                                       |
 | ------------------- | ------------------------------------- |
 | `..`                | `cd ..`                               |
@@ -196,10 +195,10 @@ wayland
 | `temp`              | Proc temp                             |
 | `ycc`               | Yandex cli config                     |
 | `gits`              | Show edited and untracked git files   |
-| `extract <archive>` | Universal archive extractor           |
 | `chrome-proxy`      | Chromium via proxy                    |
 | `dpi`               | Proxy                                 |
 | `cpp <file.cpp>`    | compile with `g++ -std=c++17` and run |
+
 ### terminal (kitty)
 | | |
 |---|---|
@@ -214,6 +213,7 @@ wayland
 |`Ctrl + Shift + Down`|Move tab down / focus window down|
 |`Alt + Left`|Word jump left|
 |`Alt + Right`|Word jump right|
+
 #### tmux
 | | |
 |---|---|
@@ -229,7 +229,6 @@ wayland
 |`y`|Copy selection (copy mode)|
 
 ### editor (vim/nvim/helix)
-
 | | |
 |---|---|
 |`Alt + Space`|Exit Insert mode|

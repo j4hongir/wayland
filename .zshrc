@@ -35,13 +35,9 @@ alias grep='grep --color=auto'
 alias ip='ip -color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
-alias sys='systemctl'
-alias pac='sudo pacman'
 
-alias sshr='sudo systemctl restart ssh'
-alias sshs='sudo systemctl stop ssh'
-alias sshh='sudo systemctl status ssh'
 alias wip="ip -4 addr show dev wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'"
+alias gip="curl ipinfo.io"
 alias py='python3'
 alias trash='mv --force -t ~/.local/share/Trash '
 alias hg='history|grep'
@@ -113,10 +109,6 @@ bindkey '^[[3~' delete-char
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
 
-# DIRSTACKSIZE=20
-# setopt AUTO_PUSHD           # Автоматически добавлять директории в стек
-# setopt PUSHD_MINUS         # Поменять знак минус и плюс в pushd
-# setopt PUSHD_IGNORE_DUPS    # Не добавлять дубликаты
 
 setopt AUTO_CD
 setopt EXTENDED_GLOB
@@ -126,8 +118,6 @@ setopt CORRECT
 setopt COMPLETE_IN_WORD
 
 
-##########################testing#########################################
-# Set up fzf key bindings and fuzzy completion
 eval "$(fzf --zsh)"
 
 # --- setup fzf theme using gruvbox colors ---
@@ -146,24 +136,20 @@ export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
-# Use fd for listing path candidates
 _fzf_compgen_path() {
     fd --hidden --exclude .git . "$1"
 }
 
-# Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
     fd --type=d --hidden --exclude .git . "$1"
 }
 
 
-# Define preview commands with better quoting
 show_file_or_dir_preview='if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi'
 
 export FZF_CTRL_T_OPTS="--preview '${show_file_or_dir_preview}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
-# Advanced customization of fzf options via _fzf_comprun function
 _fzf_comprun() {
     local command=$1
     shift
@@ -175,42 +161,21 @@ _fzf_comprun() {
     esac
 }
 
-# Set bat theme to gruvbox
 export BAT_THEME="gruvbox-dark"
 
-# Set eza alias with icons
 alias ls="eza --icons=always"
 
 
-
-# The next line updates PATH for CLI.
 if [ -f '/home/mars/yandex-cloud/path.bash.inc' ]; then source '/home/mars/yandex-cloud/path.bash.inc'; fi
 
-# The next line enables shell command completion for yc.
 if [ -f '/home/mars/yandex-cloud/completion.zsh.inc' ]; then source '/home/mars/yandex-cloud/completion.zsh.inc'; fi
-
-
 
 export PATH="$PATH:$(go env GOPATH)/bin"
 
-
-command_not_found_handler() {
-    if [[ "$1" == "love" ]]; then
-        echo "zsh: not found: love"
-        echo "Did you mean money?"
-        return 127
-    else
-        # Возвращаем управление стандартному поведению Zsh
-        # (или ничего не делаем — Zsh сам выведет ошибку)
-        # Но чтобы не дублировать ошибку, просто выходим с кодом 127
-        return 127
-    fi
-}
 export PATH="$HOME/.npm-global/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 
-
-# Pyenv configuration
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
