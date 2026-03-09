@@ -228,34 +228,4 @@ wayland
 |`v`|Begin selection (copy mode)|
 |`y`|Copy selection (copy mode)|
 
-### editor (vim/nvim/helix)
-| | |
-|---|---|
-|`Alt + Space`|Exit Insert mode|
-|`Alt + D`|Force close (`:q!`)|
-|`Alt + Q`|Close (`:q`)|
-|`Alt + S`|Save (`:w`)|
-|`Alt + K`|Save and close (`:wq`)|
-|`Alt + O`|New line below (stay in Normal mode)|
-|`Alt + Shift + O`|New line above (stay in Normal mode)|
-|`Alt + L`|Jump to last change (`` `. ``)|
-|`Alt + Z`|Zen Mode|
-|`Alt + Up`|Move line up|
-|`Alt + Down`|Move line down|
-|`Tab`|Indent (Visual mode)|
-|`Shift + Tab`|Unindent (Visual mode)|
-|`d` / `dd` / `x`|Delete without yanking|
-|`Alt + W + H/J/K/L`|Focus window left/down/up/right|
-|`Alt + W + S`|Horizontal split|
-|`Alt + W + V`|Vertical split|
-|`Alt + W + C`|Close window|
-|`Alt + W + =`|Equalize windows|
-|`Ctrl + N` / `Ctrl + P`|Next / previous completion item|
-|`Enter`|Confirm completion|
-|`Ctrl + Space`|Trigger completion|
-|`Ctrl + E`|Abort completion|
-|`e`|New file (start page)|
-|`f`|Find files — Telescope (start page)|
-|`r`|Recent files (start page)|
-|`q`|Quit (start page)|
-
+### editor [nvim](config/nvim/README.md)
