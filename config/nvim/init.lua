@@ -34,26 +34,26 @@ vim.cmd("highlight Normal ctermbg=none guibg=none")
 -- Plugins (vim-plug)
 vim.cmd([[
 call plug#begin('~/.vim/plugged')
-Plug 'morhetz/gruvbox'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'neovim/nvim-lspconfig'
-Plug 'numToStr/Comment.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'mg979/vim-visual-multi'
-Plug 'nvim-lualine/lualine.nvim'
-Plug 'norcalli/nvim-colorizer.lua'
-Plug 'folke/noice.nvim'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'rcarriga/nvim-notify'
-Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'sphamba/smear-cursor.nvim'
-Plug 'tpope/vim-surround'
-Plug 'folke/zen-mode.nvim'
-Plug 'sindrets/diffview.nvim'
+Plug 'morhetz/gruvbox'              " color theme
+Plug 'hrsh7th/nvim-cmp'             " autocompletion engine
+Plug 'hrsh7th/cmp-buffer'           " completion: words from open buffers
+Plug 'hrsh7th/cmp-path'             " completion: file paths
+Plug 'hrsh7th/cmp-nvim-lsp'         " completion: LSP suggestions
+Plug 'neovim/nvim-lspconfig'        " LSP configs (pylsp, clangd)
+Plug 'numToStr/Comment.nvim'        " gcc to comment line, gc + motion for block
+Plug 'nvim-telescope/telescope.nvim'" fuzzy finder: files, oldfiles, grep
+Plug 'nvim-lua/plenary.nvim'        " utility library, required by telescope
+Plug 'mg979/vim-visual-multi'       " multiple cursors, ctrl+n to select next
+Plug 'nvim-lualine/lualine.nvim'    " statusline: mode, branch, filename, position
+Plug 'norcalli/nvim-colorizer.lua'  " renders hex colors like #fb4934 inline
+Plug 'folke/noice.nvim'             " replaces cmdline and messages UI
+Plug 'MunifTanjim/nui.nvim'         " UI library, required by noice
+Plug 'rcarriga/nvim-notify'         " popup notifications, used by noice
+Plug 'lukas-reineke/indent-blankline.nvim' " rainbow indent guides
+Plug 'sphamba/smear-cursor.nvim'    " animated cursor movement
+Plug 'tpope/vim-surround'           " ysiw( to surround, ds( to delete, cs' to change
+Plug 'folke/zen-mode.nvim'          " distraction-free mode, alt+z
+Plug 'sindrets/diffview.nvim'       " git diff viewer, :DiffviewOpen
 call plug#end()
 ]])
 
@@ -63,7 +63,6 @@ vim.cmd("colorscheme gruvbox")
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
--- Normal mode
 map('n', '<A-d>', ':q!<CR>', opts)
 map('n', '<A-q>', ':q<CR>', opts)
 map('n', '<A-s>', ':w<CR>', opts)
@@ -75,14 +74,12 @@ map('n', '<A-z>', ':ZenMode<CR>', opts)
 map('n', '<A-Up>', ':m .-2<CR>==', opts)
 map('n', '<A-Down>', ':m .+1<CR>==', opts)
 
--- Window management (Alt+w prefix)
 for _, v in ipairs({ 'h', 'j', 'k', 'l', 'c', '+', '-', '=', '_', 'o' }) do
   map('n', '<A-w>' .. v, '<C-w>' .. v, opts)
 end
 map('n', '<A-w>s', ':split<CR>', opts)
 map('n', '<A-w>v', ':vsplit<CR>', opts)
 
--- Insert mode
 map('i', '<A-space>', '<Esc>', opts)
 map('i', '{', '{}<Left>', { noremap = true })
 map('i', '(', '()<Left>', { noremap = true })
@@ -90,18 +87,15 @@ map('i', '[', '[]<Left>', { noremap = true })
 map('i', "'", "''<Left>", { noremap = true })
 map('i', '"', '""<Left>', { noremap = true })
 
--- Visual mode
 map('v', '<Tab>', '>gv', opts)
 map('v', '<S-Tab>', '<gv', opts)
 map('x', '<A-Up>', ":m '<-2<CR>gv=gv", opts)
 map('x', '<A-Down>', ":m '>+1<CR>gv=gv", opts)
 
--- Delete without yank
 map({ 'n', 'x' }, 'd', '"_d', opts)
 map('n', 'dd', '"_dd', opts)
 map('n', 'x', '"_x', opts)
 
--- Plugin Configurations
 
 -- Notify
 require('notify').setup({
@@ -276,8 +270,6 @@ require("ibl").setup { indent = { highlight = highlight } }
 -- Colorizer
 require('colorizer').setup({ '*', css = { rgb_fn = true } }, { mode = 'background' })
 
-
--- Autocommands & Custom Commands
 
 -- Start page
 vim.api.nvim_create_autocmd("VimEnter", {
