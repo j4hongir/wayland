@@ -1,56 +1,45 @@
 #!/bin/bash
-# ─────────────────────────────────────────────────────────────────────────────
-# screen.sh — скриншот + OCR | Wayland (grim · slurp · tesseract)
+# screen.sh — screenshot + ocr | wayland (grim · slurp · tesseract)
 #
-# Использование:
-#   screen.sh          — скриншот → уведомление с кнопками
-#   screen.sh --ocr    — захват области → OCR → текст в буфер (без файла)
+# usage:
+#   screen.sh        capture area → save png + txt sidecar → notify
+#   screen.sh --ocr  capture area → ocr → clipboard (no file)
 #
-# Переменные окружения (опционально):
-#   SCREENSHOT_DIR     — куда сохранять (default: ~/Pictures/screens)
-#   OCR_LANG           — языки Tesseract  (default: rus+eng)
-#   EDITOR_APP         — редактор         (default: swappy → gimp → xdg-open)
-# ─────────────────────────────────────────────────────────────────────────────
+# env:
+#   SCREENSHOT_DIR   save location   (default: ~/Pictures/screens)
+#   OCR_LANG         tesseract langs  (default: rus+eng)
+#   EDITOR_APP       image editor     (default: swappy → gimp → xdg-open)
 
 set -euo pipefail
 
-# ── конфиг ───────────────────────────────────────────────────────────────────
 SCREENSHOT_DIR="${SCREENSHOT_DIR:-$HOME/Pictures/screens}"
 OCR_LANG="${OCR_LANG:-rus+eng}"
 SLURP_ARGS=(-d -b 1B1F2866 -c 89b4faff -w 1)
 GRIM_ARGS=(-t png -l 3)
 
-# ── хелперы ──────────────────────────────────────────────────────────────────
-die() { notify-send "screen.sh" "$1" -i dialog-error -t 4000; exit 1; }
+die()  { notify-send "screen.sh" "$1" -i dialog-error -t 4000; exit 1; }
+need() { for cmd in "$@"; do command -v "$cmd" &>/dev/null || die "missing: $cmd"; done; }
 
-need() {
-    for cmd in "$@"; do
-        command -v "$cmd" &>/dev/null || die "Не найден: $cmd"
-    done
-}
-
-# открыть папку с выделенным файлом (перебираем файловые менеджеры)
 open_folder() {
-    local file="$1"
-    if   command -v nautilus  &>/dev/null; then nautilus  --select "$file" &
-    elif command -v thunar    &>/dev/null; then thunar    "$(dirname "$file")" &
-    elif command -v dolphin   &>/dev/null; then dolphin   --select "$file" &
-    elif command -v nemo      &>/dev/null; then nemo      "$(dirname "$file")" &
-    elif command -v pcmanfm   &>/dev/null; then pcmanfm   "$(dirname "$file")" &
-    else xdg-open "$(dirname "$file")" &
+    local f="$1"
+    if   command -v nautilus &>/dev/null; then nautilus  --select "$f" &
+    elif command -v thunar   &>/dev/null; then thunar    "$(dirname "$f")" &
+    elif command -v dolphin  &>/dev/null; then dolphin   --select "$f" &
+    elif command -v nemo     &>/dev/null; then nemo      "$(dirname "$f")" &
+    elif command -v pcmanfm  &>/dev/null; then pcmanfm   "$(dirname "$f")" &
+    else xdg-open "$(dirname "$f")" &
     fi
 }
 
 open_editor() {
-    local file="$1"
-    if   [[ -n "${EDITOR_APP:-}" ]];       then $EDITOR_APP "$file" &
-    elif command -v swappy &>/dev/null;    then swappy -f "$file" &
-    elif command -v gimp   &>/dev/null;    then gimp   "$file" &
-    else xdg-open "$file" &
+    local f="$1"
+    if   [[ -n "${EDITOR_APP:-}" ]];    then $EDITOR_APP "$f" &
+    elif command -v swappy &>/dev/null; then swappy -f "$f" &
+    elif command -v gimp   &>/dev/null; then gimp   "$f" &
+    else xdg-open "$f" &
     fi
 }
 
-# убираем 1px-артефакт рамки slurp
 trim_geometry() {
     awk 'BEGIN{FS="[ ,x]";OFS=""}{
         x=$1+1; y=$2+1; w=$3-2; h=$4-2
@@ -59,29 +48,33 @@ trim_geometry() {
     }' <<< "$1"
 }
 
-ocr_to_clipboard() {
-    local file="$1"
-    command -v tesseract &>/dev/null \
-        || die "Tesseract не установлен → sudo pacman -S tesseract tesseract-data-rus"
-
-    local text
-    text=$(tesseract "$file" - -l "$OCR_LANG" 2>/dev/null \
-           | grep -v '^[[:space:]]*$') || true
-
-    if [[ -z "$text" ]]; then
-        notify-send "OCR" "Текст не найден" -i dialog-warning -t 3000
-        return 1
-    fi
-
-    printf '%s' "$text" | wl-copy
+run_ocr() {
+    tesseract "$1" - -l "$OCR_LANG" --psm 3 2>/dev/null \
+        | grep -v '^[[:space:]]*$' \
+        | sed 's/[[:space:]]\+/ /g; s/^ //; s/ $//'
 }
 
-# ── базовые зависимости ───────────────────────────────────────────────────────
+ocr_to_clipboard() {
+    command -v tesseract &>/dev/null \
+        || die "tesseract not found — sudo pacman -S tesseract tesseract-data-rus"
+
+    local text
+    text=$(run_ocr "$1") || true
+    [[ -z "$text" ]] && { notify-send "ocr" "no text found" -i dialog-warning -t 3000; return 1; }
+
+    printf '%s' "$text" | wl-copy
+    local words; words=$(printf '%s' "$text" | wc -w)
+    notify-send "ocr" "copied ${words} words" -t 2000
+}
+
+save_sidecar() {
+    # always write (even if empty) so --index skips this file on re-run
+    run_ocr "$1" > "${1%.png}.txt" 2>/dev/null || true
+}
+
 need grim slurp wl-copy notify-send
 
-# ─────────────────────────────────────────────────────────────────────────────
-# РЕЖИМ --ocr: выделяем → OCR → текст в буфер, файл не создаётся
-# ─────────────────────────────────────────────────────────────────────────────
+# --ocr: region select → clipboard, no file written
 if [[ "${1:-}" == "--ocr" ]]; then
     need tesseract
 
@@ -92,15 +85,13 @@ if [[ "${1:-}" == "--ocr" ]]; then
     trap 'rm -f "$TMPFILE"' EXIT
 
     grim "${GRIM_ARGS[@]}" -g "$(trim_geometry "$RAW")" "$TMPFILE" 2>/dev/null
-    [[ -s "$TMPFILE" ]] || die "OCR: ошибка захвата области"
+    [[ -s "$TMPFILE" ]] || die "ocr: capture failed"
 
     ocr_to_clipboard "$TMPFILE"
     exit 0
 fi
 
-# ─────────────────────────────────────────────────────────────────────────────
-# РЕЖИМ обычный: скриншот → сохранить → уведомление
-# ─────────────────────────────────────────────────────────────────────────────
+# default: capture → png + txt sidecar → clipboard → notify
 mkdir -p "$SCREENSHOT_DIR"
 FILENAME="screenshot-$(date +'%Y-%m-%d-%H%M%S').png"
 FILEPATH="$SCREENSHOT_DIR/$FILENAME"
@@ -109,23 +100,20 @@ RAW=$(slurp "${SLURP_ARGS[@]}" 2>/dev/null) || exit 0
 [[ -z "$RAW" ]] && exit 0
 
 grim "${GRIM_ARGS[@]}" -g "$(trim_geometry "$RAW")" "$FILEPATH" 2>/dev/null
+[[ -s "$FILEPATH" ]] || { rm -f "$FILEPATH"; die "capture failed"; }
 
-if [[ ! -s "$FILEPATH" ]]; then
-    rm -f "$FILEPATH"
-    die "Скриншот: ошибка захвата"
-fi
-
-# изображение → буфер + cliphist
 wl-copy < "$FILEPATH"
 { wl-paste | cliphist store; } 2>/dev/null || true
 
-# ── уведомление ──────────────────────────────────────────────────────────────
-ACTION=$(notify-send "Скриншот сохранён" "$FILENAME" \
+# sidecar in background — does not delay the notification
+command -v tesseract &>/dev/null && { save_sidecar "$FILEPATH" & disown; }
+
+ACTION=$(notify-send "screenshot saved" "$FILENAME" \
     -i "$FILEPATH" \
     -t 7000 \
-    -A "default=Открыть папку" \
-    -A "edit=Редактировать" \
-    -A "ocr=Копировать текст")
+    -A "default=open folder" \
+    -A "edit=edit" \
+    -A "ocr=copy text")
 
 case "${ACTION:-}" in
     default) open_folder "$FILEPATH" ;;
