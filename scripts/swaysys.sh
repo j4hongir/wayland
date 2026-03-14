@@ -7,7 +7,7 @@ if [ -z "$chosen" ]; then
 else
     case $chosen in
         Restart*)  swaymsg reload ;;
-        Quit*)     swaymsg dispatch exit ;;
+        Quit*)     swaymsg exit ;;
         Lock*)     swaylock -i ~/wayland/walls/trees.png ;;
         Suspend)   systemctl suspend ;;
         Reboot)    systemctl reboot ;;
