@@ -170,7 +170,7 @@ exec --no-startup-id waybar
 
 bindsym --to-code $super+Shift+v exec  ~/wayland/scripts/clip.sh
 
-bindsym --to-code $super+o exec wofi --show drun  --hide-scroll  
+bindsym --to-code $super+o exec tofi-drun --auto-accept-single false | xargs -I{} sh -c '{}'
 
 bindsym --to-code $super+y exec python3 ~/Dashboard/main.py 
 
