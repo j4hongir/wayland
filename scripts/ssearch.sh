@@ -66,4 +66,8 @@ selected=$(
 [[ -z "$selected" ]] && exit 0
 
 png=$(printf '%s' "$selected" | awk -F'\t' '{print $NF}')
-[[ -f "$png" ]] && xdg-open "$png"
+if [[ -f "$png" ]]; then
+    txt="${png%.png}.txt"
+    [[ -f "$txt" ]] && cat "$txt" | iconv -f utf-8 -t utf-8 -c | wl-copy
+    xdg-open "$png"
+fi
