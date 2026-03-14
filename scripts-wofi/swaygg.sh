@@ -2,6 +2,7 @@
 
 prev_focus=""
 
+# Подписываемся на события Sway
 swaymsg -m -t subscribe '["window"]' | \
   jq --unbuffered 'select(.change == "focus").container.id' | \
   while read new_focus; do

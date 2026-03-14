@@ -1,1 +1,2 @@
-cliphist list | wofi -S dmenu  --hide-scroll| cliphist decode | wl-copy
+#!/bin/bash
+cliphist list | tofi --auto-accept-single false --prompt-text "> " | cliphist decode | wl-copy
