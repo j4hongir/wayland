@@ -160,7 +160,7 @@ wayland
 | `F9` — Next                                | Next track                           |
 | `F5` — Bright–                             | Brightness −10%                      |
 | `F6` — Bright+`                            | Brightness +10%                      |
-| `Super + Shift + Q`                        | System menu (logout, reboot, lock)   |
+| `Super + Q`                                | System menu (logout, reboot, lock)   |
 | `Power button`                             | System menu                          |
 | `Super + Backspace`                        | Reload config (Sway only)            |
 
