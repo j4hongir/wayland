@@ -161,6 +161,7 @@ wayland
 | `F5` — Bright–                             | Brightness −10%                      |
 | `F6` — Bright+`                            | Brightness +10%                      |
 | `Super + Q`                                | System menu (logout, reboot, lock)   |
+| `Super + Shift + Q`                        | Local Recall                         |
 | `Power button`                             | System menu                          |
 | `Super + Backspace`                        | Reload config (Sway only)            |
 

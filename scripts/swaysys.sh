@@ -1,6 +1,6 @@
 #!/bin/bash
 options="Restart\nQuit\nLock Session\nSuspend\nReboot\nShutdown"
-chosen=$(echo -e "$options" | tofi --prompt-text ">")
+chosen=$(echo -e "$options" | tofi --prompt-text "> ")
 
 if [ -z "$chosen" ]; then
     exit 0
