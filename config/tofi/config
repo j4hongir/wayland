@@ -4,11 +4,11 @@ font-features = ""
 hint-font = true
 
 text-color = #ebdbb2
+
 prompt-color = #fb4934
 selection-color = #fabc33
-background-color = #282828
-
-prompt-text = "run: "
+background-color = #282828cc
+prompt-text = "> "
 prompt-background = #00000000
 prompt-background-padding = 0
 prompt-background-corner-radius = 0
@@ -25,10 +25,10 @@ selection-background = #00000000
 selection-background-padding = 0
 selection-background-corner-radius = 0
 
-width = 50%
-height = 30%
-outline-width = 2
-outline-color = #3c3836
+width = 40%
+height = 40%
+outline-width = 0
+outline-color = #fabc33
 border-width = 2
 border-color = #fabc33
 corner-radius = 12
@@ -38,8 +38,9 @@ padding-left = 12
 padding-right = 12
 clip-to-padding = true
 
-anchor = center
-margin-top = 0
+#anchor = center
+anchor = top
+margin-top = 50
 margin-bottom = 0
 margin-left = 0
 margin-right = 0
@@ -49,3 +50,4 @@ text-cursor = true
 history = true
 require-match = false
 auto-accept-single = true
+

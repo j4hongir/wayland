@@ -172,11 +172,11 @@ bindsym --to-code $super+Shift+v exec  ~/wayland/scripts/clip.sh
 
 bindsym --to-code $super+o exec tofi-drun --auto-accept-single false | xargs -I{} sh -c '{}'
 
-bindsym --to-code $super+y exec python3 ~/Dashboard/main.py 
-
 bindsym --to-code super+Shift+w exec ~/wayland/scripts/screen.sh
 
-exec --no-startup-id  wl-paste --watch cliphist store
+exec --no-startup-id  wl-paste -t text/plain --watch cliphist store &
+exec --no-startup-id  wl-paste -t img/png --watch cliphist store &
+
 
 input * {
     xkb_layout us,ru
@@ -209,3 +209,4 @@ bindsym --to-code $super+Shift+s move scratchpad
 
 bindsym --whole-window button8 nop
 bindsym --whole-window button9 nop
+
