@@ -174,8 +174,8 @@ bindsym --to-code $super+o exec tofi-drun --auto-accept-single false | xargs -I{
 
 bindsym --to-code super+Shift+w exec ~/wayland/scripts/screen.sh
 
-exec --no-startup-id  wl-paste -t text/plain --watch cliphist store &
-exec --no-startup-id  wl-paste -t img/png --watch cliphist store &
+exec --no-startup-id wl-paste -t image/png -w cliphist store  
+exec --no-startup-id wl-paste -t text/plain -w cliphist store
 
 
 input * {
