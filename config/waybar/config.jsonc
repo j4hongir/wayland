@@ -133,7 +133,7 @@
         }
 
         },
-        "on-click-right": "solanum",
+        "on-click-right": "pomotroid",
         "actions": {
             "on-click-middle": "mode",
             "on-scroll-up": "shift_up",
@@ -199,3 +199,4 @@
     "tooltip": false
     }
 }
+

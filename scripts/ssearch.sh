@@ -7,24 +7,25 @@ OCR_LANG="${OCR_LANG:-rus+eng}"
 
 die() { printf 'ss-search: %s\n' "$*" >&2; exit 1; }
 
-run_ocr() {
-    tesseract "$1" - -l "$OCR_LANG" --psm 3 2>/dev/null \
-        | grep -v '^[[:space:]]*$' \
-        | sed 's/[[:space:]]\+/ /g; s/^ //; s/ $//'
-}
-
 # --index
 if [[ "${1:-}" == "--index" ]]; then
-    declare -i total=0 done=0
-    total=$(find "$SCREENSHOT_DIR" -name "screenshot-*.png" -type f | wc -l)
-    while IFS= read -r png; do
-        txt="${png%.png}.txt"
-        [[ -f "$txt" ]] && continue
-        (( done++ )) || true
-        printf '\r[%d/%d] %s' "$done" "$total" "$(basename "$png")"
-        run_ocr "$png" > "$txt" 2>/dev/null || true
-    done < <(find "$SCREENSHOT_DIR" -name "screenshot-*.png" -type f | sort)
-    printf '\ndone. indexed %d new files out of %d total\n' "$done" "$total"
+    mapfile -t pngs < <(
+        find "$SCREENSHOT_DIR" -name "screenshot-*.png" -type f | sort \
+        | while IFS= read -r png; do
+            [[ -f "${png%.png}.txt" ]] || echo "$png"
+        done
+    )
+    total=${#pngs[@]}
+    (( total == 0 )) && { printf 'nothing to index\n'; exit 0; }
+    printf '%s\n' "${pngs[@]}" \
+    | xargs -P "$(nproc)" -I{} bash -c '
+        out="${1%.png}.txt"
+        tesseract "$1" - -l '"$OCR_LANG"' --psm 3 2>/dev/null \
+            | grep -v "^[[:space:]]*$" \
+            | sed "s/[[:space:]]\+/ /g; s/^ //; s/ $//" \
+            > "$out" || true
+    ' _ {}
+    printf 'done. indexed %d files\n' "$total"
     exit 0
 fi
 
@@ -33,10 +34,17 @@ if [[ "${1:-}" == "--list" ]]; then
     while IFS= read -r txt; do
         png="${txt%.txt}.png"
         [[ -f "$png" ]] || continue
-        base=$(basename "$txt" .txt)
+        base="${txt##*/}"
+        base="${base%.txt}"
         dt="${base#screenshot-}"
         stamp="${dt:0:10} ${dt:11:2}:${dt:13:2}:${dt:15:2}"
-        snippet=$(head -3 "$txt" | tr '\n' ' ' | cut -c1-120)
+        snippet=""
+        i=0
+        while IFS= read -r line && (( i < 3 )); do
+            snippet+="${line} "
+            (( i++ )) || true
+        done < "$txt"
+        snippet="${snippet:0:120}"
         printf '%s\t%s\t%s\n' "$png" "$stamp" "$snippet"
     done < <(find "$SCREENSHOT_DIR" -name "screenshot-*.txt" -type f | sort -r)
     exit 0
@@ -53,7 +61,7 @@ fi
 
 selected=$(
     "$0" --list | while IFS=$'\t' read -r png stamp snippet; do
-        clean=$(printf '%s' "$snippet" | iconv -f utf-8 -t utf-8 -c 2>/dev/null | tr '\t\n' '  ')
+        clean="${snippet//[$'\t\n']/ }"
         printf '%s  |  %s\t%s\n' "$stamp" "$clean" "$png"
     done \
     | tofi --prompt-text "> " \
@@ -68,6 +76,6 @@ selected=$(
 png=$(printf '%s' "$selected" | awk -F'\t' '{print $NF}')
 if [[ -f "$png" ]]; then
     txt="${png%.png}.txt"
-    [[ -f "$txt" ]] && cat "$txt" | iconv -f utf-8 -t utf-8 -c | wl-copy
+    [[ -f "$txt" ]] && wl-copy < "$txt"
     xdg-open "$png"
 fi
