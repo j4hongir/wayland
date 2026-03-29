@@ -1,12 +1,13 @@
 {
     "layer": "top",
     "spacing": 4,
+    "spacing": 0,
     "height": 0,
 
-    "margin-top": 3,
-    "margin-right": 3,
+    "margin-top": 4,
+    "margin-right": 6,
     "margin-bottom": 0,
-    "margin-left": 3,
+    "margin-left": 6,
 
     "modules-left": [
         "sway/workspaces",
@@ -188,7 +189,7 @@
 
     "pulseaudio": {
     "format": "{icon}{volume}%",
-    "format-muted": " 0%",
+    "format-muted": " Muted",
     "format-icons": {
         "default": [" ", " ", " "]
     },
@@ -199,3 +200,4 @@
     "tooltip": false
     }
 }
+

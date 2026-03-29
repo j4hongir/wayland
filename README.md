@@ -1,5 +1,6 @@
 ## advanced dots (arch x wayland)
-![sway](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review.png)
+![sway1](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review1.png)
+![sway2](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review2.png)
 
 > **Note** 
 > Sway and Hyprland are configured identically - they use same keybindings, scripts and programs

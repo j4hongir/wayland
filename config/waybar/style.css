@@ -1,102 +1,21 @@
-
 * {
     border: none;
-    border-radius: 0px;
+    border-radius: 6;
     min-height: 0;
     font-family: "MartianMono NFP Cond";
     font-weight: 800;
-    font-size: 15px;
+    font-size: 16px;
     padding: 0;
 }
 
 window#waybar {
-    /*background: #1d2021;*/
-    background: rgba(29, 32, 33, 0.8);
-    border: 2px solid #928374;
-}
-
-tooltip {
-    background-color: #1d2021;
-    border: 2px solid #928374;
-}
-
-#clock,
-#tray,
-#battery,
-#idle_inhibitor,
-#language,
-#custom-notification,
-#backlight,
-#pulseaudio {
-    margin: 6px 6px 6px 0px;
-    padding: 2px 8px;
-}
-
-#workspaces {
-    background-color: #303536;
-    /*margin: 6px 0px 6px 6px;*/
-    margin: 6px 6px 6px 6px;
-    border: 2px solid #434a4c;
-}
-
-#workspaces button {
-    all: initial;
-    min-width: 0;
-    box-shadow: inset 0 -3px transparent;
-    padding: 2px 4px;
-    color: #c7ab7a;
-    transition: 0.2s all;
-}
-
-#workspaces button.focused {
-    color: #fabd2f;
-}
-
-#workspaces button.urgent {
-    background-color: #3c3836;
-}
-
-#clock {
-    background-color: #303536;
-    border: 2px solid #434a4c;
-    color: #d4be98;
-}
-
-#tray {
-    background-color: #303536;
-    border: 2px solid #c7ab7a;
-}
-
-
-#language,
-#pulseaudio {
-    background-color: #303536;
-    border: 2px solid #434a4c;
-    color: #d4be98
-}
-#pulseaudio.muted {
-  color: #c14a4a;
-}
-
-
-
-#custom-notification{
-    background-color: #303536;
-    border: 2px solid #434a4c;
-    color: #d4be98;
-}
-
-
-#backlight{
-    background-color: #303536;
-    border: 2px solid #434a4c;
-    margin: 6px 6px 6px 0px;
-    color: #d4be98;
+    background: transparent;
+    border: none;
 }
 
 tooltip {
     background-color: #303536;
-    border: 2px solid #434a4c;
+    border: 2px solid #7c7064;
     color: #d4be98;
 }
 
@@ -106,88 +25,141 @@ tooltip label {
     margin: 4px;
 }
 
-#idle_inhibitor {
+#clock,
+#tray,
+#battery,
+#backlight,
+#idle_inhibitor,
+#language,
+#custom-notification,
+#pulseaudio {
     background-color: #303536;
-    border: 2px solid #434a4c;
+    border: 2px solid #7c7064;
     color: #d4be98;
+    margin: 0 3px 0 0;
+    padding: 2px 20px;
+    transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-#battery {
+#backlight,
+#pulseaudio,
+#battery{
+    min-width: 70px; 
+}
+
+#idle_inhibitor,
+#custom-notification,
+#dnd-notification, 
+#dnd-none,
+#clock,
+#language{
+    min-width: 40px; 
+}
+
+
+#custom-notification.dnd-none,
+#custom-notification.dnd-notification {
+    border-color: #c14a4a;
+    color: #c14a4a;
+}
+
+#tray {
+    border-color: #fabd2f;
+}
+
+#workspaces {
     background-color: #303536;
-    border: 2px solid #434a4c;
-    color: #d4be98;
+    border: 2px solid #7c7064;
+    margin: 0 3px;
+}
+
+#workspaces button {
+    all: initial;
+    min-width: 20px;
+    box-shadow: inset 0 -3px transparent;
+    padding: 2px 6px;
+    color: #c7ab7a;
+    transition: 0.2s all;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+    color: #fabd2f;
+}
+
+#workspaces button.urgent {
+    background-color: #3c3836;
+}
+
+#pulseaudio.muted {
+    color: #c14a4a;
+    border-color: #c14a4a;
 }
 
 #battery.critical {
-  color: #c14a4a;
+    color: #c14a4a;
 }
 
 #battery.warning {
     color: #fabd2f;
 }
 
-#battery.good {
-    color: #b8bb26;
+#idle_inhibitor.activated {
+    color: #fabd2f;
+    border-color: #fabd2f;
 }
 
-#battery.good {
-    color: #d4be98;
-}
-
-#submap {
-    background-color: #cc241d;
-    border: 2px solid #fb4934;
-    color: #ebdbb2;
-    margin: 6px 6px 6px 0px;
-    padding: 2px 8px;
-    font-weight: 800;
-}
-
+#submap,
 #mode {
     background-color: #cc241d;
     border: 2px solid #fb4934;
     color: #ebdbb2;
-    margin: 6px 6px 6px 0px;
+    margin: 0 3px 0 0;
     padding: 2px 8px;
-    font-weight: 800;
 }
 
 menu {
     padding: 10px;
     border-radius: 8px;
-    background-color: #282828; 
+    background-color: #282828;
     min-width: 320px;
     border: 1px solid #fabd2f;
 }
+
 menuitem {
     padding: 12px;
     margin: 3px;
     border-radius: 6px;
     font-size: 14px;
+    transition: 0.15s background-color;
 }
+
 menuitem:hover {
-    background-color: #504945; 
+    background-color: #504945;
 }
 
 menuitem label {
-    color: #ebdbb2; 
+    color: #ebdbb2;
     font-weight: normal;
 }
+
 menuitem:active {
-    background-color: #98971a; 
+    background-color: #98971a;
 }
+
 menuitem:selected {
-    background-color: #458588; 
+    background-color: #458588;
 }
+
 separator {
     margin: 6px 0;
-    background-color: #665c54; 
+    background-color: #665c54;
 }
+
 menuitem image {
-    color: #d79921; 
+    color: #d79921;
 }
+
 menu arrow {
-    color: #b8bb26; 
+    color: #b8bb26;
 }
-
-
