@@ -40,8 +40,8 @@ setopt CORRECT
 setopt COMPLETE_IN_WORD
 setopt NO_BEEP
 
-export EDITOR='nvim'
-export VISUAL='nvim'
+export EDITOR="$VISUAL"
+export VISUAL='helix'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export TERM=xterm-256color
@@ -56,6 +56,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 alias ls="eza --icons=always"
+alias hx="helix"
 alias grep='grep --color=auto'
 alias ip='ip -color=auto'
 alias ..='cd ..'

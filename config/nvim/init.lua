@@ -1,4 +1,3 @@
--- Options
 local opt = vim.opt
 
 opt.cursorline = true
@@ -10,7 +9,7 @@ opt.numberwidth = 4
 opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.termguicolors = true
-opt.cmdheight = 0
+opt.cmdheight = 1
 opt.pumheight = 10
 opt.pumwidth = 50
 opt.pumblend = 10
@@ -25,13 +24,11 @@ opt.expandtab = true
 opt.shiftwidth = 4
 opt.tabstop = 4
 
--- opt.softtabstop = 4
 vim.cmd("syntax enable")
 vim.cmd("set background=dark")
 vim.cmd("set colorcolumn=88")
 vim.cmd("highlight Normal ctermbg=none guibg=none")
 
--- Plugins (vim-plug)
 vim.cmd([[
 call plug#begin('~/.vim/plugged')
 Plug 'morhetz/gruvbox'              " color theme
@@ -45,7 +42,6 @@ Plug 'nvim-telescope/telescope.nvim'" fuzzy finder: files, oldfiles, grep
 Plug 'nvim-lua/plenary.nvim'        " utility library, required by telescope
 Plug 'mg979/vim-visual-multi'       " multiple cursors, ctrl+n to select next
 Plug 'nvim-lualine/lualine.nvim'    " statusline: mode, branch, filename, position
-Plug 'norcalli/nvim-colorizer.lua'  " renders hex colors like #fb4934 inline
 Plug 'folke/noice.nvim'             " replaces cmdline and messages UI
 Plug 'MunifTanjim/nui.nvim'         " UI library, required by noice
 Plug 'rcarriga/nvim-notify'         " popup notifications, used by noice
@@ -59,7 +55,10 @@ call plug#end()
 
 vim.cmd("colorscheme gruvbox")
 
--- Keymaps
+require('diffview').setup({
+  hg_cmd = nil
+})
+
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
@@ -97,7 +96,6 @@ map('n', 'dd', '"_dd', opts)
 map('n', 'x', '"_x', opts)
 
 
--- Notify
 require('notify').setup({
   stages = "slide",
   timeout = 1000,
@@ -107,7 +105,6 @@ require('notify').setup({
 })
 vim.notify = require('notify')
 
--- Smear Cursor
 require('smear_cursor').setup({
   opts = {
     smear_between_buffers = true,
@@ -122,7 +119,6 @@ require('smear_cursor').setup({
   cursor_color = '#928374',
 })
 
--- Zen Mode
 require("zen-mode").setup {
   window = {
     backdrop = 1,
@@ -144,7 +140,6 @@ require("zen-mode").setup {
   },
 }
 
--- LSP + Completion
 local cmp_status, cmp = pcall(require, 'cmp')
 local lsp_status, lspconfig = pcall(require, 'lspconfig')
 
@@ -201,7 +196,6 @@ if cmp_status and lsp_status then
   end
 end
 
--- Lualine
 require('lualine').setup {
   options = {
     theme = 'gruvbox',
@@ -219,7 +213,6 @@ require('lualine').setup {
   },
 }
 
--- Noice
 require("noice").setup({
   cmdline = {
     enabled = true,
@@ -230,7 +223,7 @@ require("noice").setup({
       search_up = { pattern = "^%?", icon = " ", lang = "regex" },
     },
   },
-  messages = { enabled = true },
+  messages = { enabled = true, },
   popupmenu = { enabled = true },
   lsp = {
     override = {
@@ -248,7 +241,6 @@ require("noice").setup({
   },
 })
 
--- Indent Blankline
 local highlight = {
   "RainbowRed", "RainbowYellow", "RainbowBlue", "RainbowOrange",
   "RainbowGreen", "RainbowViolet", "RainbowCyan",
@@ -267,11 +259,7 @@ end)
 
 require("ibl").setup { indent = { highlight = highlight } }
 
--- Colorizer
-require('colorizer').setup({ '*', css = { rgb_fn = true } }, { mode = 'background' })
 
-
--- Start page
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     if #vim.fn.argv() == 0 then
@@ -301,7 +289,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
   end,
 })
 
--- Telescope: open recent file in horizontal split
 local telescope = require('telescope.builtin')
 vim.api.nvim_create_user_command('Tabbi', function()
   telescope.oldfiles({
@@ -319,3 +306,7 @@ vim.api.nvim_create_user_command('Tabbi', function()
   })
 end, { desc = "Open recent file in split" })
 
+
+vim.schedule(function()
+  vim.notify = require("notify")
+end)

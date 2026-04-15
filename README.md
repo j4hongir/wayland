@@ -2,9 +2,9 @@
 ![sway1](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review1.png)
 ![sway2](https://raw.githubusercontent.com/Jahamars/wayland/refs/heads/main/photos/review2.png)
 
-> **Note** 
-> Sway and Hyprland are configured identically - they use same keybindings, scripts and programs
-> The repo must be cloned into the home directory (e.g. `/home/user/wayland`)
+> **note** 
+> - sway and Hyprland are configured identically - they use same keybindings, scripts and programs
+> - the repo must be cloned into the home directory (e.g. `/home/user/wayland`)
 
 
 ---
@@ -230,4 +230,6 @@ wayland
 |`v`|Begin selection (copy mode)|
 |`y`|Copy selection (copy mode)|
 
-### editor [nvim](config/nvim/README.md)
+### editor 
+- [helix](config/helix/README.md)
+- [nvim](config/nvim/README.md)
