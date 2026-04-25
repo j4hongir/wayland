@@ -150,6 +150,7 @@
         "interval": 60,
         "on-scroll-up": "brightnessctl set +5%",
         "on-scroll-down": "brightnessctl set 5%-",
+        "on-click-right": "easygamma",
         "smooth-scrolling-threshold": 1,
         "tooltip": false,
         
