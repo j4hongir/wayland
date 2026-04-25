@@ -1,6 +1,6 @@
 * {
     border: none;
-    border-radius: 6;
+    border-radius: 6px;
     min-height: 0;
     font-family: "MartianMono NFP Cond";
     font-weight: 800;
@@ -28,6 +28,7 @@ tooltip label {
 #clock,
 #tray,
 #battery,
+#power-profiles-daemon,
 #backlight,
 #idle_inhibitor,
 #language,
@@ -116,6 +117,21 @@ tooltip label {
     margin: 0 3px 0 0;
     padding: 2px 8px;
 }
+
+#power-profiles-daemon.performance {
+    color: #cc241d;
+    border-color: #cc241d;
+}
+
+#power-profiles-daemon.balanced {
+    color: #8ec07c;
+}
+
+#power-profiles-daemon.power-saver {
+    color: #b8bb26;
+    border-color: #b8bb26;
+}
+
 
 menu {
     padding: 10px;

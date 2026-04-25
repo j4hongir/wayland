@@ -27,6 +27,7 @@
         "sway/language",
         "backlight",
         "pulseaudio",
+        "power-profiles-daemon",
         "battery"
     ],
     
@@ -161,6 +162,18 @@
         }
     },
 
+    "power-profiles-daemon": {
+      "format": "{icon}",
+      "tooltip-format": "mode: {profile}\ndriver: {driver}",
+      "tooltip": true,
+      "format-icons": {
+        "default": "󰾆",
+        "performance": "󰓅",
+        "balanced": "󰾆",
+        "power-saver": "󰌪"
+      }
+    },
+
     "battery": {
      "bat": "BAT0",
      "adapter": "AC",
@@ -175,7 +188,7 @@
          "critical": 15
      },
      "interval": 10,
-     "on-click": "~/wayland/scripts/powerprofile.sh"
+     "tooltip-format": "{time} | {power} W | health: {health}%"
     },
 
     "idle_inhibitor": {
