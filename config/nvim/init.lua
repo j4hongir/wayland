@@ -1,5 +1,6 @@
 local opt = vim.opt
 
+vim.opt.signcolumn = "yes"
 opt.cursorline = true
 opt.cursorcolumn = true
 opt.number = true
@@ -37,7 +38,7 @@ Plug 'hrsh7th/cmp-buffer'           " completion: words from open buffers
 Plug 'hrsh7th/cmp-path'             " completion: file paths
 Plug 'hrsh7th/cmp-nvim-lsp'         " completion: LSP suggestions
 Plug 'neovim/nvim-lspconfig'        " LSP configs (pylsp, clangd)
-Plug 'numToStr/Comment.nvim'        " gcc to comment line, gc + motion for block
+Plug 'L3MON4D3/LuaSnip'             " snippets
 Plug 'nvim-telescope/telescope.nvim'" fuzzy finder: files, oldfiles, grep
 Plug 'nvim-lua/plenary.nvim'        " utility library, required by telescope
 Plug 'mg979/vim-visual-multi'       " multiple cursors, ctrl+n to select next
@@ -49,15 +50,13 @@ Plug 'lukas-reineke/indent-blankline.nvim' " rainbow indent guides
 Plug 'sphamba/smear-cursor.nvim'    " animated cursor movement
 Plug 'tpope/vim-surround'           " ysiw( to surround, ds( to delete, cs' to change
 Plug 'folke/zen-mode.nvim'          " distraction-free mode, alt+z
-Plug 'sindrets/diffview.nvim'       " git diff viewer, :DiffviewOpen
+Plug 'lewis6991/gitsigns.nvim'      " git changes 
 call plug#end()
 ]])
 
-vim.cmd("colorscheme gruvbox")
+require('gitsigns').setup()
 
-require('diffview').setup({
-  hg_cmd = nil
-})
+vim.cmd("colorscheme gruvbox")
 
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
@@ -103,6 +102,7 @@ require('notify').setup({
   max_width = 30,
   max_height = 10,
 })
+
 vim.notify = require('notify')
 
 require('smear_cursor').setup({
@@ -140,61 +140,68 @@ require("zen-mode").setup {
   },
 }
 
-local cmp_status, cmp = pcall(require, 'cmp')
-local lsp_status, lspconfig = pcall(require, 'lspconfig')
 
-if cmp_status and lsp_status then
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local cmp = require('cmp')
+local luasnip = require('luasnip')
 
-  cmp.setup({
-    mapping = {
-      ['<C-n>'] = cmp.mapping.select_next_item(),
-      ['<C-p>'] = cmp.mapping.select_prev_item(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }),
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-e>'] = cmp.mapping.abort(),
+cmp.setup({
+  snippet = {
+    expand = function(args) luasnip.lsp_expand(args.body) end,
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-Space>'] = cmp.mapping.complete(),
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'buffer' },
+    { name = 'path' },
+  }),
+})
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+if vim.lsp.config then
+  vim.lsp.config('clangd', { capabilities = capabilities })
+  vim.lsp.enable('clangd')
+
+  vim.lsp.config('pylsp', {
+    capabilities = capabilities,
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = { enabled = true, ignore = { 'W391' }, maxLineLength = 100 },
+          pyflakes = { enabled = true },
+          pylint = { enabled = false },
+          yapf = { enabled = false },
+        },
+      },
     },
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      { name = 'path' },
-      { name = 'buffer' },
-    }),
   })
-
-  if vim.lsp.config then
-      vim.lsp.config('clangd', { capabilities = capabilities })
-      vim.lsp.config('pylsp', {
-        capabilities = capabilities,
-        settings = {
-          pylsp = {
-            plugins = {
-              pycodestyle = { enabled = true, ignore = { 'W391' }, maxLineLength = 100 },
-              pyflakes = { enabled = true },
-              pylint = { enabled = false },
-              yapf = { enabled = false },
-            },
-          },
+  vim.lsp.enable('pylsp')
+else
+  local lspconfig = require('lspconfig')
+  lspconfig.clangd.setup({ capabilities = capabilities })
+  lspconfig.pylsp.setup({
+    capabilities = capabilities,
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = { enabled = true, ignore = { 'W391' }, maxLineLength = 100 },
+          pyflakes = { enabled = true },
+          pylint = { enabled = false },
+          yapf = { enabled = false },
         },
-      })
-  else
-      lspconfig.clangd.setup { capabilities = capabilities }
-      lspconfig.pylsp.setup {
-        capabilities = capabilities,
-        settings = {
-          pylsp = {
-            plugins = {
-              pycodestyle = { enabled = true, ignore = { 'W391' }, maxLineLength = 100 },
-              pyflakes = { enabled = true },
-              pylint = { enabled = false },
-              yapf = { enabled = false },
-            },
-          },
-        },
-      }
-  end
+      },
+    },
+  })
 end
+
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
 
 require('lualine').setup {
   options = {
@@ -214,6 +221,10 @@ require('lualine').setup {
 }
 
 require("noice").setup({
+  notify = { 
+    enabled = false, 
+  },
+  
   cmdline = {
     enabled = true,
     view = "cmdline",
@@ -223,7 +234,7 @@ require("noice").setup({
       search_up = { pattern = "^%?", icon = " ", lang = "regex" },
     },
   },
-  messages = { enabled = true, },
+  messages = { enabled = true },
   popupmenu = { enabled = true },
   lsp = {
     override = {
@@ -270,7 +281,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
       ]])
       local lines = {
         "", "", "", "", "", "", "",
-        "                •  •     ┓•    ",
+        "                   •  •     ┓•    ",
         "                ┏┳┓┓┏┓┓┏┳┓┏┓┃┓┏┏┳┓",
         "                ┛┗┗┗┛┗┗┛┗┗┗┻┗┗┛┛┗┗",
         "",
@@ -307,6 +318,4 @@ vim.api.nvim_create_user_command('Tabbi', function()
 end, { desc = "Open recent file in split" })
 
 
-vim.schedule(function()
-  vim.notify = require("notify")
-end)
+map('n', 'gl', '<Cmd>lua vim.diagnostic.open_float()<CR>', opts)
