@@ -7,7 +7,6 @@ OCR_LANG="${OCR_LANG:-rus+eng}"
 
 die() { printf 'ss-search: %s\n' "$*" >&2; exit 1; }
 
-# --index
 if [[ "${1:-}" == "--index" ]]; then
     mapfile -t pngs < <(
         find "$SCREENSHOT_DIR" -name "screenshot-*.png" -type f | sort \
@@ -29,7 +28,6 @@ if [[ "${1:-}" == "--index" ]]; then
     exit 0
 fi
 
-# --list
 if [[ "${1:-}" == "--list" ]]; then
     while IFS= read -r txt; do
         png="${txt%.txt}.png"
@@ -50,7 +48,6 @@ if [[ "${1:-}" == "--list" ]]; then
     exit 0
 fi
 
-# default: tofi
 [[ -d "$SCREENSHOT_DIR" ]] || die "directory not found: $SCREENSHOT_DIR"
 
 txt_count=$(find "$SCREENSHOT_DIR" -name "screenshot-*.txt" -type f 2>/dev/null | wc -l)

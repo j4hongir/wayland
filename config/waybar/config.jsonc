@@ -175,7 +175,7 @@
          "critical": 15
      },
      "interval": 10,
-     "on-click": "slimbookbattery"
+     "on-click": "~/wayland/scripts/powerprofile.sh"
     },
 
     "idle_inhibitor": {
