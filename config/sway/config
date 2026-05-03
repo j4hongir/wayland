@@ -1,44 +1,33 @@
-output * bg /home/user/wayland/walls/nasa.png fill
-
+output * bg ~/wayland/walls/nasa.png fill
 set $super Mod4
 set $alt Mod1
 
-#swafx################
+#swafx
 # default_border pixel 2
 # default_floating_border pixel 2
 # corner_radius 6
-######################
 
 font pango:MartianMono NFM Cond Med 10
 floating_modifier $super
 
 exec export XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
-
 exec --no-startup-id swaync
-# exec --no-startup-id pulseaudio
 exec --no-startup-id nm-applet
 exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 exec --no-startup-id wlsunset -l 57.1522 -L 65.5272 -t 4500 -T 6000
+exec ~/wayland/scripts/swaygg.sh
 
 bindsym --to-code $super+t exec kitty 
 bindsym --to-code $super+w exec ~/wayland/scripts/swaywall.sh 
-
 bindsym --to-code $super+b exec chromium
-
 bindsym --to-code $super+f exec nautilus
 bindsym --to-code $super+Shift+g exec obsidian
-
 bindsym --to-code $super+Shift+p exec hyprpicker -a
-
 bindsym --to-code XF86MonBrightnessUp exec brightnessctl set 5%+
 bindsym --to-code XF86MonBrightnessDown exec brightnessctl set 5%-
-
 bindsym --to-code $super+x kill
-
 bindsym --to-code $super+z [con_mark=_prev] focus
-exec ~/wayland/scripts/swaygg.sh
-
 bindsym --to-code $super+Left focus left
 bindsym --to-code $super+h focus left
 bindsym --to-code $super+Down focus down
@@ -47,7 +36,6 @@ bindsym --to-code $super+Up focus up
 bindsym --to-code $super+k focus up
 bindsym --to-code $super+Right focus right
 bindsym --to-code $super+l focus right
-
 bindsym --to-code $super+Shift+Left move left
 bindsym --to-code $super+Shift+h move left
 bindsym --to-code $super+Shift+Down move down
@@ -56,17 +44,11 @@ bindsym --to-code $super+Shift+Up move up
 bindsym --to-code $super+Shift+k move up
 bindsym --to-code $super+Shift+Right move right
 bindsym --to-code $super+Shift+l move right
-
 bindsym --to-code $super+n split h
 bindsym --to-code $super+m split v
-
 bindsym --to-code $super+c layout toggle split
-
 bindsym --to-code $super+Shift+f fullscreen toggle
-
 bindsym --to-code $super+e floating toggle
-
-#bindsym --to-code $super+z focus mode_toggle
 bindsym --to-code $super+Control+Right workspace next
 bindsym --to-code $super+Control+Left workspace prev
 bindsym --to-code $alt+1 workspace 1
@@ -75,26 +57,24 @@ bindsym --to-code $alt+3 workspace 3
 bindsym --to-code $alt+4 workspace 4
 bindsym --to-code $alt+5 workspace 5
 bindsym --to-code $alt+6 workspace 6
-
 bindsym --to-code $super+Shift+1 move container to workspace 1
 bindsym --to-code $super+Shift+2 move container to workspace 2
 bindsym --to-code $super+Shift+3 move container to workspace 3
 bindsym --to-code $super+Shift+4 move container to workspace 4
 bindsym --to-code $super+Shift+5 move container to workspace 5
 bindsym --to-code $super+Shift+6 move container to workspace 6
-
 bindsym --to-code $super+BackSpace exec "swaymsg reload"
 bindsym --to-code $super+Shift+q exec ~/wayland/scripts/ssearch.sh
 bindsym --to-code $super+q exec ~/wayland/scripts/swaysys.sh
 bindsym --to-code XF86PowerOff exec ~/wayland/scripts/swaysys.sh
 
 
-set $focused 
-set $focused_inactive 
-set $unfocused 
-set $urgent 
-set $placeholder 
-set $resize_border 
+set $focused #fabd2f
+set $focused_inactive #928374
+set $unfocused #7c6f64
+set $urgent #fb4934
+set $placeholder #928374
+set $resize_border #ff0000
 
 client.focused             $focused     #928374 #ebdbb2 $focused     $focused
 client.focused_inactive    $focused_inactive $focused_inactive #ebdbb2 $focused_inactive $focused_inactive
@@ -121,41 +101,21 @@ mode "resize" {
         bindsym --to-code Return mode "default"; \
         client.focused $focused #928374 #ebdbb2 $focused $focused
 }
-
 bindsym --to-code $super+r mode "resize"; \
     client.focused $resize_border $resize_border #ebdbb2 $resize_border $resize_border
 
-
-
-# client.focused             #fabd2f  #928374 #ebdbb2 #fabd2f  #fabd2f
-# # client.focused             #fabd2f  #928374 #ebdbb2 #83a598 #83a598
-# client.focused_inactive    #928374 #928374 #ebdbb2 #928374 #928374
-# client.unfocused           #7c6f64 #3c3836 #ebdbb2 #928374 #928374
-# client.urgent              #fb4934 #928374 #ebdbb2 #d79921 #d79921
-# client.placeholder         #928374 #3c3836 #ebdbb2 #928374 #928374
-# client.background          #928374
-
-# for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] floating enable
-# for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] focus
-# for_window [class=".*"] border pixel 2.5
 for_window [class=".*"] border pixel 2.5
 hide_edge_borders none
 gaps inner 4
 gaps outer 2
-# gaps top 31px
 
-
-exec --no-startup-id waybar
 
 bindsym --to-code $super+Shift+v exec  ~/wayland/scripts/clip.sh
-
 bindsym --to-code $super+o exec tofi-drun --auto-accept-single false | xargs -I{} sh -c '{}'
-
 bindsym --to-code super+Shift+w exec ~/wayland/scripts/screen.sh
-
+exec --no-startup-id waybar
 exec --no-startup-id wl-paste -t image/png -w cliphist store  
 exec --no-startup-id wl-paste -t text/plain -w cliphist store
-
 
 input * {
     xkb_layout us,ru
@@ -172,27 +132,17 @@ input "type:touchpad" {
 bindsym --to-code XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym --to-code XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym --to-code XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-
-
 bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
 bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 bindsym XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-
-# set $opacity 0.9
-# for_window [class=".*"] opacity $opacity
-# for_window [app_id=".*"] opacity $opacity
-
 bindsym --to-code $super+s scratchpad show
 bindsym --to-code $super+Shift+s move scratchpad
-
 bindsym --whole-window button8 exec :
 bindsym --whole-window button9 exec :
-
 for_window [app_id="pomotroid"] floating enable
 for_window [app_id="pomotroid"] resize set 430 486
 for_window [app_id="pomotroid"] move position 747 1
-
 for_window [app_id="easygamma"] floating enable
 for_window [app_id="easygamma"] move position 1424 1
 for_window [app_id="swayimg"] floating enable
