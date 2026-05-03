@@ -1,5 +1,5 @@
 #!/bin/bash
-options="Restart\nQuit\nLock Session\nSuspend\nReboot\nShutdown"
+options="Restart\nQuit\nLock\nSuspend\nReboot\nShutdown"
 chosen=$(echo -e "$options" | tofi --auto-accept-single false --prompt-text "> ")
 
 if [ -z "$chosen" ]; then

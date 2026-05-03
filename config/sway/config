@@ -1,22 +1,19 @@
-output * bg /home/mars/wayland/walls/nasa.png fill
+output * bg ~/wayland/walls/nasa.png fill
 # set modifier
 set $super Mod4
 set $alt Mod1
 
-#swafx################
+#swafx
 # default_border pixel 2
 # default_floating_border pixel 2
 # corner_radius 6
-######################
 
 # set font
 font pango:MartianMono NFM Cond Med 10
 
-# use mouse+$super to drag floating windows to their wanted position
 floating_modifier $super
 
 # exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-
 exec export XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
 
@@ -26,7 +23,6 @@ exec --no-startup-id nm-applet
 exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 exec --no-startup-id wlsunset -l 57.1522 -L 65.5272 -t 4500 -T 6000
 
-# start a terminal
 bindsym --to-code $super+t exec kitty 
 bindsym --to-code $super+w exec ~/wayland/scripts/swaywall.sh 
 
@@ -40,13 +36,11 @@ bindsym --to-code $super+Shift+p exec hyprpicker -a
 bindsym --to-code XF86MonBrightnessUp exec brightnessctl set 5%+
 bindsym --to-code XF86MonBrightnessDown exec brightnessctl set 5%-
 
-# kill focused window
 bindsym --to-code $super+x kill
 
 bindsym --to-code $super+z [con_mark=_prev] focus
 exec ~/wayland/scripts/swaygg.sh
 
-# change focus
 bindsym --to-code $super+Left focus left
 bindsym --to-code $super+h focus left
 bindsym --to-code $super+Down focus down
@@ -56,7 +50,6 @@ bindsym --to-code $super+k focus up
 bindsym --to-code $super+Right focus right
 bindsym --to-code $super+l focus right
 
-# move focused window
 bindsym --to-code $super+Shift+Left move left
 bindsym --to-code $super+Shift+h move left
 bindsym --to-code $super+Shift+Down move down
@@ -66,20 +59,15 @@ bindsym --to-code $super+Shift+k move up
 bindsym --to-code $super+Shift+Right move right
 bindsym --to-code $super+Shift+l move right
 
-# split in horizontal or vertical orientation
 bindsym --to-code $super+n split h
 bindsym --to-code $super+m split v
 
-# change split direction for already opened windows
 bindsym --to-code $super+c layout toggle split
 
-# enter fullscreen mode for the focused container
 bindsym --to-code $super+Shift+f fullscreen toggle
 
-# toggle tiling / floating
 bindsym --to-code $super+e floating toggle
 
-# change focus between tiling / floating windows
 #bindsym --to-code $super+z focus mode_toggle
 
 # switch to workspace
@@ -92,7 +80,6 @@ bindsym --to-code $alt+4 workspace 4
 bindsym --to-code $alt+5 workspace 5
 bindsym --to-code $alt+6 workspace 6
 
-# move focused container to workspace
 bindsym --to-code $super+Shift+1 move container to workspace 1
 bindsym --to-code $super+Shift+2 move container to workspace 2
 bindsym --to-code $super+Shift+3 move container to workspace 3
@@ -107,12 +94,12 @@ bindsym --to-code $super+q exec ~/wayland/scripts/swaysys.sh
 bindsym --to-code XF86PowerOff exec ~/wayland/scripts/swaysys.sh
 
 
-set $focused #fabd2f
-set $focused_inactive #928374
-set $unfocused #7c6f64
-set $urgent #fb4934
-set $placeholder #928374
-set $resize_border #ff0000
+set $focused 
+set $focused_inactive 
+set $unfocused 
+set $urgent 
+set $placeholder 
+set $resize_border 
 
 client.focused             $focused     #928374 #ebdbb2 $focused     $focused
 client.focused_inactive    $focused_inactive $focused_inactive #ebdbb2 $focused_inactive $focused_inactive
@@ -154,7 +141,6 @@ bindsym --to-code $super+r mode "resize"; \
 # client.placeholder         #928374 #3c3836 #ebdbb2 #928374 #928374
 # client.background          #928374
 
-# window rules, you can find the window class using xprop
 # for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] floating enable
 # for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] focus
 # for_window [class=".*"] border pixel 2.5

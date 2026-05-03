@@ -1,0 +1,10 @@
+# PAM configuration file for hyprlock
+# the 'login' configuration file (see /etc/pam.d/login)
+
+auth        include     login
+#%PAM-1.0
+auth    [success=1 new_authtok_reqd=1 default=ignore]   pam_fprintd.so timeout=10
+auth    include      login
+account include      login
+password include     login
+session include     login

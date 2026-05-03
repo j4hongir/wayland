@@ -54,6 +54,9 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+export VBOX_LOG_DEST=nofile
+export VBOX_RELEASE_LOG_DEST=nofile
+
 
 alias ls="eza --icons=always"
 alias hx="helix"

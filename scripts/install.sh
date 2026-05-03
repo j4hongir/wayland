@@ -14,7 +14,7 @@ cd paru && makepkg -si
 
 sudo pacman -S --needed \
   bat bluez bluez-utils brightnessctl chromium cliphist \
-  eza fzf git github-cli grim helix hypridle hyprland \
+  eza fzf fd git github-cli grim helix hypridle hyprland \
   hyprlock hyprpicker kitty less swaybg swayimg pavucontrol obs-studio thermald \
   macchina mission-center mpv nautilus ncdu neovim network-manager-applet \
   nwg-look obsidian openvpn papirus-icon-theme \
