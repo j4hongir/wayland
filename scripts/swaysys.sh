@@ -8,7 +8,7 @@ else
     case $chosen in
         Restart*)  swaymsg reload ;;
         Quit*)     swaymsg exit ;;
-        Lock*)     swaylock -i ~/wayland/walls/trees.png ;;
+        Lock*)     hyprlock ;;
         Suspend)   systemctl suspend ;;
         Reboot)    systemctl reboot ;;
         Shutdown)  systemctl poweroff ;;

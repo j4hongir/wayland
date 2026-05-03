@@ -1,19 +1,17 @@
-output * bg ~/wayland/walls/nasa.png fill
-# set modifier
+output * bg /home/user/wayland/walls/nasa.png fill
+
 set $super Mod4
 set $alt Mod1
 
-#swafx
+#swafx################
 # default_border pixel 2
 # default_floating_border pixel 2
 # corner_radius 6
+######################
 
-# set font
 font pango:MartianMono NFM Cond Med 10
-
 floating_modifier $super
 
-# exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 exec export XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
 
@@ -69,8 +67,6 @@ bindsym --to-code $super+Shift+f fullscreen toggle
 bindsym --to-code $super+e floating toggle
 
 #bindsym --to-code $super+z focus mode_toggle
-
-# switch to workspace
 bindsym --to-code $super+Control+Right workspace next
 bindsym --to-code $super+Control+Left workspace prev
 bindsym --to-code $alt+1 workspace 1
@@ -88,7 +84,6 @@ bindsym --to-code $super+Shift+5 move container to workspace 5
 bindsym --to-code $super+Shift+6 move container to workspace 6
 
 bindsym --to-code $super+BackSpace exec "swaymsg reload"
-
 bindsym --to-code $super+Shift+q exec ~/wayland/scripts/ssearch.sh
 bindsym --to-code $super+q exec ~/wayland/scripts/swaysys.sh
 bindsym --to-code XF86PowerOff exec ~/wayland/scripts/swaysys.sh
@@ -132,7 +127,6 @@ bindsym --to-code $super+r mode "resize"; \
 
 
 
-# # colour of border, background, text, indicator, and child_border
 # client.focused             #fabd2f  #928374 #ebdbb2 #fabd2f  #fabd2f
 # # client.focused             #fabd2f  #928374 #ebdbb2 #83a598 #83a598
 # client.focused_inactive    #928374 #928374 #ebdbb2 #928374 #928374
@@ -145,7 +139,6 @@ bindsym --to-code $super+r mode "resize"; \
 # for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] focus
 # for_window [class=".*"] border pixel 2.5
 for_window [class=".*"] border pixel 2.5
-# hide_edge_borders smart
 hide_edge_borders none
 gaps inner 4
 gaps outer 2
@@ -193,6 +186,14 @@ bindsym XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 bindsym --to-code $super+s scratchpad show
 bindsym --to-code $super+Shift+s move scratchpad
 
-bindsym --whole-window button8 nop
-bindsym --whole-window button9 nop
+bindsym --whole-window button8 exec :
+bindsym --whole-window button9 exec :
+
+for_window [app_id="pomotroid"] floating enable
+for_window [app_id="pomotroid"] resize set 430 486
+for_window [app_id="pomotroid"] move position 747 1
+
+for_window [app_id="easygamma"] floating enable
+for_window [app_id="easygamma"] move position 1424 1
+for_window [app_id="swayimg"] floating enable
 
