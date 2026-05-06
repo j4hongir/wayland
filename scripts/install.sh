@@ -18,7 +18,7 @@ sudo pacman -S --needed \
   hyprlock hyprpicker kitty less swaybg swayimg pavucontrol obs-studio thermald \
   macchina mission-center mpv nautilus ncdu neovim network-manager-applet \
   nwg-look obsidian openvpn papirus-icon-theme \
-  power-profiles-daemon pyenv \
+  power-profiles-daemon pyenv swayidle swaylock\
   qt5ct qt6ct sddm slurp sof-firmware starship \
   swappy swaync tesseract tesseract-data-eng tesseract-data-rus tmux trash-cli \
   tree virtualbox waybar \
