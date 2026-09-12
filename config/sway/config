@@ -1,12 +1,12 @@
-output * bg /home/user/wayland/walls/gradient.jpg fill
+output * bg /home/user/wayland/walls/nasa.png fill
 set $super Mod4
 set $alt Mod1
 
-#swafx
-default_border pixel 2
-default_floating_border pixel 2
-corner_radius 6
-animation_duration_ms 250
+# #swafx
+# default_border pixel 2
+# default_floating_border pixel 2
+# corner_radius 6
+# animation_duration_ms 250
 
 font pango:MartianMono NFM Cond Med 10
 floating_modifier $super
@@ -14,7 +14,7 @@ floating_modifier $super
 exec export XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
 exec --no-startup-id swaync
-exec --no-startup-id easygamma
+exec --no-startup-id easygamma --tray
 exec --no-startup-id nm-applet
 exec --no-startup-id ~/wayland/scripts/idle_sway.sh
 exec --no-startup-id wlsunset -l 57.1522 -L 65.5272 -t 4500 -T 6000
@@ -26,8 +26,6 @@ bindsym --to-code $super+b exec chromium
 bindsym --to-code $super+f exec nautilus
 bindsym --to-code $super+Shift+g exec obsidian
 bindsym --to-code $super+Shift+p exec hyprpicker -a
-bindsym --to-code XF86MonBrightnessUp exec brightnessctl set 5%+
-bindsym --to-code XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --to-code $super+x kill
 bindsym --to-code $super+z [con_mark=_prev] focus
 bindsym --to-code $super+Left focus left
@@ -114,7 +112,7 @@ gaps outer 2
 bindsym --to-code $super+Shift+v exec  ~/wayland/scripts/clip.sh
 bindsym --to-code $super+o exec tofi-drun --auto-accept-single false | xargs -I{} sh -c '{}'
 bindsym --to-code super+Shift+w exec ~/wayland/scripts/screen.sh
-exec --no-startup-id waybar
+exec --no-startup-id waybar > /dev/null 2>&1
 exec --no-startup-id wl-paste -t image/png -w cliphist store  
 exec --no-startup-id wl-paste -t text/plain -w cliphist store
 
@@ -137,16 +135,23 @@ bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
 bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 bindsym XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bindsym --to-code XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym --to-code XF86MonBrightnessDown exec brightnessctl set 5%-
+
+
 bindsym --to-code $super+s scratchpad show
 bindsym --to-code $super+Shift+s move scratchpad
 bindsym --whole-window button8 exec :
 bindsym --whole-window button9 exec :
-for_window [app_id="pomotroid"] floating enable
-for_window [app_id="pomotroid"] resize set 430 486
-for_window [app_id="pomotroid"] move position 747 1
-for_window [app_id="easygamma"] floating enable
-for_window [app_id="easygamma"] move position 1424 1
+
+for_window [app_id="pomotroid"] floating enable, resize set 430 486, move position 747 1
+for_window [app_id="easygamma"] floating enable, move position 1424 1
 for_window [app_id="swayimg"] floating enable
-for_window [app_id="org.pulseaudio.pavucontrol"] floating enable
-for_window [app_id="org.pulseaudio.pavucontrol"] resize set 430 486
-for_window [app_id="org.pulseaudio.pavucontrol"] move position 1475 1
+for_window [app_id="org.pulseaudio.pavucontrol"] floating enable, resize set 430 486, move position 1475 1
+for_window [app_id="chrome-nngceckbapebfimnlniiiahkandclblb-Default"] floating enable, move position 1425 1
+
+
+bindgesture swipe:right workspace prev
+bindgesture swipe:left workspace next
+bindgesture swipe:3:up fullscreen toggle
+bindgesture swipe:3:down fullscreen toggle

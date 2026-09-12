@@ -77,13 +77,15 @@
     "hyprland/language": {
     "format": "{}",
     "format-ru": "RU",
-    "format-en": "US"
+    "format-en": "US",
+    "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
     },
 
     "sway/language": {
     "format": "{}",
     "format-ru": "RU",
-    "format-en": "US"
+    "format-en": "US",
+    "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
     },
 
     "custom/notification": {
